@@ -1,8 +1,9 @@
 #pragma once
+#include <QListWidgetItem>
 #include "vertex.h"
 #include "face.h"
 
-class HalfEdge
+class HalfEdge : public QListWidgetItem
 {
 public:
     static int population;

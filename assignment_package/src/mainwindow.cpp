@@ -3,7 +3,6 @@
 #include "cameracontrolshelp.h"
 #include <QFileDialog>
 #include <iostream>
-#include "mesh.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -11,6 +10,18 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->mygl->setFocus();
+
+    connect(ui->mygl,
+            SIGNAL(sig_sendListItem(QListWidgetItem*)),
+            this,
+            SLOT(slot_addListItem(QListWidgetItem*)));
+
+    connect(ui->vertsListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
+            ui->mygl, SLOT(slot_setSelectedFace(QListWidgetItem*)));
+
+    connect(ui->facesListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
+            ui->mygl, SLOT(slot_setSelectedFace(QListWidgetItem*)));
+
 }
 
 MainWindow::~MainWindow()
@@ -36,4 +47,23 @@ void MainWindow::on_actionCamera_Controls_triggered()
 {
     CameraControlsHelp* c = new CameraControlsHelp();
     c->show();
+}
+
+void MainWindow::slot_addListItem(QListWidgetItem *i) {
+    Vertex *v = dynamic_cast<Vertex*>(i);
+    if (v != nullptr) {
+        ui->vertsListWidget->addItem(i);
+        return;
+    }
+    Face *f = dynamic_cast<Face*>(i);
+    if (f != nullptr) {
+        ui->facesListWidget->addItem(i);
+        return;
+    }
+
+    HalfEdge *he = dynamic_cast<HalfEdge*>(i);
+    if (he != nullptr) {
+        ui->halfEdgesListWidget->addItem(i);
+        return;
+    }
 }

@@ -8,4 +8,6 @@ Face::Face(glm::vec3 c) {
 
     this->m_color = c;
     this->m_hedge = nullptr;
+
+    QListWidgetItem::setText(QString::number(id));
 }

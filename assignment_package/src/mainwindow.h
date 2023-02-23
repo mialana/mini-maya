@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QListWidgetItem>
+#include "mesh.h"
 
 namespace Ui {
 class MainWindow;
@@ -16,12 +18,17 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+
+
 private slots:
     void on_actionImport_Obj_triggered();
 
     void on_actionQuit_triggered();
 
     void on_actionCamera_Controls_triggered();
+
+    void slot_addListItem(QListWidgetItem *i);
 
 private:
     Ui::MainWindow *ui;

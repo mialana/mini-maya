@@ -11,6 +11,7 @@ MyGL::MyGL(QWidget *parent)
       m_geomSquare(this),
       m_progLambert(this),
       m_progFlat(this), m_glCamera(),
+      mp_selectedFace(nullptr),
       m_meshCurrent(this)
 {
     setFocusPolicy(Qt::StrongFocus);
@@ -95,6 +96,18 @@ void MyGL::paintGL()
 
     m_progLambert.draw(m_meshCurrent);
 
+    for (auto& v : m_meshCurrent.m_verts) {
+        emit this->sig_sendListItem(v.get());
+    }
+
+    for (auto& f : m_meshCurrent.m_faces) {
+        emit this->sig_sendListItem(f.get());
+    }
+
+    for (auto& he : m_meshCurrent.m_hedges) {
+        emit this->sig_sendListItem(he.get());
+    }
+
 }
 
 
@@ -138,4 +151,9 @@ void MyGL::keyPressEvent(QKeyEvent *e)
     }
     m_glCamera.RecomputeAttributes();
     update();  // Calls paintGL, among other things
+}
+
+void MyGL::slot_setSelectedFace(QListWidgetItem *i) {
+    mp_selectedFace = static_cast<Face*>(i);
+    std::cout << mp_selectedFace->id << std::endl;
 }

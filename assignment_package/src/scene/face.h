@@ -1,9 +1,10 @@
 #pragma once
+#include <QListWidgetItem>
 #include <glm/glm.hpp>
 
 class HalfEdge;
 
-class Face
+class Face : public QListWidgetItem
 {
 public:
     static int population;

@@ -9,4 +9,6 @@ Vertex::Vertex(glm::vec3 p)
 
     this->m_pos = p;
     this->m_hedge = nullptr;
+
+    QListWidgetItem::setText(QString::number(id));
 }

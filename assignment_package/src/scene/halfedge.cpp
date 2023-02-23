@@ -12,6 +12,8 @@ HalfEdge::HalfEdge() {
     this->sym = nullptr;
     this->m_vert = nullptr;
     this->m_face = nullptr;
+
+    QListWidgetItem::setText(QString::number(id));
 }
 
 bool HalfEdge::operator==(const HalfEdge &he2) const {

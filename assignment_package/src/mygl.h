@@ -26,6 +26,8 @@ private:
 
     Camera m_glCamera;
 
+    Face *mp_selectedFace;
+
 public:
     Mesh m_meshCurrent;
 
@@ -38,6 +40,12 @@ public:
 
 protected:
     void keyPressEvent(QKeyEvent *e);
+
+public slots:
+    void slot_setSelectedFace(QListWidgetItem *i);
+
+signals:
+    void sig_sendListItem(QListWidgetItem*);
 };
 
 
