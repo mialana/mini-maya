@@ -9,8 +9,9 @@
 MyGL::MyGL(QWidget *parent)
     : OpenGLContext(parent),
       m_geomSquare(this),
-      m_progLambert(this), m_progFlat(this),
-      m_glCamera()
+      m_progLambert(this),
+      m_progFlat(this), m_glCamera(),
+      m_meshCurrent(this)
 {
     setFocusPolicy(Qt::StrongFocus);
 }
@@ -49,6 +50,8 @@ void MyGL::initializeGL()
     //Create the instances of Cylinder and Sphere.
     m_geomSquare.create();
 
+    m_meshCurrent.create();
+
     // Create and set up the diffuse shader
     m_progLambert.create(":/glsl/lambert.vert.glsl", ":/glsl/lambert.frag.glsl");
     // Create and set up the flat lighting shader
@@ -83,25 +86,15 @@ void MyGL::paintGL()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     m_progFlat.setViewProjMatrix(m_glCamera.getViewProj());
-    m_progLambert.setViewProjMatrix(m_glCamera.getViewProj());
-    m_progLambert.setCamPos(m_glCamera.eye);
+    m_progFlat.setCamPos(m_glCamera.eye);
     m_progFlat.setModelMatrix(glm::mat4(1.f));
 
-    //Create a model matrix. This one rotates the square by PI/4 radians then translates it by <-2,0,0>.
-    //Note that we have to transpose the model matrix before passing it to the shader
-    //This is because OpenGL expects column-major matrices, but you've
-    //implemented row-major matrices.
-    glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(-2,0,0)) * glm::rotate(glm::mat4(), 0.25f * 3.14159f, glm::vec3(0,1,0));
-    //Send the geometry's transformation matrix to the shader
-    m_progLambert.setModelMatrix(model);
-    //Draw the example sphere using our lambert shader
-    m_progLambert.draw(m_geomSquare);
+    m_progLambert.setViewProjMatrix(m_glCamera.getViewProj());
+    m_progLambert.setCamPos(m_glCamera.eye);
+    m_progLambert.setModelMatrix(glm::mat4(1.f));
 
-    //Now do the same to render the cylinder
-    //We've rotated it -45 degrees on the Z axis, then translated it to the point <2,2,0>
-    model = glm::translate(glm::mat4(1.0f), glm::vec3(2,2,0)) * glm::rotate(glm::mat4(1.0f), glm::radians(-45.0f), glm::vec3(0,0,1));
-    m_progLambert.setModelMatrix(model);
-    m_progLambert.draw(m_geomSquare);
+    m_progLambert.draw(m_meshCurrent);
+
 }
 
 

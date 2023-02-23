@@ -3,20 +3,6 @@
 #include <iostream>
 #include <random>
 
-struct Randomizer {
-    std::random_device rd;
-    std::uniform_int_distribution<int> distribution;
-
-    Randomizer() {
-        rd();
-        distribution = std::uniform_int_distribution<int>(0, 255);
-    }
-
-    glm::vec3 get_randVec3() {
-        return glm::vec3(distribution(rd), distribution(rd), distribution(rd));
-    }
-};
-
 Mesh::Mesh(OpenGLContext* mp_context) : Drawable(mp_context)
 {}
 
@@ -27,9 +13,9 @@ GLenum Mesh::drawMode() {
 void Mesh::create() {
 
     std::vector<GLuint> indices;
-    std::vector<glm::vec3> positions;
-    std::vector<glm::vec3> normals;
-    std::vector<glm::vec3> colors;
+    std::vector<glm::vec4> positions;
+    std::vector<glm::vec4> normals;
+    std::vector<glm::vec4> colors;
 
     int currTotal = 0;
     for (const uPtr<Face> &f : m_faces) {
@@ -37,20 +23,23 @@ void Mesh::create() {
         HalfEdge* curr = f->m_hedge;
 
         do {
-            positions.push_back(curr->m_vert->m_pos);
+            glm::vec4 test = glm::vec4(curr->m_vert->m_pos.x, curr->m_vert->m_pos.y, curr->m_vert->m_pos.z, 1);
+            positions.push_back(test);
 
             // declare vectors that will deterine normal
             const glm::vec3 v1 = curr->next->m_vert->m_pos - curr->m_vert->m_pos;
             const glm::vec3 v2 = curr->next->next->m_vert->m_pos - curr->next->m_vert->m_pos;
             glm::vec3 n = glm::normalize(glm::cross(v1, v2));
-            normals.push_back(n);
+            glm::vec4 test2 = glm::vec4(n.x, n.y, n.z, 0);
+            normals.push_back(test2);
 
-            colors.push_back(curr->m_face->m_color);
+            glm::vec4 test3 = glm::vec4(curr->m_face->m_color.x, curr->m_face->m_color.y, curr->m_face->m_color.z, 1);
+            colors.push_back(test3);
             fVertNum++;
             curr = curr->next;
         } while (curr != f->m_hedge);
 
-        for (int i = 0; i < fVertNum; i++) {
+        for (int i = 0; i < fVertNum - 2; i++) {
             indices.push_back(currTotal);
             indices.push_back(currTotal + i + 1);
             indices.push_back(currTotal + i + 2);
@@ -66,15 +55,15 @@ void Mesh::create() {
 
     generatePos();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufPos);
-    mp_context->glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(glm::vec3), positions.data(), GL_STATIC_DRAW);
+    mp_context->glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(glm::vec4), positions.data(), GL_STATIC_DRAW);
 
     generateNor();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufNor);
-    mp_context->glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec3), normals.data(), GL_STATIC_DRAW);
+    mp_context->glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec4), normals.data(), GL_STATIC_DRAW);
 
     generateCol();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufCol);
-    mp_context->glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), colors.data(), GL_STATIC_DRAW);
+    mp_context->glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec4), colors.data(), GL_STATIC_DRAW);
 }
 
 void Mesh::createSyms() {
@@ -102,6 +91,10 @@ void Mesh::createSyms() {
 }
 
 void Mesh::loadObj(QString filename) {
+    this->m_verts.clear();
+    this->m_faces.clear();
+    this->m_hedges.clear();
+
 
     QFile file(filename);
 

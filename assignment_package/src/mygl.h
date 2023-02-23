@@ -6,6 +6,7 @@
 #include <shaderprogram.h>
 #include <scene/squareplane.h>
 #include "camera.h"
+#include "mesh.h"
 
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLShaderProgram>
@@ -25,8 +26,9 @@ private:
 
     Camera m_glCamera;
 
-
 public:
+    Mesh m_meshCurrent;
+
     explicit MyGL(QWidget *parent = nullptr);
     ~MyGL();
 

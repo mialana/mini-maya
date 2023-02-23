@@ -180,7 +180,7 @@ void ShaderProgram::draw(Drawable &d)
 }
 
 char* ShaderProgram::textFileRead(const char* fileName) {
-    char* text;
+    char* text = nullptr;
 
     if (fileName != NULL) {
         FILE *file = fopen(fileName, "rt");

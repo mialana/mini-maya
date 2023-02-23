@@ -29,6 +29,8 @@ public:
               V,        //Represents the vertical component of the plane of the viewing frustum that passes through the camera's reference point. Used in Camera::Raycast.
               H;        //Represents the horizontal component of the plane of the viewing frustum that passes through the camera's reference point. Used in Camera::Raycast.
 
+    void operator=(const Camera &c);
+
     glm::mat4 getViewProj();
 
     void RecomputeAttributes();

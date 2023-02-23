@@ -2,3 +2,6 @@ https://doc.qt.io/qt-6/qfile.html#open-1 - used to find out more about QFile cla
 
 https://pvigier.github.io/2018/02/09/dependency-graph.html - used this site cause I was having
 trouble with circular dependencies with vertices faces and half edges.
+
+https://en.cppreference.com/w/cpp/numeric/random/random_device - used cuz i wanted to implement
+a randomizer class to make coloring more efficient.
