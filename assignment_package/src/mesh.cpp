@@ -67,24 +67,20 @@ void Mesh::create() {
 }
 
 void Mesh::createSyms() {
-    std::map<std::pair<int, int>, HalfEdge*> hedgesMap;
+    std::map<std::pair<Vertex*, Vertex*>, HalfEdge*> hedgesMap;
     for (const auto& f : this->m_faces) {
         std::cout << "f: " << f->id << std::endl;
         HalfEdge* map_val = f->m_hedge;
         do {
             HalfEdge* curr = map_val;
             do {
-//                std::cout << curr->id << ", ";
                 curr = curr->next;
             } while (curr->next != map_val);
 
-            int a = glm::min(map_val->m_vert->id, curr->m_vert->id);
-            int b = glm::max(map_val->m_vert->id, curr->m_vert->id);
+            Vertex* a = (map_val->m_vert->id < curr->m_vert->id) ? map_val->m_vert : curr->m_vert;
+            Vertex* b = (map_val->m_vert->id < curr->m_vert->id) ? curr->m_vert : map_val->m_vert;
 
-            std::pair<int, int> p = std::make_pair(a, b);
-
-//            std::cout << "a: " << a << std::endl;
-//            std::cout << "b: " << b << "\n" << std::endl;
+            std::pair<Vertex*, Vertex*> p = std::make_pair(a, b);
 
             if (hedgesMap[p] != nullptr) {
                 std::cout << "found" << std::endl;
