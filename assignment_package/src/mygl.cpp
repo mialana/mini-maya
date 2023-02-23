@@ -153,7 +153,17 @@ void MyGL::keyPressEvent(QKeyEvent *e)
     update();  // Calls paintGL, among other things
 }
 
+void MyGL::slot_setSelectedVertex(QListWidgetItem *i) {
+    mp_selectedVertex = static_cast<Vertex*>(i);
+    std::cout << mp_selectedVertex->id << std::endl;
+}
+
 void MyGL::slot_setSelectedFace(QListWidgetItem *i) {
     mp_selectedFace = static_cast<Face*>(i);
     std::cout << mp_selectedFace->id << std::endl;
+}
+
+void MyGL::slot_setSelectedHedge(QListWidgetItem *i) {
+    mp_selectedHedge = static_cast<HalfEdge*>(i);
+    std::cout << mp_selectedHedge->id << std::endl;
 }

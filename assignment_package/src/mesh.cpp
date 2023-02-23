@@ -69,7 +69,6 @@ void Mesh::create() {
 void Mesh::createSyms() {
     std::map<std::pair<Vertex*, Vertex*>, HalfEdge*> hedgesMap;
     for (const auto& f : this->m_faces) {
-        std::cout << "f: " << f->id << std::endl;
         HalfEdge* map_val = f->m_hedge;
         do {
             HalfEdge* curr = map_val;
@@ -83,7 +82,6 @@ void Mesh::createSyms() {
             std::pair<Vertex*, Vertex*> p = std::make_pair(a, b);
 
             if (hedgesMap[p] != nullptr) {
-                std::cout << "found" << std::endl;
                 map_val->symWith(hedgesMap[p]);
             } else {
                 hedgesMap[p] = map_val;
