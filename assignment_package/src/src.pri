@@ -4,6 +4,7 @@ DEPENDPATH += $$PWD
 SOURCES += \
     $$PWD/main.cpp \
     $$PWD/mainwindow.cpp \
+    $$PWD/mesh.cpp \
     $$PWD/mygl.cpp \
     $$PWD/scene/face.cpp \
     $$PWD/scene/halfedge.cpp \
@@ -20,6 +21,7 @@ SOURCES += \
 HEADERS += \
     $$PWD/la.h \
     $$PWD/mainwindow.h \
+    $$PWD/mesh.h \
     $$PWD/mygl.h \
     $$PWD/scene/face.h \
     $$PWD/scene/halfedge.h \
