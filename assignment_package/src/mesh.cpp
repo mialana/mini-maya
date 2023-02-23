@@ -1,4 +1,21 @@
 #include "mesh.h"
+#include <QFileDialog>
+#include <iostream>
+#include <random>
+
+struct Randomizer {
+    std::random_device rd;
+    std::uniform_int_distribution<int> distribution;
+
+    Randomizer() {
+        rd();
+        distribution = std::uniform_int_distribution<int>(0, 255);
+    }
+
+    glm::vec3 get_randVec3() {
+        return glm::vec3(distribution(rd), distribution(rd), distribution(rd));
+    }
+};
 
 Mesh::Mesh(OpenGLContext* mp_context) : Drawable(mp_context)
 {}
@@ -17,19 +34,21 @@ void Mesh::create() {
     int currTotal = 0;
     for (const uPtr<Face> &f : m_faces) {
         int fVertNum = 0;
-        HalfEdge* curr = f->m_halfe;
+        HalfEdge* curr = f->m_hedge;
 
-        // declare vectors that will deterine normal
-        const glm::vec3 v1 = curr->m_next->m_vertex->m_pos - curr->m_vertex->m_pos;
-        const glm::vec3 v2 = curr->m_next->m_next->m_vertex->m_pos - curr->m_next->m_vertex->m_pos;
-        glm::vec3 n = glm::normalize(glm::cross(v1, v2));
         do {
-            positions.push_back(curr->m_vertex->m_pos);
+            positions.push_back(curr->m_vert->m_pos);
+
+            // declare vectors that will deterine normal
+            const glm::vec3 v1 = curr->next->m_vert->m_pos - curr->m_vert->m_pos;
+            const glm::vec3 v2 = curr->next->next->m_vert->m_pos - curr->next->m_vert->m_pos;
+            glm::vec3 n = glm::normalize(glm::cross(v1, v2));
             normals.push_back(n);
+
             colors.push_back(curr->m_face->m_color);
             fVertNum++;
-            curr = curr->m_next;
-        } while (curr != f->m_halfe);
+            curr = curr->next;
+        } while (curr != f->m_hedge);
 
         for (int i = 0; i < fVertNum; i++) {
             indices.push_back(currTotal);
@@ -56,4 +75,90 @@ void Mesh::create() {
     generateCol();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufCol);
     mp_context->glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec3), colors.data(), GL_STATIC_DRAW);
+}
+
+void Mesh::createSyms() {
+    std::map<std::pair<Vertex*, Vertex*>, HalfEdge*> hedgesMap;
+    for (const auto& f : this->m_faces) {
+        HalfEdge* map_val = f->m_hedge;
+        do {
+            HalfEdge* curr = map_val;
+            do {
+                curr = curr->next;
+            } while (curr->next != map_val);
+
+            Vertex* a = (f->m_hedge->m_vert->id < curr->m_vert->id) ? f->m_hedge->m_vert : curr->m_vert;
+            Vertex* b = (f->m_hedge->m_vert->id < curr->m_vert->id) ? curr->m_vert : f->m_hedge->m_vert;
+
+            std::pair<Vertex*, Vertex*> p = std::make_pair(a, b);
+
+            if (hedgesMap[p] != nullptr) {
+                map_val->symWith(hedgesMap[p]);
+            } else {
+                hedgesMap[p] = map_val;
+            }
+        } while (map_val != f->m_hedge);
+    }
+}
+
+void Mesh::loadObj(QString filename) {
+
+    QFile file(filename);
+
+    if(!file.open(QIODevice::ReadOnly)){
+        qWarning("Could not open the JSON file.");
+        return;
+    }
+
+    QTextStream fileText(&file);
+    while (!fileText.atEnd()) {
+        QString fileLine = fileText.readLine();
+
+        if (fileLine.startsWith("v ")) {
+            QStringList lineList = fileLine.split(" ");
+            glm::vec3 pos = glm::vec3(lineList[1].toFloat(), lineList[2].toFloat(), lineList[3].toFloat());
+            uPtr<Vertex> v = mkU<Vertex>(pos);
+            this->m_verts.push_back(std::move(v));
+        }
+    }
+
+    fileText.seek(0);
+
+    while (!fileText.atEnd()) {
+        QString fileLine = fileText.readLine();
+
+        Randomizer r = Randomizer();
+
+        if (fileLine.startsWith("f ")) {
+            QStringList lineList = fileLine.split(" ");
+
+            glm::vec3 randCol = r.get_randVec3();
+            uPtr<Face> f = mkU<Face>(randCol);
+
+            HalfEdge* firstHedge;
+            for (int i = 1; i < lineList.length(); i++) {
+                int vertIdx = lineList[i].split("/")[0].toInt();
+                Vertex* v = this->m_verts[vertIdx - 1].get();
+
+                uPtr<HalfEdge> newHedge = mkU<HalfEdge>();
+                newHedge->setVert(v);
+                newHedge->setFace(f.get());
+
+                if (i == 1) {
+                    firstHedge = newHedge.get();
+                } else {
+                    HalfEdge* prevHedge = this->m_hedges.back().get();
+                    prevHedge->next = newHedge.get();
+                }
+                if (i == lineList.length() - 1) {
+                    newHedge->next = firstHedge;
+                }
+                this->m_hedges.push_back(std::move(newHedge));
+            }
+
+            this->m_faces.push_back(std::move(f));
+        }
+    }
+
+    this->createSyms();
 }

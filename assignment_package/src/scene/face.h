@@ -1,5 +1,7 @@
 #pragma once
-#include "halfedge.h"
+#include <glm/glm.hpp>
+
+class HalfEdge;
 
 class Face
 {
@@ -8,7 +10,7 @@ public:
     int id;
 
     glm::vec3 m_color;
-    HalfEdge* m_halfe;
+    HalfEdge* m_hedge;
 
-    Face(glm::vec3 c, HalfEdge* he);
+    Face(glm::vec3 c);
 };

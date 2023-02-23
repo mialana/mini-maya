@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 
-
 namespace Ui {
 class MainWindow;
 }
@@ -18,6 +17,8 @@ public:
     ~MainWindow();
 
 private slots:
+    void on_actionImport_Obj_triggered();
+
     void on_actionQuit_triggered();
 
     void on_actionCamera_Controls_triggered();

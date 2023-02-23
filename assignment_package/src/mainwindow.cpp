@@ -1,7 +1,9 @@
 #include "mainwindow.h"
 #include <ui_mainwindow.h>
 #include "cameracontrolshelp.h"
-
+#include <QFileDialog>
+#include <iostream>
+#include "mesh.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -14,6 +16,15 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_actionImport_Obj_triggered() {
+    QString filename = QFileDialog::getOpenFileName(0, QString("Select OBJ File"), QDir::currentPath().append(QString("../..")), QString("*.obj"));
+
+    Mesh m = Mesh(ui->mygl);
+    m.loadObj(filename);
+
+    m.create();
 }
 
 void MainWindow::on_actionQuit_triggered()

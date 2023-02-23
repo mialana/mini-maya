@@ -1,6 +1,11 @@
 #include "face.h"
 
-Face::Face(glm::vec3 c, HalfEdge* he) {
+int Face::population = 0;
+
+Face::Face(glm::vec3 c) {
+    this->id = population;
+    population++;
+
     this->m_color = c;
-    this->m_halfe = he;
+    this->m_hedge = nullptr;
 }

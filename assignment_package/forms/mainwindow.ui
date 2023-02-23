@@ -318,7 +318,7 @@
      <x>0</x>
      <y>0</y>
      <width>1057</width>
-     <height>21</height>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -333,8 +333,15 @@
     </property>
     <addaction name="actionCamera_Controls"/>
    </widget>
+   <widget class="QMenu" name="menuImport">
+    <property name="title">
+     <string>Import</string>
+    </property>
+    <addaction name="actionImport_Obj"/>
+   </widget>
    <addaction name="menuFile"/>
    <addaction name="menuHelp"/>
+   <addaction name="menuImport"/>
   </widget>
   <action name="actionQuit">
    <property name="text">
@@ -347,6 +354,11 @@
   <action name="actionCamera_Controls">
    <property name="text">
     <string>Camera Controls</string>
+   </property>
+  </action>
+  <action name="actionImport_Obj">
+   <property name="text">
+    <string>Import Obj</string>
    </property>
   </action>
  </widget>

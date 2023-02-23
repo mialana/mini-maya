@@ -1,0 +1,4 @@
+https://doc.qt.io/qt-6/qfile.html#open-1 - used to find out more about QFile class.
+
+https://pvigier.github.io/2018/02/09/dependency-graph.html - used this site cause I was having
+trouble with circular dependencies with vertices faces and half edges.
