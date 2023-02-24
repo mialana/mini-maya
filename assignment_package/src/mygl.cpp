@@ -10,8 +10,9 @@ MyGL::MyGL(QWidget *parent)
     : OpenGLContext(parent),
       m_geomSquare(this),
       m_progLambert(this),
-      m_progFlat(this), m_glCamera(),
-      mp_selectedFace(nullptr),
+      m_progFlat(this),
+      m_glCamera(), mp_selectedFace(nullptr),
+      m_vertDisplay(this),
       m_meshCurrent(this)
 {
     setFocusPolicy(Qt::StrongFocus);
@@ -21,6 +22,7 @@ MyGL::~MyGL()
 {
     makeCurrent();
     glDeleteVertexArrays(1, &vao);
+    m_meshCurrent.destroy();
     m_geomSquare.destroy();
 }
 
@@ -52,6 +54,8 @@ void MyGL::initializeGL()
     m_geomSquare.create();
 
     m_meshCurrent.create();
+
+    m_vertDisplay.create();
 
     // Create and set up the diffuse shader
     m_progLambert.create(":/glsl/lambert.vert.glsl", ":/glsl/lambert.frag.glsl");
@@ -108,6 +112,13 @@ void MyGL::paintGL()
         emit this->sig_sendListItem(he.get());
     }
 
+    glDisable(GL_DEPTH_TEST);
+
+    glPointSize(15);
+    m_progFlat.draw(m_vertDisplay);
+
+    glEnable(GL_DEPTH_TEST);
+
 }
 
 
@@ -155,7 +166,11 @@ void MyGL::keyPressEvent(QKeyEvent *e)
 
 void MyGL::slot_setSelectedVertex(QListWidgetItem *i) {
     mp_selectedVertex = static_cast<Vertex*>(i);
-    std::cout << mp_selectedVertex->id << std::endl;
+    m_vertDisplay.updateVertex(mp_selectedVertex);
+    m_vertDisplay.destroy();
+    m_vertDisplay.create();
+
+    update();
 }
 
 void MyGL::slot_setSelectedFace(QListWidgetItem *i) {

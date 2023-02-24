@@ -14,4 +14,6 @@ public:
     HalfEdge* m_hedge;
 
     Vertex(glm::vec3 p);
+
+    Vertex(const Vertex& v2);
 };

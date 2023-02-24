@@ -26,7 +26,7 @@ public:
     std::vector<uPtr<Face>> m_faces;
     std::vector<uPtr<HalfEdge>> m_hedges;
 
-    Mesh(OpenGLContext* mp_context);
+    Mesh(OpenGLContext* context);
     virtual GLenum drawMode();
     virtual void create();
 

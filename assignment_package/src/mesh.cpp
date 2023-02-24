@@ -3,7 +3,7 @@
 #include <iostream>
 #include <random>
 
-Mesh::Mesh(OpenGLContext* mp_context) : Drawable(mp_context)
+Mesh::Mesh(OpenGLContext* context) : Drawable(context)
 {}
 
 GLenum Mesh::drawMode() {

@@ -16,13 +16,13 @@ MainWindow::MainWindow(QWidget *parent) :
             this,
             SLOT(slot_addListItem(QListWidgetItem*)));
 
-    connect(ui->vertsListWidget, SIGNAL(itemChanged(QListWidgetItem*)),
+    connect(ui->vertsListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
             ui->mygl, SLOT(slot_setSelectedVertex(QListWidgetItem*)));
 
-    connect(ui->facesListWidget, SIGNAL(itemChanged(QListWidgetItem*)),
+    connect(ui->facesListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
             ui->mygl, SLOT(slot_setSelectedFace(QListWidgetItem*)));
 
-    connect(ui->halfEdgesListWidget, SIGNAL(itemChanged(QListWidgetItem*)),
+    connect(ui->halfEdgesListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
             ui->mygl, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
 
 }

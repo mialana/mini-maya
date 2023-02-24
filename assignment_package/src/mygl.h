@@ -7,6 +7,7 @@
 #include <scene/squareplane.h>
 #include "camera.h"
 #include "mesh.h"
+#include "display.h"
 
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLShaderProgram>
@@ -29,6 +30,8 @@ private:
     Vertex *mp_selectedVertex;
     Face *mp_selectedFace;
     HalfEdge *mp_selectedHedge;
+
+    VertexDisplay m_vertDisplay;
 
 public:
     Mesh m_meshCurrent;
