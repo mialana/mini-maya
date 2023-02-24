@@ -5,7 +5,7 @@
 class VertexDisplay : public Drawable
 {
 protected:
-    uPtr<Vertex> displayedVertex;
+    Vertex* displayedVertex;
 public:
     VertexDisplay(OpenGLContext* context);
 

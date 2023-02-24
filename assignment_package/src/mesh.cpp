@@ -23,18 +23,14 @@ void Mesh::create() {
         HalfEdge* curr = f->m_hedge;
 
         do {
-            glm::vec4 test = glm::vec4(curr->m_vert->m_pos.x, curr->m_vert->m_pos.y, curr->m_vert->m_pos.z, 1);
-            positions.push_back(test);
+            positions.push_back(glm::vec4(curr->m_vert->m_pos, 1));
 
-            // declare vectors that will deterine normal
             const glm::vec3 v1 = curr->next->m_vert->m_pos - curr->m_vert->m_pos;
             const glm::vec3 v2 = curr->next->next->m_vert->m_pos - curr->next->m_vert->m_pos;
             glm::vec3 n = glm::normalize(glm::cross(v1, v2));
-            glm::vec4 test2 = glm::vec4(n.x, n.y, n.z, 0);
-            normals.push_back(test2);
+            normals.push_back(glm::vec4(n, 0));
 
-            glm::vec4 test3 = glm::vec4(curr->m_face->m_color.x, curr->m_face->m_color.y, curr->m_face->m_color.z, 1);
-            colors.push_back(test3);
+            colors.push_back(glm::vec4(curr->m_face->m_color, 1));
             fVertNum++;
             curr = curr->next;
         } while (curr != f->m_hedge);

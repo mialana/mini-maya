@@ -11,8 +11,10 @@ MyGL::MyGL(QWidget *parent)
       m_geomSquare(this),
       m_progLambert(this),
       m_progFlat(this),
-      m_glCamera(), mp_selectedFace(nullptr),
+      m_glCamera(),
       m_vertDisplay(this),
+      m_faceDisplay(this),
+      m_hedgeDisplay(this),
       m_meshCurrent(this)
 {
     setFocusPolicy(Qt::StrongFocus);
@@ -57,6 +59,10 @@ void MyGL::initializeGL()
 
     m_vertDisplay.create();
 
+    m_faceDisplay.create();
+
+    m_hedgeDisplay.create();
+
     // Create and set up the diffuse shader
     m_progLambert.create(":/glsl/lambert.vert.glsl", ":/glsl/lambert.frag.glsl");
     // Create and set up the flat lighting shader
@@ -90,6 +96,8 @@ void MyGL::paintGL()
     // Clear the screen so that we only see newly drawn images
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    glPointSize(5);
+
     m_progFlat.setViewProjMatrix(m_glCamera.getViewProj());
     m_progFlat.setCamPos(m_glCamera.eye);
     m_progFlat.setModelMatrix(glm::mat4(1.f));
@@ -114,8 +122,9 @@ void MyGL::paintGL()
 
     glDisable(GL_DEPTH_TEST);
 
-    glPointSize(15);
     m_progFlat.draw(m_vertDisplay);
+    m_progFlat.draw(m_faceDisplay);
+    m_progFlat.draw(m_hedgeDisplay);
 
     glEnable(GL_DEPTH_TEST);
 
@@ -165,8 +174,8 @@ void MyGL::keyPressEvent(QKeyEvent *e)
 }
 
 void MyGL::slot_setSelectedVertex(QListWidgetItem *i) {
-    mp_selectedVertex = static_cast<Vertex*>(i);
-    m_vertDisplay.updateVertex(mp_selectedVertex);
+    Vertex* v = static_cast<Vertex*>(i);
+    m_vertDisplay.updateVertex(v);
     m_vertDisplay.destroy();
     m_vertDisplay.create();
 
@@ -174,11 +183,19 @@ void MyGL::slot_setSelectedVertex(QListWidgetItem *i) {
 }
 
 void MyGL::slot_setSelectedFace(QListWidgetItem *i) {
-    mp_selectedFace = static_cast<Face*>(i);
-    std::cout << mp_selectedFace->id << std::endl;
+    Face* f = static_cast<Face*>(i);
+    m_faceDisplay.updateFace(f);
+    m_faceDisplay.destroy();
+    m_faceDisplay.create();
+
+    update();
 }
 
 void MyGL::slot_setSelectedHedge(QListWidgetItem *i) {
-    mp_selectedHedge = static_cast<HalfEdge*>(i);
-    std::cout << mp_selectedHedge->id << std::endl;
+    HalfEdge* he = static_cast<HalfEdge*>(i);
+    m_hedgeDisplay.updateHedge(he);
+    m_hedgeDisplay.destroy();
+    m_hedgeDisplay.create();
+
+    update();
 }
