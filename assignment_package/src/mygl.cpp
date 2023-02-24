@@ -12,6 +12,9 @@ MyGL::MyGL(QWidget *parent)
       m_progLambert(this),
       m_progFlat(this),
       m_glCamera(),
+      mp_selectedVert(nullptr),
+      mp_selectedFace(nullptr),
+      mp_selectedHedge(nullptr),
       m_vertDisplay(this),
       m_faceDisplay(this),
       m_hedgeDisplay(this),
@@ -137,45 +140,52 @@ void MyGL::keyPressEvent(QKeyEvent *e)
     if(e->modifiers() & Qt::ShiftModifier){
         amount = 10.0f;
     }
-    // http://doc.qt.io/qt-5/qt.html#Key-enum
-    // This could all be much more efficient if a switch
-    // statement were used
-    if (e->key() == Qt::Key_Escape) {
-        QApplication::quit();
-    } else if (e->key() == Qt::Key_Right) {
-        m_glCamera.RotateAboutUp(-amount);
-    } else if (e->key() == Qt::Key_Left) {
-        m_glCamera.RotateAboutUp(amount);
-    } else if (e->key() == Qt::Key_Up) {
-        m_glCamera.RotateAboutRight(-amount);
-    } else if (e->key() == Qt::Key_Down) {
-        m_glCamera.RotateAboutRight(amount);
-    } else if (e->key() == Qt::Key_1) {
-        m_glCamera.fovy += amount;
-    } else if (e->key() == Qt::Key_2) {
-        m_glCamera.fovy -= amount;
-    } else if (e->key() == Qt::Key_W) {
-        m_glCamera.TranslateAlongLook(amount);
-    } else if (e->key() == Qt::Key_S) {
-        m_glCamera.TranslateAlongLook(-amount);
-    } else if (e->key() == Qt::Key_D) {
-        m_glCamera.TranslateAlongRight(amount);
-    } else if (e->key() == Qt::Key_A) {
-        m_glCamera.TranslateAlongRight(-amount);
-    } else if (e->key() == Qt::Key_Q) {
-        m_glCamera.TranslateAlongUp(-amount);
-    } else if (e->key() == Qt::Key_E) {
-        m_glCamera.TranslateAlongUp(amount);
-    } else if (e->key() == Qt::Key_R) {
-        m_glCamera = Camera(this->width(), this->height());
+
+    switch(e->key())
+    {
+    case Qt::Key_Escape : QApplication::quit(); break;
+    case Qt::Key_Right : m_glCamera.RotateAboutUp(-amount); break;
+    case Qt::Key_Left : m_glCamera.RotateAboutUp(amount); break;
+    case Qt::Key_Up : m_glCamera.RotateAboutRight(-amount);
+    case Qt::Key_Down : m_glCamera.RotateAboutRight(amount); break;
+    case Qt::Key_1 : m_glCamera.fovy += amount; break;
+    case Qt::Key_2 : m_glCamera.fovy -= amount;; break;
+    case Qt::Key_W : m_glCamera.TranslateAlongLook(amount); break;
+    case Qt::Key_S : m_glCamera.TranslateAlongLook(-amount); break;
+    case Qt::Key_D : m_glCamera.TranslateAlongRight(amount); break;
+    case Qt::Key_A :m_glCamera.TranslateAlongRight(-amount); break;
+    case Qt::Key_Q : m_glCamera.TranslateAlongUp(-amount);
+    case Qt::Key_E : m_glCamera.TranslateAlongUp(amount); break;
+    case Qt::Key_R : m_glCamera = Camera(this->width(), this->height()); break;
     }
+
     m_glCamera.RecomputeAttributes();
-    update();  // Calls paintGL, among other things
+
+    if (mp_selectedHedge != nullptr) {
+        switch(e->key())
+        {
+        case Qt::Key_N : slot_setSelectedHedge(mp_selectedHedge->next); return;
+        case Qt::Key_M : slot_setSelectedHedge(mp_selectedHedge->sym); return;
+        case Qt::Key_F : slot_setSelectedFace(mp_selectedHedge->m_face); return;
+        case Qt::Key_V : slot_setSelectedVertex(mp_selectedHedge->m_vert); return;
+        }
+    }
+
+    if (mp_selectedVert != nullptr && e->key() == Qt::Key_H) {
+        if (amount == 10.0f) {
+            slot_setSelectedHedge(mp_selectedFace->m_hedge);
+        } else {
+            slot_setSelectedHedge(mp_selectedVert->m_hedge);
+        }
+        return;
+    }
+
+    update();
 }
 
 void MyGL::slot_setSelectedVertex(QListWidgetItem *i) {
-    Vertex* v = static_cast<Vertex*>(i);
-    m_vertDisplay.updateVertex(v);
+    mp_selectedVert = static_cast<Vertex*>(i);
+    m_vertDisplay.updateVertex(mp_selectedVert);
     m_vertDisplay.destroy();
     m_vertDisplay.create();
 
@@ -183,8 +193,8 @@ void MyGL::slot_setSelectedVertex(QListWidgetItem *i) {
 }
 
 void MyGL::slot_setSelectedFace(QListWidgetItem *i) {
-    Face* f = static_cast<Face*>(i);
-    m_faceDisplay.updateFace(f);
+    mp_selectedFace = static_cast<Face*>(i);
+    m_faceDisplay.updateFace(mp_selectedFace);
     m_faceDisplay.destroy();
     m_faceDisplay.create();
 
@@ -192,8 +202,8 @@ void MyGL::slot_setSelectedFace(QListWidgetItem *i) {
 }
 
 void MyGL::slot_setSelectedHedge(QListWidgetItem *i) {
-    HalfEdge* he = static_cast<HalfEdge*>(i);
-    m_hedgeDisplay.updateHedge(he);
+    mp_selectedHedge = static_cast<HalfEdge*>(i);
+    m_hedgeDisplay.updateHedge(mp_selectedHedge);
     m_hedgeDisplay.destroy();
     m_hedgeDisplay.create();
 

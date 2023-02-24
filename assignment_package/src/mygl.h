@@ -27,6 +27,10 @@ private:
 
     Camera m_glCamera;
 
+    Vertex* mp_selectedVert;
+    Face* mp_selectedFace;
+    HalfEdge* mp_selectedHedge;
+
     VertexDisplay m_vertDisplay;
     FaceDisplay m_faceDisplay;
     HedgeDisplay m_hedgeDisplay;
