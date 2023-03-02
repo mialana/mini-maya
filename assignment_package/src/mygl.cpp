@@ -4,6 +4,7 @@
 #include <iostream>
 #include <QApplication>
 #include <QKeyEvent>
+#include <glm/gtx/string_cast.hpp>
 
 
 MyGL::MyGL(QWidget *parent)
@@ -75,6 +76,10 @@ void MyGL::initializeGL()
     // We have to have a VAO bound in OpenGL 3.2 Core. But if we're not
     // using multiple VAOs, we can just bind one once.
     glBindVertexArray(vao);
+
+
+//    glm::mat4 test = glm::translate(glm::mat4(), glm::vec3(0.f, 0.f, -5.f));
+//    std::cout << glm::to_string(test) << std::endl;
 }
 
 void MyGL::resizeGL(int w, int h)
@@ -146,15 +151,15 @@ void MyGL::keyPressEvent(QKeyEvent *e)
     case Qt::Key_Escape : QApplication::quit(); break;
     case Qt::Key_Right : m_glCamera.RotateAboutUp(-amount); break;
     case Qt::Key_Left : m_glCamera.RotateAboutUp(amount); break;
-    case Qt::Key_Up : m_glCamera.RotateAboutRight(-amount);
+    case Qt::Key_Up : m_glCamera.RotateAboutRight(-amount); break;
     case Qt::Key_Down : m_glCamera.RotateAboutRight(amount); break;
     case Qt::Key_1 : m_glCamera.fovy += amount; break;
-    case Qt::Key_2 : m_glCamera.fovy -= amount;; break;
+    case Qt::Key_2 : m_glCamera.fovy -= amount; break;
     case Qt::Key_W : m_glCamera.TranslateAlongLook(amount); break;
     case Qt::Key_S : m_glCamera.TranslateAlongLook(-amount); break;
     case Qt::Key_D : m_glCamera.TranslateAlongRight(amount); break;
     case Qt::Key_A :m_glCamera.TranslateAlongRight(-amount); break;
-    case Qt::Key_Q : m_glCamera.TranslateAlongUp(-amount);
+    case Qt::Key_Q : m_glCamera.TranslateAlongUp(-amount); break;
     case Qt::Key_E : m_glCamera.TranslateAlongUp(amount); break;
     case Qt::Key_R : m_glCamera = Camera(this->width(), this->height()); break;
     }

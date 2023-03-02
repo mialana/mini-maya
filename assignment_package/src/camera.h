@@ -17,6 +17,11 @@ public:
     float near_clip;  // Near clip plane distance
     float far_clip;  // Far clip plane distance
 
+    const glm::vec4 u_eye = glm::vec4(0, 0, 0, 1);
+    const glm::vec4 u_look = glm::vec4(0, 0, 1, 0);
+    const glm::vec4 u_up = glm::vec4(0, 1, 0, 0);
+    const glm::vec4 u_right = glm::vec4(1, 0, 0, 0);
+
     //Computed attributes
     float aspect;
 
@@ -29,6 +34,10 @@ public:
               V,        //Represents the vertical component of the plane of the viewing frustum that passes through the camera's reference point. Used in Camera::Raycast.
               H;        //Represents the horizontal component of the plane of the viewing frustum that passes through the camera's reference point. Used in Camera::Raycast.
 
+    float theta;
+    float phi;
+    float radius;
+
     void operator=(const Camera &c);
 
     glm::mat4 getViewProj();
@@ -37,6 +46,9 @@ public:
 
     void RotateAboutUp(float deg);
     void RotateAboutRight(float deg);
+
+    void RotateTheta(float theta);
+    void RotatePhi(float phi);
 
     void TranslateAlongLook(float amt);
     void TranslateAlongRight(float amt);

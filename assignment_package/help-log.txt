@@ -5,3 +5,8 @@ trouble with circular dependencies with vertices faces and half edges.
 
 https://en.cppreference.com/w/cpp/numeric/random/random_device - used cuz i wanted to implement
 a randomizer class to make coloring more efficient.
+
+https://glm.g-truc.net/0.9.4/api/a00136.html - used site to find out documentation for glm arccos and arctan
+
+https://glm.g-truc.net/0.9.4/api/a00206.html - used site to learn more about translate and rotate functionalities
+

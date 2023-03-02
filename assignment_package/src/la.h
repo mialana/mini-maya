@@ -2,10 +2,12 @@
 #define LA
 #define GLM_CIS460  // Don't copy this include!
 #define GLM_FORCE_RADIANS
+#define GLM_SWIZZLE
 // Primary GLM library
 #    include <glm/glm.hpp>
 // For glm::translate, glm::rotate, and glm::scale.
 #    include <glm/gtc/matrix_transform.hpp>
+#    include <glm/gtx/transform.hpp>
 // For glm::value_ptr.
 #    include <glm/gtc/type_ptr.hpp>
 //#undef GLM_CIS460
