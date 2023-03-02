@@ -18,9 +18,6 @@ public:
     float far_clip;  // Far clip plane distance
 
     const glm::vec4 u_eye = glm::vec4(0, 0, 0, 1);
-    const glm::vec4 u_look = glm::vec4(0, 0, 1, 0);
-    const glm::vec4 u_up = glm::vec4(0, 1, 0, 0);
-    const glm::vec4 u_right = glm::vec4(1, 0, 0, 0);
 
     //Computed attributes
     float aspect;
@@ -46,9 +43,6 @@ public:
 
     void RotateAboutUp(float deg);
     void RotateAboutRight(float deg);
-
-    void RotateTheta(float theta);
-    void RotatePhi(float phi);
 
     void TranslateAlongLook(float amt);
     void TranslateAlongRight(float amt);

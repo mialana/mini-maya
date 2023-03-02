@@ -149,14 +149,14 @@ void MyGL::keyPressEvent(QKeyEvent *e)
     switch(e->key())
     {
     case Qt::Key_Escape : QApplication::quit(); break;
-    case Qt::Key_Right : m_glCamera.RotateAboutUp(-amount); break;
-    case Qt::Key_Left : m_glCamera.RotateAboutUp(amount); break;
+    case Qt::Key_Right : m_glCamera.RotateAboutUp(amount); break;
+    case Qt::Key_Left : m_glCamera.RotateAboutUp(-amount); break;
     case Qt::Key_Up : m_glCamera.RotateAboutRight(-amount); break;
     case Qt::Key_Down : m_glCamera.RotateAboutRight(amount); break;
     case Qt::Key_1 : m_glCamera.fovy += amount; break;
     case Qt::Key_2 : m_glCamera.fovy -= amount; break;
-    case Qt::Key_W : m_glCamera.TranslateAlongLook(amount); break;
-    case Qt::Key_S : m_glCamera.TranslateAlongLook(-amount); break;
+    case Qt::Key_W : m_glCamera.TranslateAlongLook(-amount); break;
+    case Qt::Key_S : m_glCamera.TranslateAlongLook(amount); break;
     case Qt::Key_D : m_glCamera.TranslateAlongRight(amount); break;
     case Qt::Key_A :m_glCamera.TranslateAlongRight(-amount); break;
     case Qt::Key_Q : m_glCamera.TranslateAlongUp(-amount); break;
