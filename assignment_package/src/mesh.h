@@ -26,10 +26,10 @@ class Mesh : public Drawable
 {
 private:
     void findCentroids(std::unordered_map<Face*, Vertex*>& centroids);
-    void computeSmoothedMidpoints(std::unordered_map<Face*, Vertex*>& centroids);
-    void smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroids,
-                                int n);
-    void quadrangulate(Face *f, std::unordered_map<Face*, Vertex*>& centroids);
+    void computeSmoothedMidpoints(std::unordered_map<Face*, Vertex*>& centroids,
+                                  std::unordered_map<HalfEdge*, glm::vec3>& midMap);
+    void smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroids, int n);
+    void quadrangulate(std::unordered_map<Face*, Vertex*>& centroids, int n);
 public:   
     static HalfEdge* findHedgeBefore(HalfEdge* he);
 

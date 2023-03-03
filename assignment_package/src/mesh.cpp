@@ -155,8 +155,8 @@ HalfEdge* Mesh::findHedgeBefore(HalfEdge* he) {
 void Mesh::splitHedge(HalfEdge* he1, HalfEdge* he2, Vertex* v1, Vertex* v2, glm::vec3 pos) {
     uPtr<Vertex> v3Uptr = mkU<Vertex>(pos);
 
-    uPtr<HalfEdge> he1bUptr = mkU<HalfEdge>(he1->next, nullptr, nullptr, nullptr);
-    uPtr<HalfEdge> he2bUptr = mkU<HalfEdge>(he2->next, nullptr, nullptr, nullptr);
+    uPtr<HalfEdge> he1bUptr = mkU<HalfEdge>();
+    uPtr<HalfEdge> he2bUptr = mkU<HalfEdge>();
 
     Vertex* v3 = v3Uptr.get();
     HalfEdge* he1b = he1bUptr.get();
@@ -165,6 +165,9 @@ void Mesh::splitHedge(HalfEdge* he1, HalfEdge* he2, Vertex* v1, Vertex* v2, glm:
     this->m_verts.push_back(std::move(v3Uptr));
     this->m_hedges.push_back(std::move(he1bUptr));
     this->m_hedges.push_back(std::move(he2bUptr));
+
+    he1b->next = he1->next;
+    he2b->next = he2->next;
 
     he1b->m_vert = v1;
     he1b->m_face = he1->m_face;
@@ -175,7 +178,7 @@ void Mesh::splitHedge(HalfEdge* he1, HalfEdge* he2, Vertex* v1, Vertex* v2, glm:
     he1->next = he1b;
     he2->next = he2b;
 
-    he1->m_vert = v3;
+    he1->setVert(v3);
     he2->m_vert = v3;
 
     he1->symWith(he2b);
@@ -237,14 +240,26 @@ void Mesh::subdivideMesh() {
     std::unordered_map<Face*, Vertex*> centroids;
     this->findCentroids(centroids);
 
-    this->computeSmoothedMidpoints(centroids);
+    std::unordered_map<HalfEdge*, glm::vec3> midMap;
+    this->computeSmoothedMidpoints(centroids, midMap);
+
+    std::unordered_set<HalfEdge*> hedgesSplit;
+
+    int numHedges = this->m_hedges.size();
+    for (int i = 0; i < numHedges; i++) {
+        HalfEdge* curr = this->m_hedges[i].get();
+        if (!hedgesSplit.count(curr) && !hedgesSplit.count(curr->sym)) {
+            this->splitHedge(curr, curr->sym, curr->m_vert, curr->sym->m_vert, midMap.at(curr));
+
+            std::cout << "midmap value: " << glm::to_string(midMap.at(curr)) << std::endl;
+            hedgesSplit.insert(curr);
+            hedgesSplit.insert(curr->sym);
+        }
+    }
 
     smoothOrigVerts(centroids, origVertsNum);
 
-    for (int i = 0; i < origFacesNum; i++) {
-        Face* f = this->m_faces[i].get();
-        quadrangulate(f, centroids);
-    }
+    quadrangulate(centroids, origFacesNum);
 }
 
 void Mesh::findCentroids(std::unordered_map<Face*, Vertex*>& centroids) {
@@ -270,31 +285,27 @@ void Mesh::findCentroids(std::unordered_map<Face*, Vertex*>& centroids) {
 
         centroid->m_pos = vertSum;
 
-        centroids.insert(std::pair<Face*, Vertex*>(f, centroid));
+        centroids.insert(std::make_pair(f, centroid));
     }
 }
 
-void Mesh::computeSmoothedMidpoints(std::unordered_map<Face*, Vertex*>& centroids) {
-    std::unordered_set<HalfEdge*> hedgesSplit;
+void Mesh::computeSmoothedMidpoints(std::unordered_map<Face*, Vertex*>& centroids,
+                                    std::unordered_map<HalfEdge*, glm::vec3>& midMap) {
+
     int numHedges = this->m_hedges.size();
     for (int i = 0; i < numHedges; i++) {
         HalfEdge* curr = this->m_hedges[i].get();
-        if (!hedgesSplit.count(curr) && !hedgesSplit.count(curr->sym)) {
-            HalfEdge* he2 = curr->sym;
+        HalfEdge* he2 = curr->sym;
 
-            Vertex* v1 = curr->m_vert;
-            Vertex* v2 = he2->m_vert;
+        Vertex* v1 = curr->m_vert;
+        Vertex* v2 = he2->m_vert;
 
-            glm::vec3 f1Pos = centroids.at(curr->m_face)->m_pos;
-            glm::vec3 f2Pos = centroids.at(curr->sym->m_face)->m_pos;
+        glm::vec3 f1Pos = centroids.at(curr->m_face)->m_pos;
+        glm::vec3 f2Pos = centroids.at(he2->m_face)->m_pos;
 
-            glm::vec3 e = (v1->m_pos + v2->m_pos + f1Pos + f2Pos) / 4.f;
+        glm::vec3 e = (v1->m_pos + v2->m_pos + f1Pos + f2Pos) / 4.f;
 
-            this->splitHedge(curr, he2, v1, v2, e);
-
-            hedgesSplit.insert(curr);
-            hedgesSplit.insert(curr->sym);
-        }
+        midMap.insert(std::make_pair(curr, e));
     }
 }
 
@@ -309,65 +320,111 @@ void Mesh::smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroids, int or
         HalfEdge* curr = start;
         do {
             if (curr != nullptr) {
-                Face* currFace = curr->m_face;
-                sumCent += centroids.at(currFace)->m_pos;
+//                curr = curr->next;
+//                Face* currFace = curr->m_face;
+//                sumCent += centroids.at(currFace)->m_pos;
 
-                curr = curr->next;
-                sumMid += curr->m_vert->m_pos;
+
+//                sumMid += curr->m_vert->m_pos;
+//                midCt++;
+//                curr = curr->sym;
+
+
                 midCt++;
-                curr = curr->sym;
+                std::cout << glm::to_string(curr->next->m_vert->m_pos) << std::endl;
+                sumMid += curr->next->m_vert->m_pos;
+                if(curr->m_face != nullptr) {
+                    sumCent += centroids.at(curr->m_face)->m_pos;
+                }
+                curr = curr->next->sym;
+
+//                midCt++;
+//                sumMid += curr->m_vert->m_pos;
+
+//                curr = curr->next->sym;
             }
         } while (curr != start);
 
-        v->m_pos = ((midCt - 2.f) * v->m_pos / midCt) +
-                (sumMid / glm::pow(midCt, 2.f)) +
-                (sumCent / glm::pow(midCt, 2.f));
+        std::cout << "old pos" << glm::to_string(this->m_verts[i].get()->m_pos) << std::endl;
+        std::cout << "sumMid: " << glm::to_string(sumMid) << std::endl;
+        std::cout << "sumCent: " << glm::to_string(sumCent) << std::endl;
+        std::cout << midCt << std::endl;
+
+        glm::vec3 newPos = v->m_pos;
+        newPos *= (midCt - 2);
+        newPos /= midCt;
+
+        sumMid /= (midCt * midCt);
+        sumCent /= (midCt * midCt);
+
+        newPos += sumMid + sumCent;
+
+        this->m_verts[i].get()->m_pos = newPos;
+
+//        glm::vec3 firstTerm = sumCent / (midCt * midCt);
+//        glm::vec3 secondTerm = sumMid / (midCt * midCt);
+//        glm::vec3 newV = (midCt - 2.f) * v->m_pos;
+//        newV = newV / midCt;
+//        newV = newV + secondTerm + firstTerm;
+
+//        v->m_pos = newV;
+
+        std::cout << glm::to_string(this->m_verts[i].get()->m_pos) << std::endl;
     }
 }
 
-void Mesh::quadrangulate(Face *f, std::unordered_map<Face*, Vertex*>& centroids) {
-    HalfEdge* origCurr = f->m_hedge;
-    HalfEdge* curr = f->m_hedge;
+void Mesh::quadrangulate(std::unordered_map<Face*, Vertex*>& centroids, int origFacesNum) {
+    for (int i = 0; i < origFacesNum; i++) {
+        Face* f = this->m_faces[i].get();
 
-    HalfEdge* prevToCentroid = nullptr;
-    HalfEdge* firstFromCentroid = nullptr;
+        HalfEdge* origCurr = f->m_hedge;
+        HalfEdge* curr = origCurr;
 
-    do {
-        uPtr<HalfEdge> tcUptr = mkU<HalfEdge>(nullptr, nullptr, centroids[f], nullptr);
-        uPtr<HalfEdge> fcUptr = mkU<HalfEdge>(curr, nullptr, curr->sym->m_vert, nullptr);
+        HalfEdge* prevToCentroid = nullptr;
+        HalfEdge* firstFromCentroid = nullptr;
 
-        HalfEdge* toCentroid = tcUptr.get();
-        HalfEdge* fromCentroid = fcUptr.get();
+        do {
+            uPtr<HalfEdge> tcUptr = mkU<HalfEdge>();
+            uPtr<HalfEdge> fcUptr = mkU<HalfEdge>();
 
-        this->m_hedges.push_back(std::move(tcUptr));
-        this->m_hedges.push_back(std::move(fcUptr));
+            HalfEdge* toCentroid = tcUptr.get();
+            HalfEdge* fromCentroid = fcUptr.get();
 
-        toCentroid->next = fromCentroid;
+            this->m_hedges.push_back(std::move(tcUptr));
+            this->m_hedges.push_back(std::move(fcUptr));
 
-        if (prevToCentroid != nullptr) {
-            fromCentroid->symWith(prevToCentroid);
-        }
+            toCentroid->m_vert = centroids.at(f);
+            fromCentroid->next = curr;
 
-        if (firstFromCentroid == nullptr) {
-            firstFromCentroid = fromCentroid;
+            fromCentroid->m_vert = curr->sym->m_vert;
+            toCentroid->next = fromCentroid;
 
-            toCentroid->setFace(f);
-            fromCentroid->setFace(f);
-        } else {
-            uPtr<Face> newFace = mkU<Face>(Randomizer().get_randVec3());
-            toCentroid->m_face = newFace.get();
-            fromCentroid->m_face = newFace.get();
-            curr->next->m_face = newFace.get();
-            curr->setFace(newFace.get());
+            if (prevToCentroid != nullptr) {
+                fromCentroid->symWith(prevToCentroid);
+            }
 
-            this->m_faces.push_back(std::move(newFace));
-        }
+            if (firstFromCentroid == nullptr) {
+                firstFromCentroid = fromCentroid;
+                toCentroid->m_face = f;
+                fromCentroid->m_face = f;
+            } else {
+                uPtr<Face> nfUptr = mkU<Face>(Randomizer().get_randVec3());
+                Face* newFace = nfUptr.get();
+                this->m_faces.push_back(std::move(nfUptr));
 
-        HalfEdge* savedNext = curr->next;
-        curr = curr->next->next;
-        savedNext->next = toCentroid;
-        prevToCentroid = toCentroid;
-    } while (curr != origCurr);
+                curr->next->m_face = newFace;
+                toCentroid->m_face = newFace;
+                fromCentroid->m_face = newFace;
+                curr->setFace(newFace);
+            }
 
-    prevToCentroid->symWith(firstFromCentroid);
+            HalfEdge* savedNext = curr->next;
+            curr = curr->next->next;
+            savedNext->next = toCentroid;
+            prevToCentroid = toCentroid;
+        } while (curr != origCurr);
+
+        prevToCentroid->symWith(firstFromCentroid);
+
+    }
 }
