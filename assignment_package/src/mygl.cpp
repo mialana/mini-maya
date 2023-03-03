@@ -261,3 +261,27 @@ void MyGL::slot_translateZ(double newZ) {
         updateAll();
     }
 }
+
+void MyGL::slot_changeRed(double newRed) {
+    if (mp_selectedFace != nullptr) {
+        mp_selectedFace->m_color.r = newRed;
+
+        updateAll();
+    }
+}
+
+void MyGL::slot_changeGreen(double newGreen) {
+    if (mp_selectedFace != nullptr) {
+        mp_selectedFace->m_color.g = newGreen;
+
+        updateAll();
+    }
+}
+
+void MyGL::slot_changeBlue(double newBlue) {
+    if (mp_selectedFace != nullptr) {
+        mp_selectedFace->m_color.b = newBlue;
+
+        updateAll();
+    }
+}

@@ -56,6 +56,10 @@ public slots:
     void slot_translateY(double);
     void slot_translateZ(double);
 
+    void slot_changeRed(double);
+    void slot_changeGreen(double);
+    void slot_changeBlue(double);
+
 signals:
     void sig_sendListItem(QListWidgetItem*);
     void sig_setSelectedVert(QListWidgetItem*);

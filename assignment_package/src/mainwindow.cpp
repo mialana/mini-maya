@@ -31,13 +31,13 @@ MainWindow::MainWindow(QWidget *parent) :
             this, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
 
 
-    connect(ui->vertsListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
+    connect(ui->vertsListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
             this, SLOT(slot_setSelectedVert(QListWidgetItem*)));
 
-    connect(ui->facesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
+    connect(ui->facesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
             this, SLOT(slot_setSelectedFace(QListWidgetItem*)));
 
-    connect(ui->halfEdgesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
+    connect(ui->halfEdgesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
             this, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
 
 
@@ -57,8 +57,16 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->vertPosZSpinBox, SIGNAL(valueChanged(double)),
             ui->mygl, SLOT(slot_translateZ(double)));
 
-}
+    connect(ui->faceRedSpinBox, SIGNAL(valueChanged(double)),
+            ui->mygl, SLOT(slot_changeRed(double)));
 
+    connect(ui->faceGreenSpinBox, SIGNAL(valueChanged(double)),
+            ui->mygl, SLOT(slot_changeGreen(double)));
+
+    connect(ui->faceBlueSpinBox, SIGNAL(valueChanged(double)),
+            ui->mygl, SLOT(slot_changeBlue(double)));
+
+}
 
 void MainWindow::slot_setSelectedVert(QListWidgetItem *i) {
     ui->mygl->mp_selectedVert = static_cast<Vertex*>(i);
@@ -82,6 +90,10 @@ void MainWindow::slot_setSelectedFace(QListWidgetItem *i) {
     ui->mygl->m_faceDisplay.create();
 
     ui->facesListWidget->setCurrentItem(i);
+
+    ui->faceRedSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.r);
+    ui->faceGreenSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.g);
+    ui->faceBlueSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.b);
 
     ui->mygl->update();
 }
