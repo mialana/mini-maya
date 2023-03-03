@@ -17,8 +17,6 @@ public:
     float near_clip;  // Near clip plane distance
     float far_clip;  // Far clip plane distance
 
-    const glm::vec4 u_eye = glm::vec4(0, 0, 0, 1);
-
     //Computed attributes
     float aspect;
 
@@ -47,4 +45,7 @@ public:
     void TranslateAlongLook(float amt);
     void TranslateAlongRight(float amt);
     void TranslateAlongUp(float amt);
+
+private:
+    void updateEye();
 };

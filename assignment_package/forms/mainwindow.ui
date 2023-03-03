@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1057</width>
-    <height>492</height>
+    <height>623</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -102,214 +102,186 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="vertPosXSpinBox">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>720</x>
-      <y>320</y>
-      <width>62</width>
-      <height>22</height>
+      <x>380</x>
+      <y>470</y>
+      <width>251</width>
+      <height>101</height>
      </rect>
     </property>
-    <property name="minimum">
-     <double>-99.989999999999995</double>
-    </property>
+    <layout class="QFormLayout" name="formLayout">
+     <item row="0" column="0" colspan="2">
+      <layout class="QGridLayout" name="gridLayout_2">
+       <item row="0" column="0">
+        <widget class="QPushButton" name="splitEdge">
+         <property name="text">
+          <string>Split Edge</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1">
+        <widget class="QPushButton" name="triangulateFace">
+         <property name="text">
+          <string>Triangulate Face</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="subdivide">
+         <property name="text">
+          <string>Subdivide</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QPushButton" name="bindSkeleton">
+         <property name="text">
+          <string>Bind Skeleton</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+    </layout>
    </widget>
-   <widget class="QDoubleSpinBox" name="vertPosYSpinBox">
+   <widget class="QWidget" name="">
     <property name="geometry">
      <rect>
-      <x>800</x>
-      <y>320</y>
-      <width>62</width>
-      <height>22</height>
+      <x>20</x>
+      <y>470</y>
+      <width>341</width>
+      <height>101</height>
      </rect>
     </property>
-    <property name="minimum">
-     <double>-99.989999999999995</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="vertPosZSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>880</x>
-      <y>320</y>
-      <width>62</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <double>-99.989999999999995</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>320</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Vertex Position</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_5">
-    <property name="geometry">
-     <rect>
-      <x>720</x>
-      <y>340</y>
-      <width>61</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>X</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_6">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>340</y>
-      <width>61</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Y</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_7">
-    <property name="geometry">
-     <rect>
-      <x>880</x>
-      <y>340</y>
-      <width>61</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Z</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_8">
-    <property name="geometry">
-     <rect>
-      <x>880</x>
-      <y>390</y>
-      <width>61</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Blue</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_9">
-    <property name="geometry">
-     <rect>
-      <x>720</x>
-      <y>390</y>
-      <width>61</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Red</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="faceBlueSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>880</x>
-      <y>370</y>
-      <width>62</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <double>1.000000000000000</double>
-    </property>
-    <property name="singleStep">
-     <double>0.050000000000000</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_10">
-    <property name="geometry">
-     <rect>
-      <x>640</x>
-      <y>370</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Face Color</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="faceGreenSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>370</y>
-      <width>62</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <double>1.000000000000000</double>
-    </property>
-    <property name="singleStep">
-     <double>0.050000000000000</double>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="faceRedSpinBox">
-    <property name="geometry">
-     <rect>
-      <x>720</x>
-      <y>370</y>
-      <width>62</width>
-      <height>22</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <double>1.000000000000000</double>
-    </property>
-    <property name="singleStep">
-     <double>0.050000000000000</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_11">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>390</y>
-      <width>61</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Green</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
+    <layout class="QGridLayout" name="gridLayout">
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Vertex Position</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QDoubleSpinBox" name="vertPosXSpinBox">
+       <property name="minimum">
+        <double>-99.989999999999995</double>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QDoubleSpinBox" name="vertPosYSpinBox">
+       <property name="minimum">
+        <double>-99.989999999999995</double>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QDoubleSpinBox" name="vertPosZSpinBox">
+       <property name="minimum">
+        <double>-99.989999999999995</double>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>X</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Y</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Z</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>Face Color</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QDoubleSpinBox" name="faceRedSpinBox">
+       <property name="maximum">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.050000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QDoubleSpinBox" name="faceGreenSpinBox">
+       <property name="maximum">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.050000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QDoubleSpinBox" name="faceBlueSpinBox">
+       <property name="maximum">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>0.050000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>Red</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>Green</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Blue</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

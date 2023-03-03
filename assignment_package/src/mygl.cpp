@@ -5,6 +5,7 @@
 #include <QApplication>
 #include <QKeyEvent>
 #include <glm/gtx/string_cast.hpp>
+#include "mesh.h"
 
 
 MyGL::MyGL(QWidget *parent)
@@ -59,6 +60,9 @@ void MyGL::initializeGL()
     //Create the instances of Cylinder and Sphere.
     m_geomSquare.create();
 
+    // ignore
+    m_meshCurrent.loadObj(QString("/Users/liu.amy05/Desktop/cis-4600/hw-projects/hw05-06-07/obj_files/cube.obj"));
+    m_meshCurrent.destroy();
     m_meshCurrent.create();
 
     m_vertDisplay.create();
@@ -76,7 +80,6 @@ void MyGL::initializeGL()
     // We have to have a VAO bound in OpenGL 3.2 Core. But if we're not
     // using multiple VAOs, we can just bind one once.
     glBindVertexArray(vao);
-
 
 //    glm::mat4 test = glm::translate(glm::mat4(), glm::vec3(0.f, 0.f, -5.f));
 //    std::cout << glm::to_string(test) << std::endl;
@@ -175,12 +178,19 @@ void MyGL::keyPressEvent(QKeyEvent *e)
         case Qt::Key_V : slot_setSelectedVertex(mp_selectedHedge->m_vert); return;
         }
     }
+    std::cout << "called" << std::endl;
 
-    if (mp_selectedVert != nullptr && e->key() == Qt::Key_H) {
+    if (e->key() == Qt::Key_H) {
+        std::cout << "called" << std::endl;
         if (amount == 10.0f) {
-            slot_setSelectedHedge(mp_selectedFace->m_hedge);
+            if (mp_selectedFace != nullptr) {
+                slot_setSelectedHedge(mp_selectedFace->m_hedge);
+                std::cout << "called" << std::endl;
+            }
         } else {
-            slot_setSelectedHedge(mp_selectedVert->m_hedge);
+            if (mp_selectedVert != nullptr) {
+                slot_setSelectedHedge(mp_selectedVert->m_hedge);
+            }
         }
         return;
     }
@@ -213,4 +223,82 @@ void MyGL::slot_setSelectedHedge(QListWidgetItem *i) {
     m_hedgeDisplay.create();
 
     update();
+}
+
+void MyGL::slot_splitHedge() {
+    if (mp_selectedHedge != nullptr) {
+        HalfEdge* he1 = mp_selectedHedge;
+        HalfEdge* he2 = he1->sym;
+        Vertex* v1 = he1->m_vert;
+        Vertex* v2 = he2->m_vert;
+
+        uPtr<Vertex> v3 = mkU<Vertex>((v1->m_pos + v2->m_pos) / 2.f);
+
+        uPtr<HalfEdge> he1b = mkU<HalfEdge>(he1->next, nullptr, nullptr, nullptr);
+        uPtr<HalfEdge> he2b = mkU<HalfEdge>(he2->next, nullptr, nullptr, nullptr);
+
+        he1b->setVert(v1);
+        he1b->setFace(he1->m_face);
+
+        he2b->setVert(v2);
+        he2b->setFace(he2->m_face);
+
+        he1->next = he1b.get();
+        he2->next = he2b.get();
+
+        he1->m_vert = v3.get();
+        he2->m_vert = v3.get();
+
+        he1->sym = he2b.get();
+        he2->sym = he1b.get();
+
+        he2b->sym = he1;
+        he1b->sym = he2;
+
+        m_meshCurrent.m_hedges.push_back(std::move(he1b));
+        m_meshCurrent.m_hedges.push_back(std::move(he2b));
+
+        m_meshCurrent.m_verts.push_back(std::move(v3));
+
+        m_hedgeDisplay.updateHedge(mp_selectedHedge);
+        m_hedgeDisplay.destroy();
+        m_hedgeDisplay.create();
+
+        update();
+    }
+}
+
+void MyGL::slot_triangulateFace() {
+    if (mp_selectedFace != nullptr) {
+        HalfEdge* he_0 = mp_selectedFace->m_hedge;
+
+        uPtr<HalfEdge> he_a = mkU<HalfEdge>(nullptr, nullptr, he_0->m_vert, nullptr);
+        uPtr<HalfEdge> he_b = mkU<HalfEdge>(nullptr, nullptr, he_0->next->next->m_vert, nullptr);
+
+        he_a->symWith(he_b.get());
+
+        uPtr<Face> face2 = mkU<Face>(Randomizer().get_randVec3());
+
+        he_0->setFace(face2.get());
+        he_0->next->next->setFace(face2.get());
+        he_a->setFace(face2.get());
+
+        he_b->setFace(mp_selectedFace);
+
+        he_b->next = he_0->next->next->next;
+        he_0->next->next->next = he_a.get();
+        he_a->next = he_0->next;
+        he_0->next = he_b.get();
+
+        m_meshCurrent.m_hedges.push_back(std::move(he_a));
+        m_meshCurrent.m_hedges.push_back(std::move(he_b));
+
+        m_meshCurrent.m_faces.push_back(std::move(face2));
+
+        m_faceDisplay.updateFace(mp_selectedFace);
+        m_faceDisplay.destroy();
+        m_faceDisplay.create();
+
+        update();
+    }
 }

@@ -15,6 +15,7 @@ public:
     Face* m_face;
 
     HalfEdge();
+    HalfEdge(HalfEdge* n, HalfEdge* s, Vertex* v, Face*);
 
     bool operator==(const HalfEdge &he2) const;
     bool operator!=(const HalfEdge &he2) const;

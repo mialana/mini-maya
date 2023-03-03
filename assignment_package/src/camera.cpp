@@ -93,39 +93,21 @@ glm::mat4 Camera::getViewProj()
 void Camera::RotateAboutUp(float deg)
 {
     theta += glm::radians(deg);
-    eye = glm::vec3(
-                glm::rotate(theta, glm::vec3(0.f, 1.f, 0.f)) *
-                glm::rotate(phi, glm::vec3(1.f, 0.f, 0.f)) *
-                glm::translate(glm::vec3(0.f, 0.f, radius)) *
-                glm::vec4(ref, 1));
-
+    updateEye();
     RecomputeAttributes();
 }
+
 void Camera::RotateAboutRight(float deg)
 {
     phi += glm::radians(deg);
-    eye = glm::vec3(
-                glm::rotate(theta, glm::vec3(0.f, 1.f, 0.f)) *
-                glm::rotate(phi, glm::vec3(1.f, 0.f, 0.f)) *
-                glm::translate(glm::vec3(0.f, 0.f, radius)) *
-                glm::vec4(ref, 1));
-
+    updateEye();
     RecomputeAttributes();
 }
 
 void Camera::TranslateAlongLook(float amt)
 {
-//    glm::vec3 translation = look * amt;
-//    eye += translation;
-//    ref += translation;
-
-
     radius += amt;
-    eye = glm::vec3(
-                glm::rotate(theta, glm::vec3(0.f, 1.f, 0.f)) *
-                glm::rotate(phi, glm::vec3(1.f, 0.f, 0.f)) *
-                glm::translate(glm::vec3(0.f, 0.f, radius)) *
-                glm::vec4(ref, 1));
+    updateEye();
     RecomputeAttributes();
 }
 
@@ -135,9 +117,18 @@ void Camera::TranslateAlongRight(float amt)
     eye += translation;
     ref += translation;
 }
+
 void Camera::TranslateAlongUp(float amt)
 {
     glm::vec3 translation = up * amt;
     eye += translation;
     ref += translation;
+}
+
+void Camera::updateEye() {
+    eye = glm::vec3(
+                glm::rotate(theta, glm::vec3(0.f, 1.f, 0.f)) *
+                glm::rotate(phi, glm::vec3(1.f, 0.f, 0.f)) *
+                glm::translate(glm::vec3(0.f, 0.f, radius)) *
+                glm::vec4(ref, 1));
 }

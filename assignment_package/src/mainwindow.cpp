@@ -25,6 +25,12 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->halfEdgesListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
             ui->mygl, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
 
+    connect(ui->splitEdge, SIGNAL(clicked()),
+            ui->mygl, SLOT(slot_splitHedge()));
+
+    connect(ui->triangulateFace, SIGNAL(clicked()),
+            ui->mygl, SLOT(slot_triangulateFace()));
+
 }
 
 MainWindow::~MainWindow()

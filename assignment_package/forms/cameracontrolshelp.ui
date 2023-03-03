@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>414</width>
+    <width>514</width>
     <height>184</height>
    </rect>
   </property>
@@ -80,10 +80,10 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>30</y>
-     <width>141</width>
-     <height>21</height>
+     <x>330</x>
+     <y>34</y>
+     <width>170</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
@@ -96,10 +96,10 @@
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>10</y>
-     <width>151</width>
-     <height>21</height>
+     <x>330</x>
+     <y>11</y>
+     <width>170</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
@@ -112,10 +112,10 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>70</y>
-     <width>151</width>
-     <height>21</height>
+     <x>330</x>
+     <y>79</y>
+     <width>170</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
@@ -128,10 +128,10 @@
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>50</y>
-     <width>131</width>
-     <height>21</height>
+     <x>330</x>
+     <y>56</y>
+     <width>170</width>
+     <height>16</height>
     </rect>
    </property>
    <property name="text">
@@ -221,9 +221,9 @@
   <widget class="QLabel" name="label_11">
    <property name="geometry">
     <rect>
-     <x>150</x>
-     <y>100</y>
-     <width>251</width>
+     <x>330</x>
+     <y>140</y>
+     <width>161</width>
      <height>31</height>
     </rect>
    </property>
@@ -235,6 +235,97 @@
    </property>
    <property name="wordWrap">
     <bool>true</bool>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_12">
+   <property name="geometry">
+    <rect>
+     <x>141</x>
+     <y>11</y>
+     <width>171</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>N: Next half-edge</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_15">
+   <property name="geometry">
+    <rect>
+     <x>141</x>
+     <y>34</y>
+     <width>171</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>M: Sym half-edge</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_16">
+   <property name="geometry">
+    <rect>
+     <x>141</x>
+     <y>56</y>
+     <width>171</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>V: Half-edge's vertex</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_17">
+   <property name="geometry">
+    <rect>
+     <x>141</x>
+     <y>79</y>
+     <width>171</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>F: Half-edge's face</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_18">
+   <property name="geometry">
+    <rect>
+     <x>141</x>
+     <y>101</y>
+     <width>171</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>H: Vertex's half-edge</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_19">
+   <property name="geometry">
+    <rect>
+     <x>141</x>
+     <y>126</y>
+     <width>171</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Shift + H: Face's half-edge</string>
+   </property>
+  </widget>
+  <widget class="Line" name="line_2">
+   <property name="geometry">
+    <rect>
+     <x>300</x>
+     <y>10</y>
+     <width>31</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Vertical</enum>
    </property>
   </widget>
  </widget>

@@ -1,7 +1,6 @@
 #include "mesh.h"
 #include <QFileDialog>
 #include <iostream>
-#include <random>
 
 Mesh::Mesh(OpenGLContext* context) : Drawable(context)
 {}
@@ -96,7 +95,7 @@ void Mesh::loadObj(QString filename) {
     QFile file(filename);
 
     if(!file.open(QIODevice::ReadOnly)){
-        qWarning("Could not open the JSON file.");
+        qWarning("Could not open the file.");
         return;
     }
 

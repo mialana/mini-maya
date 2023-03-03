@@ -4,17 +4,17 @@
 
 int HalfEdge::population = 0;
 
-HalfEdge::HalfEdge() {
+HalfEdge::HalfEdge(HalfEdge* n, HalfEdge* s, Vertex* v, Face* f)
+    : next(n), sym(s), m_vert(v), m_face(f) {
     this->id = population;
     population++;
 
-    this->next = nullptr;
-    this->sym = nullptr;
-    this->m_vert = nullptr;
-    this->m_face = nullptr;
-
     QListWidgetItem::setText(QString::number(id));
 }
+
+HalfEdge::HalfEdge()
+    : HalfEdge(nullptr, nullptr, nullptr, nullptr)
+{}
 
 bool HalfEdge::operator==(const HalfEdge &he2) const {
     return (id == he2.id);

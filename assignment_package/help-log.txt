@@ -10,3 +10,5 @@ https://glm.g-truc.net/0.9.4/api/a00136.html - used site to find out documentati
 
 https://glm.g-truc.net/0.9.4/api/a00206.html - used site to learn more about translate and rotate functionalities
 
+https://doc.qt.io/qt-6/qpushbutton.html - used to find signals for qtpushbutton
+

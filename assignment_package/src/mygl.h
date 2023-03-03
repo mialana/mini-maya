@@ -53,6 +53,9 @@ public slots:
     void slot_setSelectedFace(QListWidgetItem *i);
     void slot_setSelectedHedge(QListWidgetItem *i);
 
+    void slot_splitHedge();
+    void slot_triangulateFace();
+
 signals:
     void sig_sendListItem(QListWidgetItem*);
 };
