@@ -27,6 +27,8 @@ private:
 
     Camera m_glCamera;
 
+    void updateAll();
+
 public:
     Mesh m_meshCurrent;
     Vertex* mp_selectedVert;
@@ -48,9 +50,11 @@ protected:
     void keyPressEvent(QKeyEvent *e);
 
 public slots:
-
     void slot_splitHedge();
     void slot_triangulateFace();
+    void slot_translateX(double);
+    void slot_translateY(double);
+    void slot_translateZ(double);
 
 signals:
     void sig_sendListItem(QListWidgetItem*);

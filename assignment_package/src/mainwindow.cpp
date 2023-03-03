@@ -18,21 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
             this,
             SLOT(slot_addListItem(QListWidgetItem*)));
 
-    connect(ui->vertsListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
-            this, SLOT(slot_setSelectedVert(QListWidgetItem*)));
-
-    connect(ui->facesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
-            this, SLOT(slot_setSelectedFace(QListWidgetItem*)));
-
-    connect(ui->halfEdgesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
-            this, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
-
-    connect(ui->splitEdge, SIGNAL(clicked()),
-            ui->mygl, SLOT(slot_splitHedge()));
-
-    connect(ui->triangulateFace, SIGNAL(clicked()),
-            ui->mygl, SLOT(slot_triangulateFace()));
-
     connect(ui->mygl,
             SIGNAL(sig_setSelectedVert(QListWidgetItem*)),
             this, SLOT(slot_setSelectedVert(QListWidgetItem*)));
@@ -44,6 +29,34 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->mygl,
             SIGNAL(sig_setSelectedHedge(QListWidgetItem*)),
             this, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
+
+
+    connect(ui->vertsListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
+            this, SLOT(slot_setSelectedVert(QListWidgetItem*)));
+
+    connect(ui->facesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
+            this, SLOT(slot_setSelectedFace(QListWidgetItem*)));
+
+    connect(ui->halfEdgesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
+            this, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
+
+
+    connect(ui->splitEdge, SIGNAL(clicked()),
+            ui->mygl, SLOT(slot_splitHedge()));
+
+    connect(ui->triangulateFace, SIGNAL(clicked()),
+            ui->mygl, SLOT(slot_triangulateFace()));
+
+
+    connect(ui->vertPosXSpinBox, SIGNAL(valueChanged(double)),
+            ui->mygl, SLOT(slot_translateX(double)));
+
+    connect(ui->vertPosYSpinBox, SIGNAL(valueChanged(double)),
+            ui->mygl, SLOT(slot_translateY(double)));
+
+    connect(ui->vertPosZSpinBox, SIGNAL(valueChanged(double)),
+            ui->mygl, SLOT(slot_translateZ(double)));
+
 }
 
 
@@ -54,6 +67,10 @@ void MainWindow::slot_setSelectedVert(QListWidgetItem *i) {
     ui->mygl->m_vertDisplay.create();
 
     ui->vertsListWidget->setCurrentItem(i);
+
+    ui->vertPosXSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.x);
+    ui->vertPosYSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.y);
+    ui->vertPosZSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.z);
 
     ui->mygl->update();
 }

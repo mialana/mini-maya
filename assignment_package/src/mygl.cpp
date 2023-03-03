@@ -146,7 +146,6 @@ void MyGL::paintGL()
 
 }
 
-
 void MyGL::keyPressEvent(QKeyEvent *e)
 {
     float amount = 2.0f;
@@ -200,20 +199,32 @@ void MyGL::keyPressEvent(QKeyEvent *e)
     update();
 }
 
+void MyGL::updateAll() {
+    m_meshCurrent.destroy();
+    m_meshCurrent.create();
+
+    m_hedgeDisplay.updateHedge(mp_selectedHedge);
+    m_hedgeDisplay.destroy();
+    m_hedgeDisplay.create();
+
+    m_faceDisplay.updateFace(mp_selectedFace);
+    m_faceDisplay.destroy();
+    m_faceDisplay.create();
+
+    m_vertDisplay.updateVert(mp_selectedVert);
+    m_vertDisplay.destroy();
+    m_vertDisplay.create();
+
+    update();
+}
+
 void MyGL::slot_splitHedge() {
     if (mp_selectedHedge != nullptr) {
         m_meshCurrent.splitHedge(mp_selectedHedge);
 
         emit sig_setSelectedHedge(mp_selectedHedge);
 
-        m_meshCurrent.destroy();
-        m_meshCurrent.create();
-
-        m_hedgeDisplay.updateHedge(mp_selectedHedge);
-        m_hedgeDisplay.destroy();
-        m_hedgeDisplay.create();
-
-        update();
+        updateAll();
     }
 }
 
@@ -223,13 +234,30 @@ void MyGL::slot_triangulateFace() {
 
         emit sig_setSelectedHedge(mp_selectedHedge);
 
-        m_meshCurrent.destroy();
-        m_meshCurrent.create();
+        updateAll();
+    }
+}
 
-        m_faceDisplay.updateFace(mp_selectedFace);
-        m_faceDisplay.destroy();
-        m_faceDisplay.create();
+void MyGL::slot_translateX(double newX) {
+    if (mp_selectedVert != nullptr) {
+        mp_selectedVert->m_pos.x = newX;
 
-        update();
+        updateAll();
+    }
+}
+
+void MyGL::slot_translateY(double newY) {
+    if (mp_selectedVert != nullptr) {
+        mp_selectedVert->m_pos.y = newY;
+
+        updateAll();
+    }
+}
+
+void MyGL::slot_translateZ(double newZ) {
+    if (mp_selectedVert != nullptr) {
+        mp_selectedVert->m_pos.z = newZ;
+
+        updateAll();
     }
 }
