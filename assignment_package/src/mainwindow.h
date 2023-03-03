@@ -18,6 +18,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    QString filename;
+
 private slots:
     void on_actionImport_Obj_triggered();
 

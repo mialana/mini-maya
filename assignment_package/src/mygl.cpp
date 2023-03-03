@@ -6,6 +6,8 @@
 #include <QKeyEvent>
 #include <glm/gtx/string_cast.hpp>
 #include "mesh.h"
+#include <QFileInfo>
+#include <QDir>
 
 
 MyGL::MyGL(QWidget *parent)
@@ -14,13 +16,13 @@ MyGL::MyGL(QWidget *parent)
       m_progLambert(this),
       m_progFlat(this),
       m_glCamera(),
+      m_meshCurrent(this),
       mp_selectedVert(nullptr),
       mp_selectedFace(nullptr),
       mp_selectedHedge(nullptr),
       m_vertDisplay(this),
       m_faceDisplay(this),
-      m_hedgeDisplay(this),
-      m_meshCurrent(this)
+      m_hedgeDisplay(this)
 {
     setFocusPolicy(Qt::StrongFocus);
 }
@@ -60,9 +62,12 @@ void MyGL::initializeGL()
     //Create the instances of Cylinder and Sphere.
     m_geomSquare.create();
 
-    // ignore
-    m_meshCurrent.loadObj(QString("/Users/liu.amy05/Desktop/cis-4600/hw-projects/hw05-06-07/obj_files/cube.obj"));
-    m_meshCurrent.destroy();
+    QFile relativeFile = QFile(QDir().cleanPath(QString(QFileInfo(".").absolutePath() + "/../../../../obj_files/cube.obj")));
+
+    if(relativeFile.open(QIODevice::ReadOnly)){
+        m_meshCurrent.loadObj(relativeFile);
+    }
+
     m_meshCurrent.create();
 
     m_vertDisplay.create();

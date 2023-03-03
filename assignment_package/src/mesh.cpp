@@ -1,6 +1,4 @@
 #include "mesh.h"
-#include "glm/gtx/string_cast.hpp"
-#include <QFileDialog>
 #include <iostream>
 
 Mesh::Mesh(OpenGLContext* context) : Drawable(context)
@@ -84,20 +82,13 @@ void Mesh::createSyms() {
     }
 }
 
-void Mesh::loadObj(QString filename) {
+void Mesh::loadObj(QFile& file) {
     this->m_verts.clear();
     this->m_faces.clear();
     this->m_hedges.clear();
 
-
-    QFile file(filename);
-
-    if(!file.open(QIODevice::ReadOnly)){
-        qWarning("Could not open the file.");
-        return;
-    }
-
     QTextStream fileText(&file);
+
     while (!fileText.atEnd()) {
         QString fileLine = fileText.readLine();
 

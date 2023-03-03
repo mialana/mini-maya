@@ -6,7 +6,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    filename(QDir().cleanPath(QString(QFileInfo(".").absolutePath() + "/../../../../obj_files/cube.obj")))
 {
     ui->setupUi(this);
     ui->mygl->setFocus();
@@ -84,12 +85,28 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::on_actionImport_Obj_triggered() {
-    QString filename = QFileDialog::getOpenFileName(0, QString("Select OBJ File"), QDir::currentPath().append(QString("../..")), QString("*.obj"));
+    QString validate_filename = QFileDialog::getOpenFileName(0, QString("Select OBJ File"), QDir::currentPath().append(QString("../..")), QString("*.obj"));
 
-    ui->mygl->m_meshCurrent.loadObj(filename);
+    QFile file(validate_filename);
+
+    if(!file.open(QIODevice::ReadOnly)){
+        qWarning("Could not open the file.");
+        return;
+    }
+
+    Vertex::population = 0;
+    Face::population = 0;
+    HalfEdge::population = 0;
+
+    filename = validate_filename;
+    ui->mygl->m_meshCurrent.loadObj(file);
 
     ui->mygl->m_meshCurrent.destroy();
     ui->mygl->m_meshCurrent.create();
+
+    slot_setSelectedVert(nullptr);
+    slot_setSelectedFace(nullptr);
+    slot_setSelectedHedge(nullptr);
 }
 
 void MainWindow::on_actionQuit_triggered()

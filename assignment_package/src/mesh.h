@@ -4,6 +4,7 @@
 #include <vector>
 #include "drawable.h"
 #include <random>
+#include <QFileDialog>
 
 struct Randomizer {
     std::random_device rd;
@@ -30,7 +31,7 @@ public:
     virtual GLenum drawMode();
     virtual void create();
 
-    void loadObj(QString filename);
+    void loadObj(QFile& file);
     void createSyms();
 
     void splitHedge(HalfEdge*);
