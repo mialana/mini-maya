@@ -1,13 +1,14 @@
 #include "mainwindow.h"
 #include <ui_mainwindow.h>
+#include "QtGui/qevent.h"
 #include "cameracontrolshelp.h"
 #include <QFileDialog>
 #include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    filename(QDir().cleanPath(QString(QFileInfo(".").absolutePath() + "/../../../../obj_files/cube.obj")))
+    filename(QDir().cleanPath(QString(QFileInfo(".").absolutePath() + "/../../../../obj_files/cube.obj"))),
+    ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     ui->mygl->setFocus();
@@ -17,13 +18,13 @@ MainWindow::MainWindow(QWidget *parent) :
             this,
             SLOT(slot_addListItem(QListWidgetItem*)));
 
-    connect(ui->vertsListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
+    connect(ui->vertsListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
             this, SLOT(slot_setSelectedVert(QListWidgetItem*)));
 
-    connect(ui->facesListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
+    connect(ui->facesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
             this, SLOT(slot_setSelectedFace(QListWidgetItem*)));
 
-    connect(ui->halfEdgesListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
+    connect(ui->halfEdgesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*, QListWidgetItem*)),
             this, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
 
     connect(ui->splitEdge, SIGNAL(clicked()),
