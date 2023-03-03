@@ -102,12 +102,12 @@
      <set>Qt::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>380</x>
       <y>470</y>
-      <width>251</width>
+      <width>272</width>
       <height>101</height>
      </rect>
     </property>
@@ -129,9 +129,9 @@
         </widget>
        </item>
        <item row="1" column="0">
-        <widget class="QPushButton" name="subdivide">
+        <widget class="QPushButton" name="subdivideMesh">
          <property name="text">
-          <string>Subdivide</string>
+          <string>Subdivide Mesh</string>
          </property>
         </widget>
        </item>
@@ -146,13 +146,13 @@
      </item>
     </layout>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
       <x>20</x>
       <y>470</y>
       <width>341</width>
-      <height>101</height>
+      <height>106</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">

@@ -5,6 +5,8 @@
 #include "drawable.h"
 #include <random>
 #include <QFileDialog>
+#include <unordered_map>
+#include <unordered_set>
 
 struct Randomizer {
     std::random_device rd;
@@ -22,7 +24,15 @@ struct Randomizer {
 
 class Mesh : public Drawable
 {
-public:
+private:
+    void findCentroids(std::unordered_map<Face*, Vertex*>& centroids);
+    void computeSmoothedMidpoints(std::unordered_map<Face*, Vertex*>& centroids);
+    void smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroids,
+                                int n);
+    void quadrangulate(Face *f, std::unordered_map<Face*, Vertex*>& centroids);
+public:   
+    static HalfEdge* findHedgeBefore(HalfEdge* he);
+
     std::vector<uPtr<Vertex>> m_verts;
     std::vector<uPtr<Face>> m_faces;
     std::vector<uPtr<HalfEdge>> m_hedges;
@@ -34,9 +44,9 @@ public:
     void loadObj(QFile& file);
     void createSyms();
 
-    void splitHedge(HalfEdge*);
+    void splitHedge(HalfEdge*, HalfEdge* , Vertex*, Vertex*, glm::vec3);
     void triangulateFace(Face*);
 
-    static HalfEdge* findHedgeBefore(HalfEdge* he);
+    void subdivideMesh();
 };
 

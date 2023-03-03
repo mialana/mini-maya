@@ -47,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->triangulateFace, SIGNAL(clicked()),
             ui->mygl, SLOT(slot_triangulateFace()));
 
+    connect(ui->subdivideMesh, SIGNAL(clicked()),
+            ui->mygl, SLOT(slot_subdivideMesh()));
 
     connect(ui->vertPosXSpinBox, SIGNAL(valueChanged(double)),
             ui->mygl, SLOT(slot_translateX(double)));
@@ -76,9 +78,12 @@ void MainWindow::slot_setSelectedVert(QListWidgetItem *i) {
 
     ui->vertsListWidget->setCurrentItem(i);
 
-    ui->vertPosXSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.x);
-    ui->vertPosYSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.y);
-    ui->vertPosZSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.z);
+    if (ui->mygl->mp_selectedVert != nullptr) {
+        ui->vertPosXSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.x);
+        ui->vertPosYSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.y);
+        ui->vertPosZSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.z);
+    }
+
 
     ui->mygl->update();
 }
@@ -91,9 +96,11 @@ void MainWindow::slot_setSelectedFace(QListWidgetItem *i) {
 
     ui->facesListWidget->setCurrentItem(i);
 
-    ui->faceRedSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.r);
-    ui->faceGreenSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.g);
-    ui->faceBlueSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.b);
+    if (ui->mygl->mp_selectedFace != nullptr) {
+        ui->faceRedSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.r);
+        ui->faceGreenSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.g);
+        ui->faceBlueSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.b);
+    }
 
     ui->mygl->update();
 }

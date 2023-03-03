@@ -203,6 +203,10 @@ void MyGL::updateAll() {
     m_meshCurrent.destroy();
     m_meshCurrent.create();
 
+    emit sig_setSelectedVert(mp_selectedVert);
+    emit sig_setSelectedFace(mp_selectedFace);
+    emit sig_setSelectedHedge(mp_selectedHedge);
+
     m_hedgeDisplay.updateHedge(mp_selectedHedge);
     m_hedgeDisplay.destroy();
     m_hedgeDisplay.create();
@@ -220,9 +224,12 @@ void MyGL::updateAll() {
 
 void MyGL::slot_splitHedge() {
     if (mp_selectedHedge != nullptr) {
-        m_meshCurrent.splitHedge(mp_selectedHedge);
+        HalfEdge* he2 = mp_selectedHedge->sym;
+        Vertex* v1 = mp_selectedHedge->m_vert;
+        Vertex* v2 = he2->m_vert;
+        glm::vec3 midPt = (v1->m_pos + v2->m_pos) / 2.f;
 
-        emit sig_setSelectedHedge(mp_selectedHedge);
+        m_meshCurrent.splitHedge(mp_selectedHedge, he2, v1, v2, midPt);
 
         updateAll();
     }
@@ -232,10 +239,15 @@ void MyGL::slot_triangulateFace() {
     if (mp_selectedFace != nullptr) {
         m_meshCurrent.triangulateFace(mp_selectedFace);
 
-        emit sig_setSelectedHedge(mp_selectedHedge);
-
         updateAll();
     }
+}
+
+void MyGL::slot_subdivideMesh() {
+
+    m_meshCurrent.subdivideMesh();
+
+    updateAll();
 }
 
 void MyGL::slot_translateX(double newX) {
