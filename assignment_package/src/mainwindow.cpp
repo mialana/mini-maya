@@ -17,13 +17,13 @@ MainWindow::MainWindow(QWidget *parent) :
             SLOT(slot_addListItem(QListWidgetItem*)));
 
     connect(ui->vertsListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
-            ui->mygl, SLOT(slot_setSelectedVertex(QListWidgetItem*)));
+            this, SLOT(slot_setSelectedVert(QListWidgetItem*)));
 
     connect(ui->facesListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
-            ui->mygl, SLOT(slot_setSelectedFace(QListWidgetItem*)));
+            this, SLOT(slot_setSelectedFace(QListWidgetItem*)));
 
     connect(ui->halfEdgesListWidget, SIGNAL(itemClicked(QListWidgetItem*)),
-            ui->mygl, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
+            this, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
 
     connect(ui->splitEdge, SIGNAL(clicked()),
             ui->mygl, SLOT(slot_splitHedge()));
@@ -31,6 +31,51 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->triangulateFace, SIGNAL(clicked()),
             ui->mygl, SLOT(slot_triangulateFace()));
 
+    connect(ui->mygl,
+            SIGNAL(sig_setSelectedVert(QListWidgetItem*)),
+            this, SLOT(slot_setSelectedVert(QListWidgetItem*)));
+
+    connect(ui->mygl,
+            SIGNAL(sig_setSelectedFace(QListWidgetItem*)),
+            this, SLOT(slot_setSelectedFace(QListWidgetItem*)));
+
+    connect(ui->mygl,
+            SIGNAL(sig_setSelectedHedge(QListWidgetItem*)),
+            this, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
+}
+
+
+void MainWindow::slot_setSelectedVert(QListWidgetItem *i) {
+    ui->mygl->mp_selectedVert = static_cast<Vertex*>(i);
+    ui->mygl->m_vertDisplay.updateVert(ui->mygl->mp_selectedVert);
+    ui->mygl->m_vertDisplay.destroy();
+    ui->mygl->m_vertDisplay.create();
+
+    ui->vertsListWidget->setCurrentItem(i);
+
+    ui->mygl->update();
+}
+
+void MainWindow::slot_setSelectedFace(QListWidgetItem *i) {
+    ui->mygl->mp_selectedFace = static_cast<Face*>(i);
+    ui->mygl->m_faceDisplay.updateFace(ui->mygl->mp_selectedFace);
+    ui->mygl->m_faceDisplay.destroy();
+    ui->mygl->m_faceDisplay.create();
+
+    ui->facesListWidget->setCurrentItem(i);
+
+    ui->mygl->update();
+}
+
+void MainWindow::slot_setSelectedHedge(QListWidgetItem *i) {
+    ui->mygl->mp_selectedHedge = static_cast<HalfEdge*>(i);
+    ui->mygl->m_hedgeDisplay.updateHedge(ui->mygl->mp_selectedHedge);
+    ui->mygl->m_hedgeDisplay.destroy();
+    ui->mygl->m_hedgeDisplay.create();
+
+    ui->halfEdgesListWidget->setCurrentItem(i);
+
+    ui->mygl->update();
 }
 
 MainWindow::~MainWindow()

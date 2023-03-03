@@ -2,19 +2,19 @@
 #include <iostream>
 
 VertexDisplay::VertexDisplay(OpenGLContext* context)
-    : Drawable(context), displayedVertex(nullptr)
+    : Drawable(context), displayedVert(nullptr)
 {}
 
-void VertexDisplay::updateVertex(Vertex* v) {
-    displayedVertex = v;
+void VertexDisplay::updateVert(Vertex* v) {
+    displayedVert = v;
 }
 
 void VertexDisplay::create() {
-    if (displayedVertex == nullptr) {
+    if (displayedVert == nullptr) {
         this->count = 0;
         return;
     }
-    glm::vec4 pos = glm::vec4(displayedVertex->m_pos, 1);
+    glm::vec4 pos = glm::vec4(displayedVert->m_pos, 1);
     glm::vec4 col = glm::vec4(1, 1, 1, 1);
 
     this->count = 1;
@@ -110,7 +110,9 @@ void HedgeDisplay::create() {
 
     positions.push_back(glm::vec4(displayedHedge->m_vert->m_pos, 1));
 
-    HalfEdge* curr = displayedHedge;
+    HalfEdge* curr = Mesh::findHedgeBefore(displayedHedge);
+
+
     do {
         curr = curr->next;
     } while (curr->next != displayedHedge);

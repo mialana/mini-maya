@@ -1,4 +1,5 @@
 #include "mesh.h"
+#include "glm/gtx/string_cast.hpp"
 #include <QFileDialog>
 #include <iostream>
 
@@ -25,7 +26,7 @@ void Mesh::create() {
             positions.push_back(glm::vec4(curr->m_vert->m_pos, 1));
 
             const glm::vec3 v1 = curr->next->m_vert->m_pos - curr->m_vert->m_pos;
-            const glm::vec3 v2 = curr->next->next->m_vert->m_pos - curr->next->m_vert->m_pos;
+            const glm::vec3 v2 = curr->sym->m_vert->m_pos - curr->m_vert->m_pos;
             glm::vec3 n = glm::normalize(glm::cross(v1, v2));
             normals.push_back(glm::vec4(n, 0));
 
@@ -66,10 +67,7 @@ void Mesh::createSyms() {
     for (const auto& f : this->m_faces) {
         HalfEdge* map_val = f->m_hedge;
         do {
-            HalfEdge* curr = map_val;
-            do {
-                curr = curr->next;
-            } while (curr->next != map_val);
+            HalfEdge* curr = findHedgeBefore(map_val);
 
             Vertex* a = (map_val->m_vert->id < curr->m_vert->id) ? map_val->m_vert : curr->m_vert;
             Vertex* b = (map_val->m_vert->id < curr->m_vert->id) ? curr->m_vert : map_val->m_vert;
@@ -150,4 +148,81 @@ void Mesh::loadObj(QString filename) {
     }
 
     this->createSyms();
+}
+
+void Mesh::splitHedge(HalfEdge* he1) {
+    HalfEdge* he2 = he1->sym;
+    Vertex* v1 = he1->m_vert;
+    Vertex* v2 = he2->m_vert;
+
+    uPtr<Vertex> v3 = mkU<Vertex>((v1->m_pos + v2->m_pos) / 2.f);
+
+    uPtr<HalfEdge> he1b = mkU<HalfEdge>(he1->next, nullptr, nullptr, nullptr);
+    uPtr<HalfEdge> he2b = mkU<HalfEdge>(he2->next, nullptr, nullptr, nullptr);
+
+    he1b->setVert(v1);
+    he1b->setFace(he1->m_face);
+
+    he2b->setVert(v2);
+    he2b->setFace(he2->m_face);
+
+    he1->next = he1b.get();
+    he2->next = he2b.get();
+
+    he1->m_vert = v3.get();
+    he2->m_vert = v3.get();
+
+    he1->symWith(he2b.get());
+    he2->symWith(he1b.get());
+
+    this->m_hedges.push_back(std::move(he1b));
+    this->m_hedges.push_back(std::move(he2b));
+
+    this->m_verts.push_back(std::move(v3));
+}
+
+void Mesh::triangulateFace(Face* f1) {
+    HalfEdge* curr = f1->m_hedge;
+    HalfEdge* last = Mesh::findHedgeBefore(curr);
+
+    Vertex* v0 = last->m_vert;
+
+    HalfEdge* he1 = curr->next;
+    HalfEdge* he2 = he1->next;
+
+    while (he2 != last) {
+        uPtr<Face> newFace = mkU<Face>(Randomizer().get_randVec3());
+
+        uPtr<HalfEdge> he_a = mkU<HalfEdge>(curr, nullptr, v0, newFace.get());
+
+        he1->next = he_a.get();
+
+        he1->setFace(newFace.get());
+        curr->setFace(newFace.get());
+
+        uPtr<HalfEdge> he_b = mkU<HalfEdge>(he2, nullptr, he1->m_vert, f1);
+        he_a->symWith(he_b.get());
+
+        he_b->setFace(f1);
+
+        last->next = he_b.get();
+
+        curr = he_b.get();
+        he1 = he2;
+        he2 = he2->next;
+
+        m_faces.push_back(std::move(newFace));
+        m_hedges.push_back(std::move(he_a));
+        m_hedges.push_back(std::move(he_b));
+    }
+
+}
+
+HalfEdge* Mesh::findHedgeBefore(HalfEdge* he) {
+    HalfEdge* curr = he;
+    do {
+        curr = curr->next;
+    } while (curr->next != he);
+
+    return curr;
 }

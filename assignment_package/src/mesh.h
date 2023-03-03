@@ -32,5 +32,10 @@ public:
 
     void loadObj(QString filename);
     void createSyms();
+
+    void splitHedge(HalfEdge*);
+    void triangulateFace(Face*);
+
+    static HalfEdge* findHedgeBefore(HalfEdge* he);
 };
 

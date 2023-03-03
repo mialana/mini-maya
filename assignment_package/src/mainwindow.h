@@ -18,9 +18,6 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-public slots:
-
-
 private slots:
     void on_actionImport_Obj_triggered();
 
@@ -29,6 +26,10 @@ private slots:
     void on_actionCamera_Controls_triggered();
 
     void slot_addListItem(QListWidgetItem *i);
+
+    void slot_setSelectedVert(QListWidgetItem *i);
+    void slot_setSelectedFace(QListWidgetItem *i);
+    void slot_setSelectedHedge(QListWidgetItem *i);
 
 private:
     Ui::MainWindow *ui;

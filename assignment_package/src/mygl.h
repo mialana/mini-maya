@@ -27,6 +27,8 @@ private:
 
     Camera m_glCamera;
 
+public:
+    Mesh m_meshCurrent;
     Vertex* mp_selectedVert;
     Face* mp_selectedFace;
     HalfEdge* mp_selectedHedge;
@@ -34,9 +36,6 @@ private:
     VertexDisplay m_vertDisplay;
     FaceDisplay m_faceDisplay;
     HedgeDisplay m_hedgeDisplay;
-
-public:
-    Mesh m_meshCurrent;
 
     explicit MyGL(QWidget *parent = nullptr);
     ~MyGL();
@@ -49,15 +48,15 @@ protected:
     void keyPressEvent(QKeyEvent *e);
 
 public slots:
-    void slot_setSelectedVertex(QListWidgetItem *i);
-    void slot_setSelectedFace(QListWidgetItem *i);
-    void slot_setSelectedHedge(QListWidgetItem *i);
 
     void slot_splitHedge();
     void slot_triangulateFace();
 
 signals:
     void sig_sendListItem(QListWidgetItem*);
+    void sig_setSelectedVert(QListWidgetItem*);
+    void sig_setSelectedFace(QListWidgetItem*);
+    void sig_setSelectedHedge(QListWidgetItem*);
 };
 
 

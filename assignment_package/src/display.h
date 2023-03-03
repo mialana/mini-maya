@@ -5,13 +5,13 @@
 class VertexDisplay : public Drawable
 {
 protected:
-    Vertex* displayedVertex;
+    Vertex* displayedVert;
 public:
     VertexDisplay(OpenGLContext* context);
 
     void create() override;
 
-    void updateVertex(Vertex* v);
+    void updateVert(Vertex* v);
 
     GLenum drawMode() override {
         return GL_POINTS;
