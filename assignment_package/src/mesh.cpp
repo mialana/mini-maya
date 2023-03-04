@@ -19,6 +19,7 @@ void Mesh::create() {
     int currTotal = 0;
     for (const uPtr<Face> &f : m_faces) {
         int fVertNum = 0;
+        HalfEdge* start = f->m_hedge;
         HalfEdge* curr = f->m_hedge;
 
         do {
@@ -32,7 +33,7 @@ void Mesh::create() {
             colors.push_back(glm::vec4(curr->m_face->m_color, 1));
             fVertNum++;
             curr = curr->next;
-        } while (curr != f->m_hedge);
+        } while (curr != start);
 
         for (int i = 0; i < fVertNum - 2; i++) {
             indices.push_back(currTotal);
@@ -178,8 +179,10 @@ void Mesh::splitHedge(HalfEdge* he1, HalfEdge* he2, Vertex* v1, Vertex* v2, glm:
     he1->next = he1b;
     he2->next = he2b;
 
-    he1->setVert(v3);
+    he1->m_vert = v3;
     he2->m_vert = v3;
+
+    v3->m_hedge = he1;
 
     he1->symWith(he2b);
     he2->symWith(he1b);
@@ -320,56 +323,30 @@ void Mesh::smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroids, int or
         HalfEdge* curr = start;
         do {
             if (curr != nullptr) {
-//                curr = curr->next;
-//                Face* currFace = curr->m_face;
-//                sumCent += centroids.at(currFace)->m_pos;
-
-
-//                sumMid += curr->m_vert->m_pos;
-//                midCt++;
-//                curr = curr->sym;
-
 
                 midCt++;
-                std::cout << glm::to_string(curr->next->m_vert->m_pos) << std::endl;
                 sumMid += curr->next->m_vert->m_pos;
-                if(curr->m_face != nullptr) {
+                if (curr->m_face != nullptr) {
                     sumCent += centroids.at(curr->m_face)->m_pos;
                 }
                 curr = curr->next->sym;
-
-//                midCt++;
-//                sumMid += curr->m_vert->m_pos;
-
-//                curr = curr->next->sym;
             }
         } while (curr != start);
 
-        std::cout << "old pos" << glm::to_string(this->m_verts[i].get()->m_pos) << std::endl;
+        std::cout << "old pos " << glm::to_string(this->m_verts[i].get()->m_pos) << std::endl;
         std::cout << "sumMid: " << glm::to_string(sumMid) << std::endl;
         std::cout << "sumCent: " << glm::to_string(sumCent) << std::endl;
-        std::cout << midCt << std::endl;
+        std::cout << midCt <<std::endl;
 
-        glm::vec3 newPos = v->m_pos;
-        newPos *= (midCt - 2);
-        newPos /= midCt;
+        glm::vec3 firstTerm = sumCent / (midCt * midCt);
+        glm::vec3 secondTerm = sumMid / (midCt * midCt);
+        glm::vec3 newV = (midCt - 2.f) * v->m_pos;
+        newV = newV / midCt;
+        newV = newV + secondTerm + firstTerm;
 
-        sumMid /= (midCt * midCt);
-        sumCent /= (midCt * midCt);
+        v->m_pos = newV;
 
-        newPos += sumMid + sumCent;
-
-        this->m_verts[i].get()->m_pos = newPos;
-
-//        glm::vec3 firstTerm = sumCent / (midCt * midCt);
-//        glm::vec3 secondTerm = sumMid / (midCt * midCt);
-//        glm::vec3 newV = (midCt - 2.f) * v->m_pos;
-//        newV = newV / midCt;
-//        newV = newV + secondTerm + firstTerm;
-
-//        v->m_pos = newV;
-
-        std::cout << glm::to_string(this->m_verts[i].get()->m_pos) << std::endl;
+        std::cout << glm::to_string(this->m_verts[i].get()->m_pos) << "\n" << std::endl;
     }
 }
 

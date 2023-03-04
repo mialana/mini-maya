@@ -207,18 +207,6 @@ void MyGL::updateAll() {
     emit sig_setSelectedFace(mp_selectedFace);
     emit sig_setSelectedHedge(mp_selectedHedge);
 
-    m_hedgeDisplay.updateHedge(mp_selectedHedge);
-    m_hedgeDisplay.destroy();
-    m_hedgeDisplay.create();
-
-    m_faceDisplay.updateFace(mp_selectedFace);
-    m_faceDisplay.destroy();
-    m_faceDisplay.create();
-
-    m_vertDisplay.updateVert(mp_selectedVert);
-    m_vertDisplay.destroy();
-    m_vertDisplay.create();
-
     update();
 }
 

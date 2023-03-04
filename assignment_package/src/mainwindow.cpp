@@ -84,7 +84,6 @@ void MainWindow::slot_setSelectedVert(QListWidgetItem *i) {
         ui->vertPosZSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.z);
     }
 
-
     ui->mygl->update();
 }
 
@@ -107,6 +106,7 @@ void MainWindow::slot_setSelectedFace(QListWidgetItem *i) {
 
 void MainWindow::slot_setSelectedHedge(QListWidgetItem *i) {
     ui->mygl->mp_selectedHedge = static_cast<HalfEdge*>(i);
+
     ui->mygl->m_hedgeDisplay.updateHedge(ui->mygl->mp_selectedHedge);
     ui->mygl->m_hedgeDisplay.destroy();
     ui->mygl->m_hedgeDisplay.create();
