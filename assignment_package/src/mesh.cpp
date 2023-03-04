@@ -170,17 +170,17 @@ void Mesh::splitHedge(HalfEdge* he1, HalfEdge* he2, Vertex* v1, Vertex* v2, glm:
     he1b->next = he1->next;
     he2b->next = he2->next;
 
-    he1b->m_vert = v1;
-    he1b->m_face = he1->m_face;
+    he1b->setVert(v1);
+    he1b->setFace(he1->m_face);
 
-    he2b->m_vert = v2;
-    he2b->m_face = he2->m_face;
+    he2b->setVert(v2);
+    he2b->setFace(he2->m_face);
 
     he1->next = he1b;
     he2->next = he2b;
 
-    he1->m_vert = v3;
-    he2->m_vert = v3;
+    he1->setVert(v3);
+    he2->setVert(v3);
 
     v3->m_hedge = he1;
 
@@ -377,9 +377,6 @@ void Mesh::quadrangulate(std::unordered_map<Face*, Vertex*>& centroids, int orig
             toCentroid->m_vert = centroids.at(f);
             fromCentroid->next = curr;
 
-            fromCentroid->m_vert = curr->sym->m_vert;
-            toCentroid->next = fromCentroid;
-
             if (prevToCentroid != nullptr) {
                 fromCentroid->symWith(prevToCentroid);
             }
@@ -398,6 +395,9 @@ void Mesh::quadrangulate(std::unordered_map<Face*, Vertex*>& centroids, int orig
                 fromCentroid->m_face = newFace;
                 curr->setFace(newFace);
             }
+
+            fromCentroid->m_vert = curr->sym->m_vert;
+            toCentroid->next = fromCentroid;
 
             HalfEdge* savedNext = curr->next;
             curr = curr->next->next;
