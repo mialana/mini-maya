@@ -29,12 +29,9 @@ private slots:
 
     void slot_addListItem(QListWidgetItem *i);
 
-    void slot_setSelectedVert(Vertex*);
-    void slot_setVertGeneric(QListWidgetItem *i);
-    void slot_setSelectedFace(Face*);
-    void slot_setFaceGeneric(QListWidgetItem *i);
-    void slot_setSelectedHedge(HalfEdge*);
-    void slot_setHedgeGeneric(QListWidgetItem *i);
+    void slot_setSelectedVert(QListWidgetItem *i);
+    void slot_setSelectedFace(QListWidgetItem *i);
+    void slot_setSelectedHedge(QListWidgetItem *i);
 
 private:
     Ui::MainWindow *ui;

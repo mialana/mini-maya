@@ -18,25 +18,26 @@ MainWindow::MainWindow(QWidget *parent) :
             SLOT(slot_addListItem(QListWidgetItem*)));
 
     connect(ui->mygl,
-                SIGNAL(sig_setSelectedVert(Vertex*)),
-                this, SLOT(slot_setSelectedVert(Vertex*)));
+            SIGNAL(sig_setSelectedVert(QListWidgetItem*)),
+            this, SLOT(slot_setSelectedVert(QListWidgetItem*)));
 
-        connect(ui->mygl,
-                SIGNAL(sig_setSelectedFace(Face*)),
-                this, SLOT(slot_setSelectedFace(Face*)));
+    connect(ui->mygl,
+            SIGNAL(sig_setSelectedFace(QListWidgetItem*)),
+            this, SLOT(slot_setSelectedFace(QListWidgetItem*)));
 
-        connect(ui->mygl,
-                SIGNAL(sig_setSelectedHedge(HalfEdge*)),
-                this, SLOT(slot_setSelectedHedge(HalfEdge*)));
+    connect(ui->mygl,
+            SIGNAL(sig_setSelectedHedge(QListWidgetItem*)),
+            this, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
+
 
     connect(ui->vertsListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT(slot_setVertGeneric(QListWidgetItem*)));
+            this, SLOT(slot_setSelectedVert(QListWidgetItem*)));
 
     connect(ui->facesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT(slot_setFaceGeneric(QListWidgetItem*)));
+            this, SLOT(slot_setSelectedFace(QListWidgetItem*)));
 
     connect(ui->halfEdgesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT(slot_setHedgeGeneric(QListWidgetItem*)));
+            this, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
 
 
     connect(ui->splitEdge, SIGNAL(clicked()),
@@ -68,63 +69,50 @@ MainWindow::MainWindow(QWidget *parent) :
 
 }
 
-void MainWindow::slot_setSelectedVert(Vertex* v) {
-    ui->mygl->mp_selectedVert = v;
-    ui->mygl->m_vertDisplay.updateVert(ui->mygl->mp_selectedVert);
-    ui->mygl->m_vertDisplay.destroy();
-    ui->mygl->m_vertDisplay.create();
-
-    ui->vertsListWidget->setCurrentItem(v);
-
-    ui->vertPosXSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.x);
-    ui->vertPosYSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.y);
-    ui->vertPosZSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.z);
-
-
-    ui->mygl->update();
-}
-
-
-void MainWindow::slot_setVertGeneric(QListWidgetItem *i) {
+void MainWindow::slot_setSelectedVert(QListWidgetItem *i) {
     if (Vertex* v = dynamic_cast<Vertex*>(i); v != nullptr) {
-        ui->facesListWidget->setCurrentItem(v);
+        ui->mygl->mp_selectedVert = v;
+        ui->mygl->m_vertDisplay.updateVert(ui->mygl->mp_selectedVert);
+        ui->mygl->m_vertDisplay.destroy();
+        ui->mygl->m_vertDisplay.create();
+
+        ui->vertsListWidget->setCurrentItem(i);
+
+        ui->vertPosXSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.x);
+        ui->vertPosYSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.y);
+        ui->vertPosZSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.z);
+
+
+        ui->mygl->update();
     }
 }
 
-void MainWindow::slot_setSelectedFace(Face* f) {
-    ui->mygl->mp_selectedFace = f;
-    ui->mygl->m_faceDisplay.updateFace(ui->mygl->mp_selectedFace);
-    ui->mygl->m_faceDisplay.destroy();
-    ui->mygl->m_faceDisplay.create();
-
-    ui->facesListWidget->setCurrentItem(f);
-
-    ui->faceRedSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.r);
-    ui->faceGreenSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.g);
-    ui->faceBlueSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.b);
-    ui->mygl->update();
-}
-
-void MainWindow::slot_setFaceGeneric(QListWidgetItem *i) {
+void MainWindow::slot_setSelectedFace(QListWidgetItem *i) {
     if (Face* f = dynamic_cast<Face*>(i); f != nullptr) {
-        ui->facesListWidget->setCurrentItem(f);
+        ui->mygl->mp_selectedFace = f;
+        ui->mygl->m_faceDisplay.updateFace(ui->mygl->mp_selectedFace);
+        ui->mygl->m_faceDisplay.destroy();
+        ui->mygl->m_faceDisplay.create();
+
+        ui->facesListWidget->setCurrentItem(i);
+
+        ui->faceRedSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.r);
+        ui->faceGreenSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.g);
+        ui->faceBlueSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.b);
+        ui->mygl->update();
     }
 }
 
-void MainWindow::slot_setSelectedHedge(HalfEdge* he) {
-    ui->mygl->mp_selectedHedge = he;
-    ui->mygl->m_hedgeDisplay.updateHedge(ui->mygl->mp_selectedHedge);
-    ui->mygl->m_hedgeDisplay.destroy();
-    ui->mygl->m_hedgeDisplay.create();
-
-    ui->halfEdgesListWidget->setCurrentItem(he);
-
-    ui->mygl->update();
-}
-
-void MainWindow::slot_setHedgeGeneric(QListWidgetItem *i) {
+void MainWindow::slot_setSelectedHedge(QListWidgetItem *i) {
     if (HalfEdge* he = dynamic_cast<HalfEdge*>(i); he != nullptr) {
-        ui->halfEdgesListWidget->setCurrentItem(he);
+        ui->mygl->mp_selectedHedge = he;
+        ui->mygl->m_hedgeDisplay.updateHedge(ui->mygl->mp_selectedHedge);
+        ui->mygl->m_hedgeDisplay.destroy();
+        ui->mygl->m_hedgeDisplay.create();
+
+        ui->halfEdgesListWidget->setCurrentItem(i);
+
+        ui->mygl->update();
     }
 }
 
