@@ -203,10 +203,6 @@ void MyGL::updateAll() {
     m_meshCurrent.destroy();
     m_meshCurrent.create();
 
-    emit sig_setSelectedVert(mp_selectedVert);
-    emit sig_setSelectedFace(mp_selectedFace);
-    emit sig_setSelectedHedge(mp_selectedHedge);
-
     update();
 }
 

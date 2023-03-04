@@ -64,9 +64,9 @@ public slots:
 
 signals:
     void sig_sendListItem(QListWidgetItem*);
-    void sig_setSelectedVert(QListWidgetItem*);
-    void sig_setSelectedFace(QListWidgetItem*);
-    void sig_setSelectedHedge(QListWidgetItem*);
+    void sig_setSelectedVert(Vertex*);
+    void sig_setSelectedFace(Face*);
+    void sig_setSelectedHedge(HalfEdge*);
 };
 
 

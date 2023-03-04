@@ -1,5 +1,4 @@
 #include "mesh.h"
-#include "glm/gtx/string_cast.hpp"
 #include <iostream>
 
 Mesh::Mesh(OpenGLContext* context) : Drawable(context)
@@ -11,16 +10,16 @@ GLenum Mesh::drawMode() {
 
 void Mesh::create() {
 
-    for (const auto& he : this->m_hedges) {
-    }
-
-    std::vector<GLuint> indices;
-    std::vector<glm::vec4> positions;
-    std::vector<glm::vec4> normals;
-    std::vector<glm::vec4> colors;
+    std::vector<GLuint> indices = std::vector<GLuint>();
+    std::vector<glm::vec4> positions = std::vector<glm::vec4>();
+    std::vector<glm::vec4> normals = std::vector<glm::vec4>();
+    std::vector<glm::vec4> colors = std::vector<glm::vec4>();
 
     int currTotal = 0;
     for (const uPtr<Face> &f : m_faces) {
+        if (f == nullptr) {
+            continue;
+        }
         int fVertNum = 0;
         HalfEdge* start = f->m_hedge;
         HalfEdge* curr = f->m_hedge;
@@ -91,6 +90,10 @@ void Mesh::loadObj(QFile& file) {
     this->m_verts.clear();
     this->m_faces.clear();
     this->m_hedges.clear();
+
+    this->m_verts.resize(0);
+    this->m_faces.resize(0);
+    this->m_hedges.resize(0);
 
     QTextStream fileText(&file);
 
@@ -167,14 +170,6 @@ void Mesh::splitHedge(HalfEdge* he1, HalfEdge* he2, Vertex* v1, Vertex* v2, glm:
     this->m_verts.push_back(std::move(v3Uptr));
     this->m_hedges.push_back(std::move(he1bUptr));
     this->m_hedges.push_back(std::move(he2bUptr));
-
-//    he1b = (he1->next, he2, v1, he1->m_face)
-//    he2b = (he2->next, he1, v2, he2->m_face)
-//    v3 = (pos, he1);
-
-//    he1 = (he1b, he2b, v3, he1->m_face);
-//    he2 = (he2b, he1b, v3, he2->m_face);
-
 
     he1b->next = he1->next;
     he2b->next = he2->next;
@@ -264,8 +259,6 @@ void Mesh::subdivideMesh() {
     smoothOrigVerts(centroidMap, origVertsNum);
 
     this->quadrangulate(centroidMap, origFacesNum);
-
-    std::cout << count << std::endl;
 }
 
 void Mesh::findCentroids(std::unordered_map<Face*, Vertex*>& centroidMap) {
@@ -320,7 +313,6 @@ void Mesh::splitNewHedges(std::unordered_map<HalfEdge*, glm::vec3>& midpointMap)
         int numHedges = this->m_hedges.size();
         for (int i = 0; i < numHedges; i++) {
             HalfEdge* curr = this->m_hedges[i].get();
-            std::cout << hedgesSplit.count(curr->id) << " + " << hedgesSplit.count(curr->sym->id) << std::endl;
             if (hedgesSplit.count(curr->id) == 0 && hedgesSplit.count(curr->sym->id) == 0) {
                 hedgesSplit.insert(curr->id);
                 hedgesSplit.insert(curr->sym->id);

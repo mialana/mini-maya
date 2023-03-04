@@ -1,4 +1,5 @@
 #include "display.h"
+#include "glm/gtx/string_cast.hpp"
 #include <iostream>
 
 VertexDisplay::VertexDisplay(OpenGLContext* context)
@@ -99,7 +100,7 @@ void HedgeDisplay::updateHedge(HalfEdge* he) {
 }
 
 void HedgeDisplay::create() {
-    if (displayedHedge == nullptr) {
+    if (displayedHedge == nullptr || dynamic_cast<HalfEdge*>(displayedHedge->sym) == nullptr) {
         this->count = 0;
         return;
     }
