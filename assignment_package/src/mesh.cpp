@@ -325,6 +325,7 @@ void Mesh::smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroids, int or
             if (curr != nullptr) {
 
                 midCt++;
+                std::cout << "midAfter: " << glm::to_string(curr->next->m_vert->m_pos) << std::endl;
                 sumMid += curr->next->m_vert->m_pos;
                 if (curr->m_face != nullptr) {
                     sumCent += centroids.at(curr->m_face)->m_pos;
@@ -338,13 +339,16 @@ void Mesh::smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroids, int or
         std::cout << "sumCent: " << glm::to_string(sumCent) << std::endl;
         std::cout << midCt <<std::endl;
 
-        glm::vec3 firstTerm = sumCent / (midCt * midCt);
-        glm::vec3 secondTerm = sumMid / (midCt * midCt);
-        glm::vec3 newV = (midCt - 2.f) * v->m_pos;
-        newV = newV / midCt;
-        newV = newV + secondTerm + firstTerm;
+        glm::vec3 newPos = v->m_pos;
+                newPos *= (midCt - 2);
+                newPos /= midCt;
 
-        v->m_pos = newV;
+                sumMid /= (midCt * midCt);
+                sumCent /= (midCt * midCt);
+
+                newPos += sumMid + sumCent;
+
+                this->m_verts[i].get()->m_pos = newPos;
 
         std::cout << glm::to_string(this->m_verts[i].get()->m_pos) << "\n" << std::endl;
     }
