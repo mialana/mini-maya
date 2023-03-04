@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include <ui_mainwindow.h>
-#include "QtGui/qevent.h"
 #include "cameracontrolshelp.h"
 #include <QFileDialog>
 #include <iostream>

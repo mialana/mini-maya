@@ -11,6 +11,9 @@ GLenum Mesh::drawMode() {
 
 void Mesh::create() {
 
+    for (const auto& he : this->m_hedges) {
+    }
+
     std::vector<GLuint> indices;
     std::vector<glm::vec4> positions;
     std::vector<glm::vec4> normals;
@@ -143,7 +146,6 @@ void Mesh::loadObj(QFile& file) {
     this->createSyms();
 }
 
-
 HalfEdge* Mesh::findHedgeBefore(HalfEdge* he) {
     HalfEdge* curr = he;
     do {
@@ -250,35 +252,26 @@ void Mesh::subdivideMesh() {
     int origVertsNum = this->m_verts.size();
     int origFacesNum = this->m_faces.size();
 
-    std::unordered_map<Face*, Vertex*> centroids;
-    this->findCentroids(centroids);
+    std::unordered_map<Face*, Vertex*> centroidMap;
+    this->findCentroids(centroidMap);
 
-    std::unordered_map<HalfEdge*, glm::vec3> midMap;
-    this->computeSmoothedMidpoints(centroids, midMap);
+    std::unordered_map<HalfEdge*, glm::vec3> midpointMap;
 
-    std::unordered_set<HalfEdge*> hedgesSplit;
+    this->findSmoothedMidpoints(centroidMap, midpointMap);
 
-    int numHedges = this->m_hedges.size();
-    for (int i = 0; i < numHedges; i++) {
-        HalfEdge* curr = this->m_hedges[i].get();
-        if (!hedgesSplit.count(curr) && !hedgesSplit.count(curr->sym)) {
-            this->splitHedge(curr, curr->sym, curr->m_vert, curr->sym->m_vert, midMap.at(curr));
+    this->splitNewHedges(midpointMap);
 
-            hedgesSplit.insert(curr);
-            hedgesSplit.insert(curr->sym);
-        }
-    }
+    smoothOrigVerts(centroidMap, origVertsNum);
 
-    smoothOrigVerts(centroids, origVertsNum);
+    this->quadrangulate(centroidMap, origFacesNum);
 
-    quadrangulate(centroids, origFacesNum);
+    std::cout << count << std::endl;
 }
 
-void Mesh::findCentroids(std::unordered_map<Face*, Vertex*>& centroids) {
+void Mesh::findCentroids(std::unordered_map<Face*, Vertex*>& centroidMap) {
     int numFaces = this->m_faces.size();
     for (int i = 0; i < numFaces; i++) {
         Face* f = this->m_faces[i].get();
-
         uPtr<Vertex> cUptr = mkU<Vertex>(glm::vec3(0.0f));
         Vertex* centroid = cUptr.get();
         this->m_verts.push_back(std::move(cUptr));
@@ -297,12 +290,12 @@ void Mesh::findCentroids(std::unordered_map<Face*, Vertex*>& centroids) {
 
         centroid->m_pos = vertSum;
 
-        centroids.insert(std::make_pair(f, centroid));
+        centroidMap.insert(std::make_pair(f, centroid));
     }
 }
 
-void Mesh::computeSmoothedMidpoints(std::unordered_map<Face*, Vertex*>& centroids,
-                                    std::unordered_map<HalfEdge*, glm::vec3>& midMap) {
+void Mesh::findSmoothedMidpoints(std::unordered_map<Face*, Vertex*>& centroidMap,
+                                    std::unordered_map<HalfEdge*, glm::vec3>& midpointMap) {
 
     int numHedges = this->m_hedges.size();
     for (int i = 0; i < numHedges; i++) {
@@ -312,16 +305,33 @@ void Mesh::computeSmoothedMidpoints(std::unordered_map<Face*, Vertex*>& centroid
         Vertex* v1 = curr->m_vert;
         Vertex* v2 = he2->m_vert;
 
-        glm::vec3 f1Pos = centroids.at(curr->m_face)->m_pos;
-        glm::vec3 f2Pos = centroids.at(he2->m_face)->m_pos;
+        glm::vec3 f1Pos = centroidMap.at(curr->m_face)->m_pos;
+        glm::vec3 f2Pos = centroidMap.at(he2->m_face)->m_pos;
 
         glm::vec3 e = (v1->m_pos + v2->m_pos + f1Pos + f2Pos) / 4.f;
 
-        midMap.insert(std::make_pair(curr, e));
+        midpointMap.insert(std::make_pair(curr, e));
     }
 }
 
-void Mesh::smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroids, int origVertsNum) {
+void Mesh::splitNewHedges(std::unordered_map<HalfEdge*, glm::vec3>& midpointMap) {
+        std::unordered_set<int> hedgesSplit;
+
+        int numHedges = this->m_hedges.size();
+        for (int i = 0; i < numHedges; i++) {
+            HalfEdge* curr = this->m_hedges[i].get();
+            std::cout << hedgesSplit.count(curr->id) << " + " << hedgesSplit.count(curr->sym->id) << std::endl;
+            if (hedgesSplit.count(curr->id) == 0 && hedgesSplit.count(curr->sym->id) == 0) {
+                hedgesSplit.insert(curr->id);
+                hedgesSplit.insert(curr->sym->id);
+
+                this->splitHedge(curr, curr->sym, curr->m_vert, curr->sym->m_vert, midpointMap.at(curr));
+            }
+        }
+
+}
+
+void Mesh::smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroidMap, int origVertsNum) {
     for (int i = 0; i < origVertsNum; i++) {
         Vertex* v = this->m_verts[i].get();
         glm::vec3 sumMid = glm::vec3(0.f);
@@ -334,36 +344,26 @@ void Mesh::smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroids, int or
             if (curr != nullptr) {
 
                 midCt++;
-                std::cout << "midAfter: " << glm::to_string(curr->next->m_vert->m_pos) << std::endl;
                 sumMid += curr->next->m_vert->m_pos;
                 if (curr->m_face != nullptr) {
-                    sumCent += centroids.at(curr->m_face)->m_pos;
+                    sumCent += centroidMap.at(curr->m_face)->m_pos;
                 }
                 curr = curr->next->sym;
             }
         } while (curr != start);
 
-        std::cout << "old pos " << glm::to_string(this->m_verts[i].get()->m_pos) << std::endl;
-        std::cout << "sumMid: " << glm::to_string(sumMid) << std::endl;
-        std::cout << "sumCent: " << glm::to_string(sumCent) << std::endl;
-        std::cout << midCt <<std::endl;
-
         glm::vec3 newPos = v->m_pos;
                 newPos *= (midCt - 2);
                 newPos /= midCt;
-
                 sumMid /= (midCt * midCt);
                 sumCent /= (midCt * midCt);
-
                 newPos += sumMid + sumCent;
 
                 this->m_verts[i].get()->m_pos = newPos;
-
-        std::cout << glm::to_string(this->m_verts[i].get()->m_pos) << "\n" << std::endl;
     }
 }
 
-void Mesh::quadrangulate(std::unordered_map<Face*, Vertex*>& centroids, int origFacesNum) {
+void Mesh::quadrangulate(std::unordered_map<Face*, Vertex*>& centroidMap, int origFacesNum) {
     for (int i = 0; i < origFacesNum; i++) {
         Face* f = this->m_faces[i].get();
 
@@ -383,7 +383,7 @@ void Mesh::quadrangulate(std::unordered_map<Face*, Vertex*>& centroids, int orig
             this->m_hedges.push_back(std::move(tcUptr));
             this->m_hedges.push_back(std::move(fcUptr));
 
-            toCentroid->m_vert = centroids.at(f);
+            toCentroid->m_vert = centroidMap.at(f);
             fromCentroid->next = curr;
 
             if (prevToCentroid != nullptr) {

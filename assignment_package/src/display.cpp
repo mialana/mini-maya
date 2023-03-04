@@ -110,14 +110,7 @@ void HedgeDisplay::create() {
 
     positions.push_back(glm::vec4(displayedHedge->m_vert->m_pos, 1));
 
-    HalfEdge* curr = Mesh::findHedgeBefore(displayedHedge);
-
-
-    do {
-        curr = curr->next;
-    } while (curr->next != displayedHedge);
-
-    positions.push_back(glm::vec4(curr->m_vert->m_pos, 1));
+    positions.push_back(glm::vec4(displayedHedge->sym->m_vert->m_pos, 1));
 
     colors.push_back(glm::vec4(1, 1, 0, 1));
     colors.push_back(glm::vec4(1, 0, 0, 1));
