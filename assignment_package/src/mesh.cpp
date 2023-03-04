@@ -155,7 +155,6 @@ HalfEdge* Mesh::findHedgeBefore(HalfEdge* he) {
 
 void Mesh::splitHedge(HalfEdge* he1, HalfEdge* he2, Vertex* v1, Vertex* v2, glm::vec3 pos) {
     uPtr<Vertex> v3Uptr = mkU<Vertex>(pos);
-
     uPtr<HalfEdge> he1bUptr = mkU<HalfEdge>();
     uPtr<HalfEdge> he2bUptr = mkU<HalfEdge>();
 
@@ -167,13 +166,21 @@ void Mesh::splitHedge(HalfEdge* he1, HalfEdge* he2, Vertex* v1, Vertex* v2, glm:
     this->m_hedges.push_back(std::move(he1bUptr));
     this->m_hedges.push_back(std::move(he2bUptr));
 
+//    he1b = (he1->next, he2, v1, he1->m_face)
+//    he2b = (he2->next, he1, v2, he2->m_face)
+//    v3 = (pos, he1);
+
+//    he1 = (he1b, he2b, v3, he1->m_face);
+//    he2 = (he2b, he1b, v3, he2->m_face);
+
+
     he1b->next = he1->next;
     he2b->next = he2->next;
 
     he1b->setVert(v1);
-    he1b->setFace(he1->m_face);
-
     he2b->setVert(v2);
+
+    he1b->setFace(he1->m_face);
     he2b->setFace(he2->m_face);
 
     he1->next = he1b;
@@ -183,9 +190,12 @@ void Mesh::splitHedge(HalfEdge* he1, HalfEdge* he2, Vertex* v1, Vertex* v2, glm:
     he2->setVert(v3);
 
     v3->m_hedge = he1;
+    v3->m_hedge = he2;
 
-    he1->symWith(he2b);
-    he2->symWith(he1b);
+    he1->sym = he2b;
+    he2b->sym = he1;
+    he2->sym = he1b;
+    he1b->sym = he2;
 }
 
 void Mesh::triangulateFace(Face* f1) {
@@ -254,7 +264,6 @@ void Mesh::subdivideMesh() {
         if (!hedgesSplit.count(curr) && !hedgesSplit.count(curr->sym)) {
             this->splitHedge(curr, curr->sym, curr->m_vert, curr->sym->m_vert, midMap.at(curr));
 
-            std::cout << "midmap value: " << glm::to_string(midMap.at(curr)) << std::endl;
             hedgesSplit.insert(curr);
             hedgesSplit.insert(curr->sym);
         }
@@ -378,26 +387,29 @@ void Mesh::quadrangulate(std::unordered_map<Face*, Vertex*>& centroids, int orig
             fromCentroid->next = curr;
 
             if (prevToCentroid != nullptr) {
-                fromCentroid->symWith(prevToCentroid);
+                fromCentroid->sym = prevToCentroid;
+                prevToCentroid->sym = fromCentroid;
             }
 
             if (firstFromCentroid == nullptr) {
                 firstFromCentroid = fromCentroid;
-                toCentroid->m_face = f;
-                fromCentroid->m_face = f;
+                curr->next->setFace(f);
+                curr->setFace(f);
+                toCentroid->setFace(f);
+                fromCentroid->setFace(f);
             } else {
                 uPtr<Face> nfUptr = mkU<Face>(Randomizer().get_randVec3());
                 Face* newFace = nfUptr.get();
                 this->m_faces.push_back(std::move(nfUptr));
 
-                curr->next->m_face = newFace;
-                toCentroid->m_face = newFace;
-                fromCentroid->m_face = newFace;
+                curr->next->setFace(newFace);
+                toCentroid->setFace(newFace);
+                fromCentroid->setFace(newFace);
                 curr->setFace(newFace);
             }
 
-            fromCentroid->m_vert = curr->sym->m_vert;
             toCentroid->next = fromCentroid;
+            fromCentroid->setVert(curr->sym->m_vert);
 
             HalfEdge* savedNext = curr->next;
             curr = curr->next->next;
@@ -405,7 +417,8 @@ void Mesh::quadrangulate(std::unordered_map<Face*, Vertex*>& centroids, int orig
             prevToCentroid = toCentroid;
         } while (curr != origCurr);
 
-        prevToCentroid->symWith(firstFromCentroid);
+        firstFromCentroid->sym = prevToCentroid;
+        prevToCentroid->sym = firstFromCentroid;
 
     }
 }
