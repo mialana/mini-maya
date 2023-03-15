@@ -7,8 +7,11 @@ SOURCES += \
     $$PWD/mainwindow.cpp \
     $$PWD/mesh.cpp \
     $$PWD/mygl.cpp \
+    $$PWD/scene/circle3d.cpp \
     $$PWD/scene/face.cpp \
     $$PWD/scene/halfedge.cpp \
+    $$PWD/scene/joint.cpp \
+    $$PWD/scene/skeleton.cpp \
     $$PWD/scene/vertex.cpp \
     $$PWD/shaderprogram.cpp \
     $$PWD/utils.cpp \
@@ -25,8 +28,11 @@ HEADERS += \
     $$PWD/mainwindow.h \
     $$PWD/mesh.h \
     $$PWD/mygl.h \
+    $$PWD/scene/circle3d.h \
     $$PWD/scene/face.h \
     $$PWD/scene/halfedge.h \
+    $$PWD/scene/joint.h \
+    $$PWD/scene/skeleton.h \
     $$PWD/scene/vertex.h \
     $$PWD/shaderprogram.h \
     $$PWD/utils.h \

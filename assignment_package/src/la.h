@@ -8,6 +8,7 @@
 // For glm::translate, glm::rotate, and glm::scale.
 #    include <glm/gtc/matrix_transform.hpp>
 #    include <glm/gtx/transform.hpp>
+#    include <glm/gtx/quaternion.hpp>
 // For glm::value_ptr.
 #    include <glm/gtc/type_ptr.hpp>
 //#undef GLM_CIS460

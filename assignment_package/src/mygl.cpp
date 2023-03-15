@@ -85,9 +85,6 @@ void MyGL::initializeGL()
     // We have to have a VAO bound in OpenGL 3.2 Core. But if we're not
     // using multiple VAOs, we can just bind one once.
     glBindVertexArray(vao);
-
-//    glm::mat4 test = glm::translate(glm::mat4(), glm::vec3(0.f, 0.f, -5.f));
-//    std::cout << glm::to_string(test) << std::endl;
 }
 
 void MyGL::resizeGL(int w, int h)
@@ -202,6 +199,10 @@ void MyGL::keyPressEvent(QKeyEvent *e)
 void MyGL::updateAll() {
     m_meshCurrent.destroy();
     m_meshCurrent.create();
+
+    emit sig_setSelectedVert(mp_selectedVert);
+    emit sig_setSelectedFace(mp_selectedFace);
+    emit sig_setSelectedHedge(mp_selectedHedge);
 
     update();
 }
