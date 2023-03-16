@@ -79,9 +79,9 @@ void Joint::create() {
     glm::vec3 orthogonalAxis1 = glm::cross(orientationAxis, nonparallelAxis);
     glm::vec3 orthogonalAxis2 = glm::cross(orientationAxis, orthogonalAxis1);
 
-    glm::vec4 circleVert1 = worldPosition + glm::vec4((glm::vec3(orthogonalAxis1) * 0.5f), 1.f);
-    glm::vec4 circleVert2 = worldPosition + glm::vec4((glm::vec3(orthogonalAxis2) * 0.5f), 1.f);
-    glm::vec4 circleVert3 = worldPosition + glm::vec4((glm::vec3(orientationAxis) * 0.5f), 1.f);
+    glm::vec4 circleVert1 = worldPosition + glm::vec4((glm::vec3(orthogonalAxis1) * 0.5f), 0.f);
+    glm::vec4 circleVert2 = worldPosition + glm::vec4((glm::vec3(orthogonalAxis2) * 0.5f), 0.f);
+    glm::vec4 circleVert3 = worldPosition + glm::vec4((glm::vec3(orientationAxis) * 0.5f), 0.f);
 
     for (int i = 0; i < 12; i++) {
         const glm::mat4 translationMatrix = glm::translate(glm::mat4(), glm::vec3(-worldPosition));
@@ -91,6 +91,8 @@ void Joint::create() {
         glm::vec4 v = reverseTranslationMatrix * rotationMatrix * translationMatrix * glm::vec4(circleVert1);
 
         positions.push_back(v);
+        normals.push_back(glm::vec4(0, 0, 0, 1));
+        colors.push_back(glm::vec4(1, 0, 0, 1));
     }
 
     for (int i = 0; i < 12; i++) {
@@ -101,6 +103,8 @@ void Joint::create() {
         glm::vec4 v = reverseTranslationMatrix * rotationMatrix * translationMatrix * glm::vec4(circleVert2);
 
         positions.push_back(v);
+        normals.push_back(glm::vec4(0, 0, 0, 1));
+        colors.push_back(glm::vec4(0, 0, 1, 1));
     }
 
     for (int i = 0; i < 12; i++) {
@@ -111,20 +115,16 @@ void Joint::create() {
         glm::vec4 v = reverseTranslationMatrix * rotationMatrix * translationMatrix * glm::vec4(circleVert3);
 
         positions.push_back(v);
+        normals.push_back(glm::vec4(0, 0, 0, 1));
+        colors.push_back(glm::vec4(0, 1, 0, 1));
     }
 
     int numPositions = positions.size();
     for (int i = 0; i < numPositions; i = i + 12) {
         for (int j = i; j < i + 12; j++) {
             indices.push_back(j);
-            indices.push_back(((j+1) % 12) + j);
+            indices.push_back((j+1) % (i+12) + i * (j / (i + 11)));
         }
-    }
-
-
-    for (int i = 0; i < numPositions; i++) {
-        normals.push_back(glm::vec4(0, 0, 0, 1));
-        colors.push_back(glm::vec4(0, 0, 0, 1));
     }
 
     this->count = indices.size();

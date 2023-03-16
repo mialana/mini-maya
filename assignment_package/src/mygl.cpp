@@ -82,7 +82,7 @@ void MyGL::initializeGL()
     m_progFlat.create(":/glsl/flat.vert.glsl", ":/glsl/flat.frag.glsl");
 
     Joint j1 = Joint(this, QString("parent"), nullptr, glm::vec3(0, 1, 0), glm::quat(0.7071, 0, 0.7071, 0));
-    Joint j2 = Joint(this, QString("child"), &j1, glm::vec3(0, 0, 1), glm::quat(0, 0, 1, 0));
+    Joint j2 = Joint(this, QString("child"), &j1, glm::vec3(1, 0, 1), glm::quat(0, 0, 1, 0));
 
     j1.addChild(mkU<Joint>(j2));
 
