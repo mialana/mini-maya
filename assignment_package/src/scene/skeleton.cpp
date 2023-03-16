@@ -14,7 +14,6 @@ Skeleton::Skeleton(OpenGLContext* context, Joint* r)
 
 Skeleton::~Skeleton() {
     Drawable::destroy();
-    QTreeWidget::destroy();
 }
 
 void Skeleton::computeBindMatrices(Joint* curr) {

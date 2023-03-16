@@ -5,7 +5,7 @@
 #include "smartpointerhelp.h"
 #include "la.h"
 
-class Joint : public QTreeWidget, public Drawable
+class Joint : public QTreeWidgetItem, public Drawable
 {
 private:
     glm::vec3 translation;
@@ -21,11 +21,17 @@ public:
     Joint(const Joint&);
     ~Joint();
 
+    void addChild(uPtr<Joint>);
+
     Joint& operator=(const Joint&);
 
     glm::mat4 getLocalTransformation();
 
     glm::mat4 getOverallTransformation();
 
-    void create();
+    GLenum drawMode() override {
+        return GL_LINES;
+    }
+
+    void create() override;
 };

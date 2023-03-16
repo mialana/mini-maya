@@ -8,6 +8,7 @@
 #include "camera.h"
 #include "mesh.h"
 #include "display.h"
+#include "scene/joint.h"
 
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLShaderProgram>
@@ -38,6 +39,8 @@ public:
     VertexDisplay m_vertDisplay;
     FaceDisplay m_faceDisplay;
     HedgeDisplay m_hedgeDisplay;
+
+    uPtr<Joint> test;
 
     explicit MyGL(QWidget *parent = nullptr);
     ~MyGL();

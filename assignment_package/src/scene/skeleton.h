@@ -5,7 +5,7 @@
 #include "smartpointerhelp.h"
 #include "la.h"
 
-class Skeleton : public QTreeWidget, public Drawable
+class Skeleton : public QTreeWidgetItem, public Drawable
 {
 public:
     uPtr<Joint> root;
