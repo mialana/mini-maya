@@ -82,14 +82,13 @@ void MyGL::initializeGL()
     m_progFlat.create(":/glsl/flat.vert.glsl", ":/glsl/flat.frag.glsl");
 
     Joint j1 = Joint(this, QString("parent"), nullptr, glm::vec3(0, 1, 0), glm::quat(0.7071, 0, 0.7071, 0));
-    Joint j2 = Joint(this, QString("child"), &j1, glm::vec3(1, 0, 1), glm::quat(0, 0, 1, 0));
+    Joint j2 = Joint(this, QString("child"), &j1, glm::vec3(1, 0, 0), glm::quat(0, 0, 1, 0));
 
     j1.addChild(mkU<Joint>(j2));
 
     test = mkU<Joint>(j1);
 
     test->create();
-
 
     // We have to have a VAO bound in OpenGL 3.2 Core. But if we're not
     // using multiple VAOs, we can just bind one once.
@@ -128,7 +127,7 @@ void MyGL::paintGL()
     m_progLambert.setCamPos(m_glCamera.eye);
     m_progLambert.setModelMatrix(glm::mat4(1.f));
 
-    m_progFlat.draw(*test);
+    test->draw(m_progFlat);
 
 //    for (auto& v : m_meshCurrent.m_verts) {
 //        emit this->sig_sendListItem(v.get());

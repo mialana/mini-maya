@@ -2,14 +2,19 @@
 
 #include <QTreeWidget>
 #include "drawable.h"
+#include "shaderprogram.h"
 #include "smartpointerhelp.h"
-#include "la.h"
+#include "scene/circle3d.h"
 
 class Joint : public QTreeWidgetItem, public Drawable
 {
 private:
     glm::vec3 translation;
     glm::quat rotation;
+
+    Circle3D c1;
+    Circle3D c2;
+    Circle3D c3;
 public:
     QString name;
     Joint* parent;
@@ -34,4 +39,6 @@ public:
     }
 
     void create() override;
+
+    void draw(ShaderProgram &prog_flat);
 };

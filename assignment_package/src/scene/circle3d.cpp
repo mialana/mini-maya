@@ -1,8 +1,12 @@
 #include "circle3d.h"
 #include <iostream>
 
-Circle3D::Circle3D(OpenGLContext* context, glm::vec3 a, glm::vec4 c, glm::vec4 cv)
-    : Drawable(context), axis(a), center(c), circleVert(cv)
+Circle3D::Circle3D(OpenGLContext* context)
+    : Drawable(context), color(glm::vec4(0, 0, 0, 1))
+{}
+
+Circle3D::Circle3D(OpenGLContext* context, glm::vec3 a, glm::vec4 c, glm::vec4 cv, glm::vec4 col)
+    : Drawable(context), axis(a), center(c), circleVert(cv), color(col)
 {}
 
 void Circle3D::create() {
@@ -20,7 +24,7 @@ void Circle3D::create() {
 
         positions.push_back(v);
         normals.push_back(glm::vec4(0, 0, 0, 1));
-        colors.push_back(glm::vec4(0, 0, 0, 1));
+        colors.push_back(color);
     }
 
     int numPositions = positions.size();
