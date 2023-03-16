@@ -24,12 +24,6 @@ void Skeleton::computeBindMatrices(Joint* curr) {
     }
 }
 
-//void Skeleton::draw(ShaderProgram &prog_flat) {
-//    prog_flat.draw(c1);
-//    prog_flat.draw(c2);
-//    prog_flat.draw(c3);
-//}
-
 void Skeleton::create() {
 
 }
