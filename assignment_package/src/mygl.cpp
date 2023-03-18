@@ -22,7 +22,8 @@ MyGL::MyGL(QWidget *parent)
       mp_selectedHedge(nullptr),
       m_vertDisplay(this),
       m_faceDisplay(this),
-      m_hedgeDisplay(this)
+      m_hedgeDisplay(this),
+      m_skeletonCurrent(this)
 {
     setFocusPolicy(Qt::StrongFocus);
 }
@@ -60,36 +61,28 @@ void MyGL::initializeGL()
     glGenVertexArrays(1, &vao);
 
     //Create the instances of Cylinder and Sphere.
-//    m_geomSquare.create();
+    m_geomSquare.create();
 
-//    QFile relativeFile = QFile(QDir().cleanPath(QString(QFileInfo(".").absolutePath() + "/../../../../obj_files/cube.obj")));
+    QFile relativeFile = QFile(QDir().cleanPath(QString(QFileInfo(".").absolutePath() + "/../../../../obj_files/cube.obj")));
 
-//    if(relativeFile.open(QIODevice::ReadOnly)){
-//        m_meshCurrent.loadObj(relativeFile);
-//    }
+    if(relativeFile.open(QIODevice::ReadOnly)){
+        m_meshCurrent.loadObj(relativeFile);
+    }
 
-//    m_meshCurrent.create();
+    m_meshCurrent.create();
 
-//    m_vertDisplay.create();
+    m_skeletonCurrent.create();
 
-//    m_faceDisplay.create();
+    m_vertDisplay.create();
 
-//    m_hedgeDisplay.create();
+    m_faceDisplay.create();
+
+    m_hedgeDisplay.create();
 
     // Create and set up the diffuse shader
     m_progLambert.create(":/glsl/lambert.vert.glsl", ":/glsl/lambert.frag.glsl");
     // Create and set up the flat lighting shader
     m_progFlat.create(":/glsl/flat.vert.glsl", ":/glsl/flat.frag.glsl");
-
-    Joint j1 = Joint(this, QString("parent"), nullptr, glm::vec3(0, 1, 0), glm::quat(0, 0, 1, 0));
-    Joint j2 = Joint(this, QString("child"), nullptr, glm::vec3(1, 0, 0), glm::quat(0, 0, 1, 0));
-
-    uPtr<Joint> j2UPtr = mkU<Joint>(j2);
-    j2UPtr.get()->parent = &j1;
-    j1.addChild(std::move(j2UPtr));
-
-    testSkeleton = mkU<Skeleton>(this, &j1);
-    testSkeleton->create();
 
     // We have to have a VAO bound in OpenGL 3.2 Core. But if we're not
     // using multiple VAOs, we can just bind one once.
@@ -128,28 +121,30 @@ void MyGL::paintGL()
     m_progLambert.setCamPos(m_glCamera.eye);
     m_progLambert.setModelMatrix(glm::mat4(1.f));
 
-    m_progFlat.draw(*testSkeleton);
-    testSkeleton->drawJoints(m_progFlat, testSkeleton->root.get());
+    for (auto& v : m_meshCurrent.m_verts) {
+        emit this->sig_sendListItem(v.get());
+    }
 
-//    for (auto& v : m_meshCurrent.m_verts) {
-//        emit this->sig_sendListItem(v.get());
-//    }
+    for (auto& f : m_meshCurrent.m_faces) {
+        emit this->sig_sendListItem(f.get());
+    }
 
-//    for (auto& f : m_meshCurrent.m_faces) {
-//        emit this->sig_sendListItem(f.get());
-//    }
+    for (auto& he : m_meshCurrent.m_hedges) {
+        emit this->sig_sendListItem(he.get());
+    }
 
-//    for (auto& he : m_meshCurrent.m_hedges) {
-//        emit this->sig_sendListItem(he.get());
-//    }
+    m_progFlat.draw(m_meshCurrent);
 
-//    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_DEPTH_TEST);
 
-//    m_progFlat.draw(m_vertDisplay);
-//    m_progFlat.draw(m_faceDisplay);
-//    m_progFlat.draw(m_hedgeDisplay);
+    m_progFlat.draw(m_vertDisplay);
+    m_progFlat.draw(m_faceDisplay);
+    m_progFlat.draw(m_hedgeDisplay);
 
-//    glEnable(GL_DEPTH_TEST);
+    m_progFlat.draw(m_skeletonCurrent);
+    m_skeletonCurrent.drawJoints(m_progFlat, m_skeletonCurrent.root.get());
+
+    glEnable(GL_DEPTH_TEST);
 
 }
 

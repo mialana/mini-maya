@@ -99,3 +99,38 @@ void Skeleton::create() {
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufCol);
     mp_context->glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec4), colors.data(), GL_STATIC_DRAW);
 }
+
+void Skeleton::loadJson(QJsonObject rootJsonObj) {
+    root = loadJsonHelper(rootJsonObj, nullptr);
+
+    indices = std::vector<GLuint>();
+    positions = std::vector<glm::vec4>();
+    normals = std::vector<glm::vec4>();
+    colors = std::vector<glm::vec4>();
+
+    this->destroy();
+    this->create();
+}
+
+uPtr<Joint> Skeleton::loadJsonHelper(QJsonObject jointJsonObj, Joint* parent) {
+    QString foundName = jointJsonObj["name"].toString();
+    QJsonArray foundTrans = jointJsonObj["pos"].toArray();
+    QJsonArray foundRot = jointJsonObj["rot"].toArray();
+    QJsonArray foundChildren = jointJsonObj["children"].toArray();
+
+    glm::vec3 finalTrans = glm::vec3(foundTrans[1].toDouble(), foundTrans[2].toDouble(), foundTrans[3].toDouble());
+    double angle = foundRot[0].toDouble();
+    glm::vec3 axis = glm::vec3(foundRot[1].toDouble(), foundRot[2].toDouble(), foundRot[3].toDouble());
+    glm::quat finalRot = glm::quat(glm::angleAxis(float(angle),axis));
+
+    uPtr<Joint> newJtUPtr = mkU<Joint>(mp_context, foundName, parent, finalTrans, finalRot);
+
+    Joint* newJt = newJtUPtr.get();
+
+    for (int i = 0; i < foundChildren.size(); i++) {
+        uPtr<Joint> newChild = loadJsonHelper(foundChildren[i].toObject(), newJt);
+        newJt->addChild(std::move(newChild));
+    }
+
+    return newJtUPtr;
+}

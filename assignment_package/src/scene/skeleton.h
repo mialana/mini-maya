@@ -3,6 +3,8 @@
 #include <QTreeWidget>
 #include "joint.h"
 #include "smartpointerhelp.h"
+#include <QJsonObject>
+#include <QJsonArray>
 
 class Skeleton : public QTreeWidgetItem, public Drawable
 {
@@ -13,6 +15,7 @@ private:
     std::vector<glm::vec4> colors;
 
     void createHelper(Joint*);
+    uPtr<Joint> loadJsonHelper(QJsonObject, Joint*);
 public:
     uPtr<Joint> root;
 
@@ -29,4 +32,6 @@ public:
     void create() override;
 
     void drawJoints(ShaderProgram &prog_flat, Joint* curr);
+
+    void loadJson(QJsonObject);
 };

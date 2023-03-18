@@ -40,7 +40,7 @@ public:
     FaceDisplay m_faceDisplay;
     HedgeDisplay m_hedgeDisplay;
 
-    uPtr<Skeleton> testSkeleton;
+    Skeleton m_skeletonCurrent;
 
     explicit MyGL(QWidget *parent = nullptr);
     ~MyGL();

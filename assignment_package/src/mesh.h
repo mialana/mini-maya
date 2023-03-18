@@ -43,7 +43,6 @@ public:
     virtual void create();
 
     void loadObj(QFile& file);
-    uPtr<Joint> loadJson(QJsonObject, Joint*);
     void createSyms();
 
     void splitHedge(HalfEdge*, HalfEdge* , Vertex*, Vertex*, glm::vec3);

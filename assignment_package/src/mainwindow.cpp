@@ -143,9 +143,6 @@ void MainWindow::on_actionImport_Obj_triggered() {
 
     filename = validate_filename;
     ui->mygl->m_meshCurrent.loadObj(file);
-
-    ui->mygl->m_meshCurrent.destroy();
-    ui->mygl->m_meshCurrent.create();
 }
 
 void MainWindow::on_actionImport_Skeleton_triggered() {
@@ -163,7 +160,7 @@ void MainWindow::on_actionImport_Skeleton_triggered() {
     QJsonDocument doc = QJsonDocument::fromJson(content.toUtf8());
     QJsonObject rootJsonObj = doc.object()["root"].toObject();
 
-    ui->mygl->m_meshCurrent.loadJson(rootJsonObj, nullptr);
+    ui->mygl->m_skeletonCurrent.loadJson(rootJsonObj);
 }
 
 void MainWindow::on_actionQuit_triggered()

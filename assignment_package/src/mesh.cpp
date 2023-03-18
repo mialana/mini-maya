@@ -1,7 +1,6 @@
 #include "mesh.h"
 #include "QtCore/qjsonobject.h"
 #include <iostream>
-#include <QJsonArray>
 
 Mesh::Mesh(OpenGLContext* context) : Drawable(context)
 {}
@@ -88,29 +87,6 @@ void Mesh::createSyms() {
     }
 }
 
-uPtr<Joint> Mesh::loadJson(QJsonObject jointJsonObj, Joint* parent) {
-    QString foundName = jointJsonObj["name"].toString();
-    QJsonArray foundTrans = jointJsonObj["pos"].toArray();
-    QJsonArray foundRot = jointJsonObj["rot"].toArray();
-    QJsonArray foundChildren = jointJsonObj["children"].toArray();
-
-    glm::vec3 finalTrans = glm::vec3(foundTrans[1].toDouble(), foundTrans[2].toDouble(), foundTrans[3].toDouble());
-    double angle = foundRot[0].toDouble();
-    glm::vec3 axis = glm::vec3(foundRot[1].toDouble(), foundRot[2].toDouble(), foundRot[3].toDouble());
-    glm::quat finalRot = glm::quat(glm::angleAxis(float(angle),axis));
-
-    uPtr<Joint> newJtUPtr = mkU<Joint>(mp_context, foundName, parent, finalTrans, finalRot);
-
-    Joint* newJt = newJtUPtr.get();
-
-    for (int i = 0; i < foundChildren.size(); i++) {
-        uPtr<Joint> newChild = loadJson(foundChildren[i].toObject(), newJt);
-        newJt->addChild(std::move(newChild));
-    }
-
-    return newJtUPtr;
-}
-
 void Mesh::loadObj(QFile& file) {
     this->m_verts.clear();
     this->m_faces.clear();
@@ -172,6 +148,9 @@ void Mesh::loadObj(QFile& file) {
     }
 
     this->createSyms();
+
+    this->destroy();
+    this->create();
 }
 
 HalfEdge* Mesh::findHedgeBefore(HalfEdge* he) {
