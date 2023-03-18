@@ -8,7 +8,7 @@
 #include "camera.h"
 #include "mesh.h"
 #include "display.h"
-#include "scene/joint.h"
+#include "scene/skeleton.h"
 
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLShaderProgram>
@@ -40,7 +40,7 @@ public:
     FaceDisplay m_faceDisplay;
     HedgeDisplay m_hedgeDisplay;
 
-    uPtr<Joint> test;
+    uPtr<Skeleton> testSkeleton;
 
     explicit MyGL(QWidget *parent = nullptr);
     ~MyGL();

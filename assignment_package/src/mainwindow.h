@@ -21,6 +21,7 @@ public:
     QString filename;
 
 private slots:
+    void on_actionImport_Skeleton_triggered();
     void on_actionImport_Obj_triggered();
 
     void on_actionQuit_triggered();

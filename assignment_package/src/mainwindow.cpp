@@ -2,6 +2,8 @@
 #include <ui_mainwindow.h>
 #include "cameracontrolshelp.h"
 #include <QFileDialog>
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <iostream>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -144,6 +146,24 @@ void MainWindow::on_actionImport_Obj_triggered() {
 
     ui->mygl->m_meshCurrent.destroy();
     ui->mygl->m_meshCurrent.create();
+}
+
+void MainWindow::on_actionImport_Skeleton_triggered() {
+    QString validate_file = QFileDialog::getOpenFileName(0, QString("Select JSON File"), QDir::currentPath().append(QString("../..")), QString("*.json"));
+
+    QFile file(validate_file);
+
+    if(!file.open(QIODevice::ReadOnly)){
+        qWarning("Could not open the file.");
+        return;
+    }
+
+    QString content = file.readAll();
+    file.close();
+    QJsonDocument doc = QJsonDocument::fromJson(content.toUtf8());
+    QJsonObject rootJsonObj = doc.object()["root"].toObject();
+
+    ui->mygl->m_meshCurrent.loadJson(rootJsonObj, nullptr);
 }
 
 void MainWindow::on_actionQuit_triggered()

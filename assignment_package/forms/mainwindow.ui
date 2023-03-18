@@ -310,6 +310,7 @@
      <string>Import</string>
     </property>
     <addaction name="actionImport_Obj"/>
+    <addaction name="actionImport_Skeleton"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuHelp"/>
@@ -331,6 +332,11 @@
   <action name="actionImport_Obj">
    <property name="text">
     <string>Import Obj</string>
+   </property>
+  </action>
+  <action name="actionImport_Skeleton">
+   <property name="text">
+    <string>Import Skeleton</string>
    </property>
   </action>
  </widget>
