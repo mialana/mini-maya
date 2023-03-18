@@ -141,8 +141,9 @@ void MyGL::paintGL()
     m_progFlat.draw(m_faceDisplay);
     m_progFlat.draw(m_hedgeDisplay);
 
-    m_progFlat.draw(m_skeletonCurrent);
     m_skeletonCurrent.drawJoints(m_progFlat, m_skeletonCurrent.root.get());
+    m_progFlat.setModelMatrix(glm::mat4());
+    m_progFlat.draw(m_skeletonCurrent);
 
     glEnable(GL_DEPTH_TEST);
 

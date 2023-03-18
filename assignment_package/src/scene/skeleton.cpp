@@ -1,18 +1,15 @@
 #include "skeleton.h"
-#include "glm/gtx/string_cast.hpp"
 #include <iostream>
 
 Skeleton::Skeleton(OpenGLContext* context)
     : Drawable(context)
 {
-    root = mkU<Joint>(context, QString("root"));
+    root = nullptr;
 
     indices = std::vector<GLuint>();
     positions = std::vector<glm::vec4>();
     normals = std::vector<glm::vec4>();
     colors = std::vector<glm::vec4>();
-
-    this->computeBindMatrices(root.get());
 }
 
 Skeleton::Skeleton(OpenGLContext* context, uPtr<Joint> r)
@@ -46,6 +43,9 @@ void Skeleton::computeBindMatrices(Joint* curr) {
 }
 
 void Skeleton::drawJoints(ShaderProgram &prog_flat, Joint* curr) {
+    if (root == nullptr) {
+        return;
+    }
     curr->draw(prog_flat);
 
     for (const auto& c : curr->children) {
@@ -72,6 +72,11 @@ void Skeleton::createHelper(Joint* curr) {
 }
 
 void Skeleton::create() { 
+    if (root == nullptr) {
+        this->count = 0;
+        return;
+    }
+
     this->createHelper(root.get());
 
     for (int i = 0; i < int(positions.size()); i = i + 2) {
