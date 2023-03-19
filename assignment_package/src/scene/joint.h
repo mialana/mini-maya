@@ -11,6 +11,9 @@ private:
     glm::vec3 translation;
     glm::quat rotation;
 public:
+    static int population;
+    int id;
+
     QString name;
     Joint* parent;
     std::vector<uPtr<Joint>> children;

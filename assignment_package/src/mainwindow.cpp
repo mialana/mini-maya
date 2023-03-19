@@ -51,6 +51,10 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->subdivideMesh, SIGNAL(clicked()),
             ui->mygl, SLOT(slot_subdivideMesh()));
 
+    connect(ui->bindSkeleton, SIGNAL(clicked()),
+            ui->mygl, SLOT(slot_bindSkeleton()));
+
+
     connect(ui->vertPosXSpinBox, SIGNAL(valueChanged(double)),
             ui->mygl, SLOT(slot_translateX(double)));
 
@@ -159,6 +163,8 @@ void MainWindow::on_actionImport_Skeleton_triggered() {
     file.close();
     QJsonDocument doc = QJsonDocument::fromJson(content.toUtf8());
     QJsonObject rootJsonObj = doc.object()["root"].toObject();
+
+    Joint::population = 0;
 
     ui->mygl->m_skeletonCurrent.loadJson(rootJsonObj);
 }

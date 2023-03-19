@@ -56,6 +56,7 @@ public slots:
     void slot_splitHedge();
     void slot_triangulateFace();
     void slot_subdivideMesh();
+    void slot_bindSkeleton();
 
     void slot_translateX(double);
     void slot_translateY(double);

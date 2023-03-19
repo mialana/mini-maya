@@ -10,6 +10,10 @@ Vertex::Vertex(glm::vec3 p)
     this->m_pos = p;
     this->m_hedge = nullptr;
 
+    this->influencers = std::make_pair(nullptr, nullptr);
+    this->distances = glm::vec2(MAXFLOAT, MAXFLOAT);
+    this->weights = glm::vec2(-1.f, -1.f);
+
     QListWidgetItem::setText(QString::number(id));
 }
 

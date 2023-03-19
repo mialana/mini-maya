@@ -2,6 +2,7 @@
 
 #include <QTreeWidget>
 #include "joint.h"
+#include "mesh.h"
 #include "smartpointerhelp.h"
 #include <QJsonObject>
 #include <QJsonArray>
@@ -16,6 +17,7 @@ private:
 
     void createHelper(Joint*);
     uPtr<Joint> loadJsonHelper(QJsonObject, Joint*);
+    void bindMeshHelper(Vertex*, Joint*);
 public:
     uPtr<Joint> root;
 
@@ -34,4 +36,6 @@ public:
     void drawJoints(ShaderProgram &prog_flat, Joint* curr);
 
     void loadJson(QJsonObject);
+
+    void bindMesh(Mesh&);
 };

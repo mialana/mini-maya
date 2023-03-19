@@ -2,7 +2,8 @@
 #include "QtCore/qjsonobject.h"
 #include <iostream>
 
-Mesh::Mesh(OpenGLContext* context) : Drawable(context)
+Mesh::Mesh(OpenGLContext* context)
+    : Drawable(context), initiated(false)
 {}
 
 GLenum Mesh::drawMode() {
@@ -10,11 +11,12 @@ GLenum Mesh::drawMode() {
 }
 
 void Mesh::create() {
-
     std::vector<GLuint> indices = std::vector<GLuint>();
     std::vector<glm::vec4> positions = std::vector<glm::vec4>();
     std::vector<glm::vec4> normals = std::vector<glm::vec4>();
     std::vector<glm::vec4> colors = std::vector<glm::vec4>();
+    std::vector<glm::vec2> weights = std::vector<glm::vec2>();
+    std::vector<glm::ivec2> jointIds = std::vector<glm::ivec2>();
 
     int currTotal = 0;
     for (const uPtr<Face> &f : m_faces) {
@@ -34,6 +36,10 @@ void Mesh::create() {
             normals.push_back(glm::vec4(n, 0));
 
             colors.push_back(glm::vec4(curr->m_face->m_color, 1));
+
+            weights.push_back(curr->m_vert->weights);
+            jointIds.push_back(glm::vec2(curr->m_vert->influencers.first->id, curr->m_vert->influencers.second->id));
+
             fVertNum++;
             curr = curr->next;
         } while (curr != start);
@@ -63,6 +69,20 @@ void Mesh::create() {
     generateCol();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufCol);
     mp_context->glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec4), colors.data(), GL_STATIC_DRAW);
+
+//    if (m_attrIDs != -1 && d.bindIDs) {
+//        mp_context->glEnableVertexAttribArray(m_attrIDs);
+//        mp_context->glVertexAttribIPointer(m_attrIDs, 2, GL_INT, false, 0, nullptr);
+//    }
+
+    generateWts();
+    mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufWts);
+    mp_context->glBufferData(GL_ARRAY_BUFFER, weights.size() * sizeof(glm::vec2), weights.data(), GL_STATIC_DRAW);
+
+    generateIds();
+    mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufIds);
+    mp_context->glBufferData(GL_ARRAY_BUFFER, jointIds.size() * sizeof(glm::ivec2), jointIds.data(), GL_STATIC_DRAW);
+
 }
 
 void Mesh::createSyms() {
@@ -149,6 +169,7 @@ void Mesh::loadObj(QFile& file) {
 
     this->createSyms();
 
+    initiated = true;
     this->destroy();
     this->create();
 }

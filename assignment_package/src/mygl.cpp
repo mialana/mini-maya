@@ -63,11 +63,11 @@ void MyGL::initializeGL()
     //Create the instances of Cylinder and Sphere.
     m_geomSquare.create();
 
-    QFile relativeFile = QFile(QDir().cleanPath(QString(QFileInfo(".").absolutePath() + "/../../../../obj_files/cube.obj")));
+//    QFile relativeFile = QFile(QDir().cleanPath(QString(QFileInfo(".").absolutePath() + "/../../../../obj_files/cube.obj")));
 
-    if(relativeFile.open(QIODevice::ReadOnly)){
-        m_meshCurrent.loadObj(relativeFile);
-    }
+//    if(relativeFile.open(QIODevice::ReadOnly)){
+//        m_meshCurrent.loadObj(relativeFile);
+//    }
 
     m_meshCurrent.create();
 
@@ -237,6 +237,14 @@ void MyGL::slot_triangulateFace() {
 void MyGL::slot_subdivideMesh() {
 
     m_meshCurrent.subdivideMesh();
+
+    updateAll();
+}
+
+void MyGL::slot_bindSkeleton() {
+    if (m_skeletonCurrent.root != nullptr && m_meshCurrent.initiated) {
+        m_skeletonCurrent.bindMesh(m_meshCurrent);
+    }
 
     updateAll();
 }

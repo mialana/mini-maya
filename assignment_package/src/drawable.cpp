@@ -64,6 +64,20 @@ void Drawable::generateCol()
     mp_context->glGenBuffers(1, &bufCol);
 }
 
+void Drawable::generateWts()
+{
+    wtsBound = true;
+    // Create a VBO on our GPU and store its handle in bufWt
+    mp_context->glGenBuffers(1, &bufWts);
+}
+
+void Drawable::generateIds()
+{
+    idsBound = true;
+    // Create a VBO on our GPU and store its handle in bufWt
+    mp_context->glGenBuffers(1, &bufIds);
+}
+
 bool Drawable::bindIdx()
 {
     if(idxBound) {
@@ -94,4 +108,20 @@ bool Drawable::bindCol()
         mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufCol);
     }
     return colBound;
+}
+
+bool Drawable::bindWts()
+{
+    if(wtsBound){
+        mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufWts);
+    }
+    return wtsBound;
+}
+
+bool Drawable::bindIds()
+{
+    if(idsBound){
+        mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufIds);
+    }
+    return idsBound;
 }

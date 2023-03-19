@@ -1,7 +1,7 @@
 #pragma once
+#include "scene/joint.h"
 #include <QListWidgetItem>
 #include <glm/glm.hpp>
-#include "joint.h"
 
 class HalfEdge;
 
@@ -14,8 +14,9 @@ public:
     glm::vec3 m_pos;
     HalfEdge* m_hedge;
 
-    Joint *influencer1, *influencer2;
-    float weight1, weight2;
+    std::pair<Joint*, Joint*> influencers;
+    glm::vec2 distances;
+    glm::vec2 weights;
 
     Vertex(glm::vec3 p);
 

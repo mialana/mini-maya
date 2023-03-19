@@ -3,9 +3,14 @@
 #include <glm/gtx/string_cast.hpp>
 #include <glm/gtx/perpendicular.hpp>
 
+int Joint::population = 0;
+
 Joint::Joint(OpenGLContext* context, QString n)
     : Drawable(context), name(n)
 {
+    this->id = population;
+    population++;
+
     parent = nullptr;
     translation = glm::vec3(0,0,0);
     rotation = glm::quat(1,0,0,0);

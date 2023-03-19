@@ -34,6 +34,7 @@ private:
 
     static HalfEdge* findHedgeBefore(HalfEdge* he);
 public:   
+    bool initiated;
     std::vector<uPtr<Vertex>> m_verts;
     std::vector<uPtr<Face>> m_faces;
     std::vector<uPtr<HalfEdge>> m_hedges;
