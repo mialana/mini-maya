@@ -15,6 +15,7 @@ MyGL::MyGL(QWidget *parent)
       m_geomSquare(this),
       m_progLambert(this),
       m_progFlat(this),
+      m_progSkeleton(this),
       m_glCamera(),
       m_meshCurrent(this),
       mp_selectedVert(nullptr),
@@ -83,6 +84,7 @@ void MyGL::initializeGL()
     m_progLambert.create(":/glsl/lambert.vert.glsl", ":/glsl/lambert.frag.glsl");
     // Create and set up the flat lighting shader
     m_progFlat.create(":/glsl/flat.vert.glsl", ":/glsl/flat.frag.glsl");
+    m_progSkeleton.create(":/glsl/skeleton.vert.glsl", ":/glsl/skeleton.frag.glsl");
 
     // We have to have a VAO bound in OpenGL 3.2 Core. But if we're not
     // using multiple VAOs, we can just bind one once.
@@ -100,6 +102,7 @@ void MyGL::resizeGL(int w, int h)
 
     m_progLambert.setViewProjMatrix(viewproj);
     m_progFlat.setViewProjMatrix(viewproj);
+    m_progSkeleton.setViewProjMatrix(viewproj);
 
     printGLErrorLog();
 }
@@ -121,6 +124,10 @@ void MyGL::paintGL()
     m_progLambert.setCamPos(m_glCamera.eye);
     m_progLambert.setModelMatrix(glm::mat4(1.f));
 
+    m_progSkeleton.setViewProjMatrix(m_glCamera.getViewProj());
+    m_progSkeleton.setCamPos(m_glCamera.eye);
+    m_progSkeleton.setModelMatrix(glm::mat4(1.f));
+
     for (auto& v : m_meshCurrent.m_verts) {
         emit this->sig_sendListItem(v.get());
     }
@@ -133,7 +140,7 @@ void MyGL::paintGL()
         emit this->sig_sendListItem(he.get());
     }
 
-    m_progFlat.draw(m_meshCurrent);
+    m_progSkeleton.draw(m_meshCurrent);
 
     glDisable(GL_DEPTH_TEST);
 
@@ -142,7 +149,7 @@ void MyGL::paintGL()
     m_progFlat.draw(m_hedgeDisplay);
 
     m_skeletonCurrent.drawJoints(m_progFlat, m_skeletonCurrent.root.get());
-    m_progFlat.setModelMatrix(glm::mat4());
+    m_progFlat.setModelMatrix(glm::mat4(1.f));
     m_progFlat.draw(m_skeletonCurrent);
 
     glEnable(GL_DEPTH_TEST);
@@ -243,7 +250,15 @@ void MyGL::slot_subdivideMesh() {
 
 void MyGL::slot_bindSkeleton() {
     if (m_skeletonCurrent.root != nullptr && m_meshCurrent.initiated) {
-        m_skeletonCurrent.bindMesh(m_meshCurrent);
+        m_meshCurrent.bindSkeleton(m_skeletonCurrent);
+
+        std::vector<glm::mat4> bMats;
+        std::vector<glm::mat4> tMats;
+
+        Skeleton::getBindAndTransformMatrices(m_skeletonCurrent.root.get(), bMats, tMats);
+
+        m_progSkeleton.setBindMats(bMats);
+        m_progSkeleton.setOverallTransforms(tMats);
     }
 
     updateAll();

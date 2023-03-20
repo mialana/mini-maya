@@ -3,7 +3,6 @@
 
 #include <QMainWindow>
 #include <QListWidgetItem>
-#include "mesh.h"
 
 namespace Ui {
 class MainWindow;

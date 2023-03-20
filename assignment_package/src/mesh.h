@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <unordered_map>
 #include <unordered_set>
+#include "scene/skeleton.h"
 
 struct Randomizer {
     std::random_device rd;
@@ -46,6 +47,7 @@ public:
     void loadObj(QFile& file);
     void createSyms();
 
+    void bindSkeleton(Skeleton& skeleton);
     void splitHedge(HalfEdge*, HalfEdge* , Vertex*, Vertex*, glm::vec3);
     void triangulateFace(Face*);
 

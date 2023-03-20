@@ -24,3 +24,24 @@ Vertex::Vertex(const Vertex& v2) {
 
     QListWidgetItem::setText(QString::number(v2.id));
 }
+
+void Vertex::computeInfluentialJoints(Joint* currJoint) {
+    float distance = glm::distance(glm::vec4(m_pos,1), currJoint->getOverallTransformation() * glm::vec4(0,0,0,1));
+
+    if (distance < distances[0]) {
+        if (distance < distances[1]) {
+            distances[0] = distances[1];
+            influencers.first = influencers.second;
+
+            distances[1] = distance;
+            influencers.second = currJoint;
+        } else {
+            distances[0] = distance;
+            influencers.first = currJoint;
+        }
+    }
+
+    for (const auto& c : currJoint->children) {
+        computeInfluentialJoints(c.get());
+    }
+}

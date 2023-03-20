@@ -42,34 +42,6 @@ void Skeleton::computeBindMatrices(Joint* curr) {
     }
 }
 
-void Skeleton::bindMeshHelper(Vertex* v, Joint* currJoint) {
-    float distance = glm::distance(glm::vec4(v->m_pos,1), currJoint->getOverallTransformation() * glm::vec4(0,0,0,1));
-
-    if (distance < v->distances[0]) {
-        if (distance < v->distances[1]) {
-            v->distances[1] = distance;
-            v->influencers.second = currJoint;
-        } else {
-            v->distances[0] = distance;
-            v->influencers.first = currJoint;
-        }
-    }
-
-    for (const auto& c : currJoint->children) {
-        bindMeshHelper(v, c.get());
-    }
-}
-
-void Skeleton::bindMesh(Mesh& mesh) {
-    for (const auto& v : mesh.m_verts) {
-        bindMeshHelper(v.get(), root.get());
-
-        float summedDistances = v->distances[0] + v->distances[1];
-        v->weights[0] = 1.f - (v->distances[0] / summedDistances);
-        v->weights[1] = 1.f - (v->distances[1] / summedDistances);
-    }
-}
-
 void Skeleton::drawJoints(ShaderProgram &prog_flat, Joint* curr) {
     if (root == nullptr) {
         return;
@@ -167,4 +139,13 @@ void Skeleton::loadJson(QJsonObject rootJsonObj) {
 
     this->destroy();
     this->create();
+}
+
+void Skeleton::getBindAndTransformMatrices(Joint* j, std::vector<glm::mat4>& bMats, std::vector<glm::mat4>& tMats) {
+    bMats.push_back(j->bindMatrix);
+    tMats.push_back(j->getOverallTransformation());
+
+    for (const auto& c : j->children) {
+        getBindAndTransformMatrices(c.get(), bMats, tMats);
+    }
 }

@@ -21,4 +21,6 @@ public:
     Vertex(glm::vec3 p);
 
     Vertex(const Vertex& v2);
+
+    void computeInfluentialJoints(Joint* currJoint);
 };
