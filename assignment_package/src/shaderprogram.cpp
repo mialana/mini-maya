@@ -10,7 +10,7 @@ ShaderProgram::ShaderProgram(OpenGLContext *context)
       attrPos(-1), attrNor(-1), attrCol(-1),
       attrWts(-1), attrIds(-1),
       unifModel(-1), unifModelInvTr(-1), unifViewProj(-1), unifCamPos(-1),
-      unifOverallTransforms(-1), unifBindMats(-1),
+      unifOverallTransforms(-1), unifBindMats(-1), unifBinded(-1),
       context(context)
 {}
 
@@ -65,8 +65,8 @@ void ShaderProgram::create(const char *vertfile, const char *fragfile)
     attrPos = context->glGetAttribLocation(prog, "vs_Pos");
     attrNor = context->glGetAttribLocation(prog, "vs_Nor");
     attrCol = context->glGetAttribLocation(prog, "vs_Col");
-    attrWts = context->glGetAttribLocation(prog, "vs_Col");
-    attrCol = context->glGetAttribLocation(prog, "vs_Col");
+    attrWts = context->glGetAttribLocation(prog, "vs_Wts");
+    attrIds = context->glGetAttribLocation(prog, "vs_Ids");
 
     unifModel = context->glGetUniformLocation(prog, "u_Model");
     unifModelInvTr = context->glGetUniformLocation(prog, "u_ModelInvTr");
@@ -75,6 +75,7 @@ void ShaderProgram::create(const char *vertfile, const char *fragfile)
     unifOverallTransforms = context->glGetUniformLocation(prog, "u_OverallTransforms");
     unifBindMats = context->glGetUniformLocation(prog, "u_BindMats");
 
+    unifBinded = context->glGetUniformLocation(prog, "u_Binded");
 }
 
 void ShaderProgram::useMe()
@@ -140,7 +141,7 @@ void ShaderProgram::setBindMats(const std::vector<glm::mat4>& mvp)
                     // Handle to the matrix variable on the GPU
     context->glUniformMatrix4fv(unifBindMats,
                     // How many matrices to pass
-                       100,
+                       mvp.size(),
                     // Transpose the matrix? OpenGL uses column-major, so no.
                        GL_FALSE,
                     // Pointer to the first element of the matrix
@@ -158,8 +159,7 @@ void ShaderProgram::setOverallTransforms(const std::vector<glm::mat4>& mvp)
                     // Handle to the matrix variable on the GPU
     context->glUniformMatrix4fv(unifOverallTransforms,
                     // How many matrices to pass
-                       100,
-                    // Transpose the matrix? OpenGL uses column-major, so no.
+                       mvp.size(),
                        GL_FALSE,
                     // Pointer to the first element of the matrix
                        &mvp[0][0][0]);
@@ -173,6 +173,18 @@ void ShaderProgram::setCamPos(glm::vec3 pos)
     if(unifCamPos != -1)
     {
         context->glUniform3fv(unifCamPos, 1, &pos[0]);
+    }
+}
+
+void ShaderProgram::setBinded(bool b)
+{
+    // Tell OpenGL to use this shader program for subsequent function calls
+    useMe();
+
+    if(unifBinded != -1) {
+    // Pass a 4x4 matrix into a uniform variable in our shader
+                    // Handle to the matrix variable on the GPU
+    context->glUniform1i(unifBinded, b);
     }
 }
 

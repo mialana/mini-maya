@@ -64,11 +64,11 @@ void MyGL::initializeGL()
     //Create the instances of Cylinder and Sphere.
     m_geomSquare.create();
 
-//    QFile relativeFile = QFile(QDir().cleanPath(QString(QFileInfo(".").absolutePath() + "/../../../../obj_files/cube.obj")));
+    QFile relativeFile = QFile(QDir().cleanPath(QString(QFileInfo(".").absolutePath() + "/../../../../obj_files/cube.obj")));
 
-//    if(relativeFile.open(QIODevice::ReadOnly)){
-//        m_meshCurrent.loadObj(relativeFile);
-//    }
+    if(relativeFile.open(QIODevice::ReadOnly)){
+        m_meshCurrent.loadObj(relativeFile);
+    }
 
     m_meshCurrent.create();
 
@@ -250,8 +250,6 @@ void MyGL::slot_subdivideMesh() {
 
 void MyGL::slot_bindSkeleton() {
     if (m_skeletonCurrent.root != nullptr && m_meshCurrent.initiated) {
-        m_meshCurrent.bindSkeleton(m_skeletonCurrent);
-
         std::vector<glm::mat4> bMats;
         std::vector<glm::mat4> tMats;
 
@@ -259,9 +257,16 @@ void MyGL::slot_bindSkeleton() {
 
         m_progSkeleton.setBindMats(bMats);
         m_progSkeleton.setOverallTransforms(tMats);
-    }
 
-    updateAll();
+        m_progSkeleton.setBinded(true);
+
+        m_meshCurrent.bindSkeleton(m_skeletonCurrent);
+
+        m_meshCurrent.destroy();
+        m_meshCurrent.create();
+
+        update();
+    }
 }
 
 void MyGL::slot_translateX(double newX) {

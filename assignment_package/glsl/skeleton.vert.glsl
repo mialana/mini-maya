@@ -23,6 +23,8 @@ out vec4 fs_Col;            // The color of each vertex. This is implicitly pass
 uniform mat4 u_BindMats[100];
 uniform mat4 u_OverallTransforms[100];
 
+uniform bool u_Binded;
+
 in vec2 vs_Wts;
 in ivec2 vs_Ids;
 
@@ -37,10 +39,12 @@ void main()
                                                             // perpendicular to the surface after the surface is transformed by
                                                             // the model matrix.
 
-    vec4 modelposition = u_Model * ((vs_Wts[0] * (u_OverallTransforms[vs_Ids[0]] * u_BindMats[vs_Ids[0]] * vs_Pos)) +
-                (vs_Wts[1] * (u_OverallTransforms[vs_Ids[1]] * u_BindMats[vs_Ids[1]] * vs_Pos)));
 
-    /*vec4 modelposition = u_Model * vs_Pos;*/   // Temporarily store the transformed vertex positions for use below
+    vec4 modelposition = (u_Binded)
+            ? (u_Model * ((1 * (u_OverallTransforms[vs_Ids[0]] * u_BindMats[vs_Ids[0]] * vs_Pos)) +
+                    (1 * (u_OverallTransforms[vs_Ids[1]] * u_BindMats[vs_Ids[1]] * vs_Pos))))
+            : (u_Model * vs_Pos);
+
     fs_Pos = modelposition.xyz;
 
     gl_Position = u_ViewProj * modelposition;// gl_Position is a built-in variable of OpenGL which is

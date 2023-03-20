@@ -2,8 +2,9 @@
 #include <la.h>
 
 Drawable::Drawable(OpenGLContext* context)
-    : count(-1), bufIdx(), bufPos(), bufNor(), bufCol(),
+    : count(-1), bufIdx(), bufPos(), bufNor(), bufCol(), bufWts(), bufIds(),
       idxBound(false), posBound(false), norBound(false), colBound(false),
+      wtsBound(false), idsBound(false),
       mp_context(context)
 {}
 
@@ -18,6 +19,9 @@ void Drawable::destroy()
     mp_context->glDeleteBuffers(1, &bufPos);
     mp_context->glDeleteBuffers(1, &bufNor);
     mp_context->glDeleteBuffers(1, &bufCol);
+    mp_context->glDeleteBuffers(1, &bufWts);
+    mp_context->glDeleteBuffers(1, &bufIds);
+
 }
 
 GLenum Drawable::drawMode()

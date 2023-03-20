@@ -20,10 +20,13 @@ Joint::Joint(OpenGLContext* context, QString n)
 Joint::Joint(OpenGLContext* context, QString n, Joint* p, glm::vec3 t, glm::quat r)
     : Drawable(context), translation(t), rotation(r),
       name(n), parent(p), bindMatrix(glm::mat4(0))
-{}
+{
+    this->id = population;
+    population++;
+}
 
 Joint::Joint(const Joint& j2)
-    : Drawable(j2.mp_context), translation(j2.translation), rotation(j2.rotation),
+    : Drawable(j2.mp_context), translation(j2.translation), rotation(j2.rotation), id(j2.id),
       name(j2.name), parent(j2.parent), bindMatrix(j2.bindMatrix)
 {
     for (const auto& c : j2.children) {
@@ -44,6 +47,7 @@ void Joint::addChild(uPtr<Joint> c) {
 Joint& Joint::operator=(const Joint& j2) {
     Drawable::operator=(j2);
 
+    id = j2.id;
     translation = j2.translation;
     rotation = j2.rotation;
     name = j2.name;

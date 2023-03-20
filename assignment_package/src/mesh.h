@@ -36,6 +36,7 @@ private:
     static HalfEdge* findHedgeBefore(HalfEdge* he);
 public:   
     bool initiated;
+    bool binded;
     std::vector<uPtr<Vertex>> m_verts;
     std::vector<uPtr<Face>> m_faces;
     std::vector<uPtr<HalfEdge>> m_hedges;
@@ -47,7 +48,8 @@ public:
     void loadObj(QFile& file);
     void createSyms();
 
-    void bindSkeleton(Skeleton& skeleton);
+    void extracted(std::vector<glm::vec2> &weights);
+    void bindSkeleton(Skeleton &skeleton);
     void splitHedge(HalfEdge*, HalfEdge* , Vertex*, Vertex*, glm::vec3);
     void triangulateFace(Face*);
 

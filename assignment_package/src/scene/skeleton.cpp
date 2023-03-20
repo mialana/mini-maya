@@ -21,8 +21,6 @@ Skeleton::Skeleton(OpenGLContext* context, uPtr<Joint> r)
     positions = std::vector<glm::vec4>();
     normals = std::vector<glm::vec4>();
     colors = std::vector<glm::vec4>();
-
-    this->computeBindMatrices(root.get());
 }
 
 Skeleton::~Skeleton() {
@@ -139,6 +137,8 @@ void Skeleton::loadJson(QJsonObject rootJsonObj) {
 
     this->destroy();
     this->create();
+
+    this->computeBindMatrices(root.get());
 }
 
 void Skeleton::getBindAndTransformMatrices(Joint* j, std::vector<glm::mat4>& bMats, std::vector<glm::mat4>& tMats) {

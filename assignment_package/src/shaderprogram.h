@@ -28,6 +28,8 @@ public:
     int unifOverallTransforms;
     int unifBindMats;
 
+    int unifBinded;
+
 public:
     ShaderProgram(OpenGLContext* context);
     // Sets up the requisite GL data and shaders from the given .glsl files
@@ -42,6 +44,7 @@ public:
     void setOverallTransforms(const std::vector<glm::mat4>& mvp);
     // Pass the given color to this shader on the GPU
     void setCamPos(glm::vec3 pos);
+    void setBinded(bool b);
     // Draw the given object to our screen using this ShaderProgram's shaders
     void draw(Drawable &d);
     // Utility function used in create()

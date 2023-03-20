@@ -1,9 +1,9 @@
 #include "mesh.h"
-#include "QtCore/qjsonobject.h"
+#include "glm/gtx/string_cast.hpp"
 #include <iostream>
 
 Mesh::Mesh(OpenGLContext* context)
-    : Drawable(context), initiated(false)
+    : Drawable(context), initiated(false), binded(false)
 {}
 
 GLenum Mesh::drawMode() {
@@ -19,28 +19,30 @@ void Mesh::bindSkeleton(Skeleton& skeleton) {
         v->weights[1] = 1.f - (v->distances[1] / summedDistances);
     }
 
-    std::vector<glm::vec2> weights = std::vector<glm::vec2>();
-    std::vector<glm::ivec2> jointIds = std::vector<glm::ivec2>();
+    binded = true;
 
-    for (const uPtr<Face> &f : m_faces) {
-        HalfEdge* start = f->m_hedge;
-        HalfEdge* curr = f->m_hedge;
+//    std::vector<glm::vec2> weights = std::vector<glm::vec2>();
+//    std::vector<glm::ivec2> jointIds = std::vector<glm::ivec2>();
 
-        do {
-            weights.push_back(curr->m_vert->weights);
-            jointIds.push_back(glm::vec2(curr->m_vert->influencers.first->id, curr->m_vert->influencers.second->id));
+//    for (const uPtr<Face> &f : m_faces) {
+//        HalfEdge* start = f->m_hedge;
+//        HalfEdge* curr = f->m_hedge;
 
-            curr = curr->next;
-        } while (curr != start);
-    }
+//        do {
+//            weights.push_back(curr->m_vert->weights);
+//            jointIds.push_back(glm::vec2(curr->m_vert->influencers.first->id, curr->m_vert->influencers.second->id));
 
-    generateWts();
-    mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufWts);
-    mp_context->glBufferData(GL_ARRAY_BUFFER, weights.size() * sizeof(glm::vec2), weights.data(), GL_STATIC_DRAW);
+//            curr = curr->next;
+//        } while (curr != start);
+//    }
 
-    generateIds();
-    mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufIds);
-    mp_context->glBufferData(GL_ARRAY_BUFFER, jointIds.size() * sizeof(glm::ivec2), jointIds.data(), GL_STATIC_DRAW);
+//    generateWts();
+//    mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufWts);
+//    mp_context->glBufferData(GL_ARRAY_BUFFER, weights.size() * sizeof(glm::vec2), weights.data(), GL_STATIC_DRAW);
+
+//    generateIds();
+//    mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufIds);
+//    mp_context->glBufferData(GL_ARRAY_BUFFER, jointIds.size() * sizeof(glm::ivec2), jointIds.data(), GL_STATIC_DRAW);
 }
 
 void Mesh::create() {
@@ -48,6 +50,8 @@ void Mesh::create() {
     std::vector<glm::vec4> positions = std::vector<glm::vec4>();
     std::vector<glm::vec4> normals = std::vector<glm::vec4>();
     std::vector<glm::vec4> colors = std::vector<glm::vec4>();
+    std::vector<glm::vec2> weights = std::vector<glm::vec2>();
+    std::vector<glm::ivec2> jointIds = std::vector<glm::ivec2>();
 
     int currTotal = 0;
     for (const uPtr<Face> &f : m_faces) {
@@ -64,6 +68,11 @@ void Mesh::create() {
             normals.push_back(glm::vec4(n, 0));
 
             colors.push_back(glm::vec4(curr->m_face->m_color, 1));
+
+            if (binded) {
+                weights.push_back(curr->m_vert->weights);
+                jointIds.push_back(glm::vec2(curr->m_vert->influencers.first->id, curr->m_vert->influencers.second->id));
+            }
 
             fVertNum++;
             curr = curr->next;
@@ -94,6 +103,16 @@ void Mesh::create() {
     generateCol();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufCol);
     mp_context->glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec4), colors.data(), GL_STATIC_DRAW);
+
+    if (binded) {
+        generateWts();
+        mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufWts);
+        mp_context->glBufferData(GL_ARRAY_BUFFER, weights.size() * sizeof(glm::vec2), weights.data(), GL_STATIC_DRAW);
+
+        generateIds();
+        mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufIds);
+        mp_context->glBufferData(GL_ARRAY_BUFFER, jointIds.size() * sizeof(glm::ivec2), jointIds.data(), GL_STATIC_DRAW);
+    }
 }
 
 void Mesh::createSyms() {
