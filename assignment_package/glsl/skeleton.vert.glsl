@@ -41,8 +41,8 @@ void main()
 
 
     vec4 modelposition = (u_Binded)
-            ? (u_Model * ((1 * (u_OverallTransforms[vs_Ids[0]] * u_BindMats[vs_Ids[0]] * vs_Pos)) +
-                    (1 * (u_OverallTransforms[vs_Ids[1]] * u_BindMats[vs_Ids[1]] * vs_Pos))))
+            ? (u_Model * ((vs_Wts[0] * (u_OverallTransforms[vs_Ids[0]] * u_BindMats[vs_Ids[0]] * vs_Pos)) +
+                    (vs_Wts[1] * (u_OverallTransforms[vs_Ids[1]] * u_BindMats[vs_Ids[1]] * vs_Pos))))
             : (u_Model * vs_Pos);
 
     fs_Pos = modelposition.xyz;

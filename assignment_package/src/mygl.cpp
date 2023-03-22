@@ -209,9 +209,26 @@ void MyGL::keyPressEvent(QKeyEvent *e)
     update();
 }
 
+void MyGL::bindSkeletonHelper() {
+    m_skeletonCurrent.bindMats = std::vector<glm::mat4>();
+    m_skeletonCurrent.transformMats = std::vector<glm::mat4>();
+    m_skeletonCurrent.computeBindAndTransformMatrices(m_skeletonCurrent.root.get());
+
+    m_progSkeleton.setBindMats(m_skeletonCurrent.bindMats);
+    m_progSkeleton.setOverallTransforms(m_skeletonCurrent.transformMats);
+    m_progSkeleton.setBinded(true);
+}
+
 void MyGL::updateAll() {
+    if (m_meshCurrent.binded && m_skeletonCurrent.root != nullptr && m_meshCurrent.initiated) {
+        bindSkeletonHelper();
+    }
+
     m_meshCurrent.destroy();
     m_meshCurrent.create();
+
+    m_skeletonCurrent.destroy();
+    m_skeletonCurrent.create();
 
     emit sig_setSelectedVert(mp_selectedVert);
     emit sig_setSelectedFace(mp_selectedFace);
@@ -250,22 +267,11 @@ void MyGL::slot_subdivideMesh() {
 
 void MyGL::slot_bindSkeleton() {
     if (m_skeletonCurrent.root != nullptr && m_meshCurrent.initiated) {
-        std::vector<glm::mat4> bMats;
-        std::vector<glm::mat4> tMats;
-
-        Skeleton::getBindAndTransformMatrices(m_skeletonCurrent.root.get(), bMats, tMats);
-
-        m_progSkeleton.setBindMats(bMats);
-        m_progSkeleton.setOverallTransforms(tMats);
-
-        m_progSkeleton.setBinded(true);
+        bindSkeletonHelper();
 
         m_meshCurrent.bindSkeleton(m_skeletonCurrent);
 
-        m_meshCurrent.destroy();
-        m_meshCurrent.create();
-
-        update();
+        updateAll();
     }
 }
 
@@ -316,3 +322,77 @@ void MyGL::slot_changeBlue(double newBlue) {
         updateAll();
     }
 }
+
+void MyGL::slot_jointTranslateX(double newX) {
+    if (m_skeletonCurrent.mp_selectedJoint != nullptr) {
+        m_skeletonCurrent.mp_selectedJoint->translation.x = newX;
+
+        updateAll();
+    }
+}
+
+void MyGL::slot_jointTranslateY(double newY) {
+    if (m_skeletonCurrent.mp_selectedJoint != nullptr) {
+        m_skeletonCurrent.mp_selectedJoint->translation.y = newY;
+
+        updateAll();
+    }
+}
+
+void MyGL::slot_jointTranslateZ(double newZ) {
+    if (m_skeletonCurrent.mp_selectedJoint != nullptr) {
+        m_skeletonCurrent.mp_selectedJoint->translation.z = newZ;
+
+        updateAll();
+    }
+}
+
+void MyGL::slot_jointRotatePlusX() {
+    if (m_skeletonCurrent.mp_selectedJoint != nullptr) {
+        m_skeletonCurrent.mp_selectedJoint->rotation = glm::quat(glm::angleAxis(glm::radians(5.0f), glm::vec3(1.f, 0.f, 0.f)) * m_skeletonCurrent.mp_selectedJoint->rotation);
+
+        updateAll();
+    }
+}
+
+void MyGL::slot_jointRotatePlusY() {
+    if (m_skeletonCurrent.mp_selectedJoint != nullptr) {
+        m_skeletonCurrent.mp_selectedJoint->rotation = glm::quat(glm::angleAxis(glm::radians(5.0f), glm::vec3(0.f, 1.f, 0.f)) * m_skeletonCurrent.mp_selectedJoint->rotation);
+
+        updateAll();
+    }
+}
+
+void MyGL::slot_jointRotatePlusZ() {
+    if (m_skeletonCurrent.mp_selectedJoint != nullptr) {
+        m_skeletonCurrent.mp_selectedJoint->rotation = glm::quat(glm::angleAxis(glm::radians(5.0f), glm::vec3(0.f, 0.f, 1.f)) * m_skeletonCurrent.mp_selectedJoint->rotation);
+
+        updateAll();
+    }
+}
+
+void MyGL::slot_jointRotateMinusX() {
+    if (m_skeletonCurrent.mp_selectedJoint != nullptr) {
+        m_skeletonCurrent.mp_selectedJoint->rotation = glm::quat(glm::angleAxis(glm::radians(-5.0f), glm::vec3(1.f, 0.f, 0.f)) * m_skeletonCurrent.mp_selectedJoint->rotation);
+
+        updateAll();
+    }
+}
+
+void MyGL::slot_jointRotateMinusY() {
+    if (m_skeletonCurrent.mp_selectedJoint != nullptr) {
+        m_skeletonCurrent.mp_selectedJoint->rotation = glm::quat(glm::angleAxis(glm::radians(-5.0f), glm::vec3(0.f, 1.f, 0.f)) * m_skeletonCurrent.mp_selectedJoint->rotation);
+
+        updateAll();
+    }
+}
+
+void MyGL::slot_jointRotateMinusZ() {
+    if (m_skeletonCurrent.mp_selectedJoint != nullptr) {
+        m_skeletonCurrent.mp_selectedJoint->rotation = glm::quat(glm::angleAxis(glm::radians(-5.0f), glm::vec3(0.f, 0.f, 1.f)) * m_skeletonCurrent.mp_selectedJoint->rotation);
+
+        updateAll();
+    }
+}
+
+

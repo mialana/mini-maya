@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <QTreeWidgetItem>
 #include <QMainWindow>
 #include <QListWidgetItem>
 
@@ -27,8 +28,10 @@ private slots:
 
     void on_actionCamera_Controls_triggered();
 
+    void slot_addRootToTreeWidget(QTreeWidgetItem*);
     void slot_addListItem(QListWidgetItem *i);
 
+    void slot_setSelectedJoint(QTreeWidgetItem *i);
     void slot_setSelectedVert(QListWidgetItem *i);
     void slot_setSelectedFace(QListWidgetItem *i);
     void slot_setSelectedHedge(QListWidgetItem *i);

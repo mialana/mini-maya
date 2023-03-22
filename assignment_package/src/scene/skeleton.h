@@ -19,6 +19,11 @@ private:
 public:
     uPtr<Joint> root;
 
+    Joint* mp_selectedJoint;
+
+    std::vector<glm::mat4> bindMats;
+    std::vector<glm::mat4> transformMats;
+
     Skeleton(OpenGLContext*);
     Skeleton(OpenGLContext*, uPtr<Joint>);
     ~Skeleton();
@@ -35,5 +40,5 @@ public:
 
     void loadJson(QJsonObject);
 
-    static void getBindAndTransformMatrices(Joint*, std::vector<glm::mat4>&, std::vector<glm::mat4>&);
+    void computeBindAndTransformMatrices(Joint*);
 };

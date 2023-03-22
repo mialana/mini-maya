@@ -15,6 +15,8 @@ Joint::Joint(OpenGLContext* context, QString n)
     translation = glm::vec3(0,0,0);
     rotation = glm::quat(1,0,0,0);
     bindMatrix = glm::mat4(0);
+
+    QTreeWidgetItem::setText(0, QString(QString::number(id) + " - " + n));
 }
 
 Joint::Joint(OpenGLContext* context, QString n, Joint* p, glm::vec3 t, glm::quat r)
@@ -23,6 +25,8 @@ Joint::Joint(OpenGLContext* context, QString n, Joint* p, glm::vec3 t, glm::quat
 {
     this->id = population;
     population++;
+
+    QTreeWidgetItem::setText(0, QString(QString::number(id) + " - " + n));
 }
 
 Joint::Joint(const Joint& j2)
@@ -32,6 +36,8 @@ Joint::Joint(const Joint& j2)
     for (const auto& c : j2.children) {
         this->children.push_back(mkU<Joint>(*c));
     }
+
+    QTreeWidgetItem::setText(0, QString(QString::number(id) + " - " + j2.name));
 }
 
 Joint::~Joint() {
@@ -58,6 +64,8 @@ Joint& Joint::operator=(const Joint& j2) {
         this->children.push_back(mkU<Joint>(*c));
     }
 
+    QTreeWidgetItem::setText(0, QString(QString::number(id) + " - " + j2.name));
+
     return *this;
 }
 
@@ -73,38 +81,55 @@ glm::mat4 Joint::getOverallTransformation() {
     }
 }
 
-void Joint::draw(ShaderProgram &prog_flat) {
-    prog_flat.setModelMatrix(getOverallTransformation());
-    prog_flat.draw(*this);
+void Joint::draw(ShaderProgram &shader) {
+    shader.setModelMatrix(getOverallTransformation());
+    shader.draw(*this);
 
     for (const auto& c : children) {
-        c->draw(prog_flat);
+        c->draw(shader);
     }
 }
 
 void Joint::create() {
+    count = 0;
+    return;
+}
+
+void Joint::createJoint(bool selected) {
     std::vector<GLuint> indices = std::vector<GLuint>();
     std::vector<glm::vec4> positions = std::vector<glm::vec4>();
     std::vector<glm::vec4> normals = std::vector<glm::vec4>();
     std::vector<glm::vec4> colors = std::vector<glm::vec4>();
 
     for (int i= 0; i<12; i++) {
-        glm::vec4 v = glm::rotate(glm::mat4(1.0f), glm::radians(i*30.0f), glm::vec3(0, 0, 1)) * glm::vec4(0,0.5f,0,1);
+        glm::vec4 v = glm::rotate(glm::mat4(1.0f), glm::radians(i * 30.0f), glm::vec3(0, 0, 1)) * glm::vec4(0.f, 0.5f, 0.f, 1.f);
         positions.push_back(v);
         normals.push_back(glm::vec4(0, 0, 0, 1));
-        colors.push_back(glm::vec4(0, 0, 1, 1));
+        if (selected) {
+            colors.push_back(glm::vec4(1, 1, 1, 1));
+        } else {
+            colors.push_back(glm::vec4(0, 0, 1, 1));
+        }
     }
     for (int i= 12; i<24; i++) {
-        glm::vec4 v = glm::rotate(glm::mat4(1.0f), glm::radians(i*30.0f), glm::vec3(1, 0, 0)) * glm::vec4(0,0.5f,0,1);;
+        glm::vec4 v = glm::rotate(glm::mat4(1.0f), glm::radians(i * 30.0f), glm::vec3(1, 0, 0)) * glm::vec4(0.f, 0.5f, 0.f, 1.f);;
         positions.push_back(v);
         normals.push_back(glm::vec4(0, 0, 0, 1));
-        colors.push_back(glm::vec4(0, 1, 0, 1));
+        if (selected) {
+            colors.push_back(glm::vec4(1, 1, 1, 1));
+        } else {
+            colors.push_back(glm::vec4(0, 1, 0, 1));
+        }
     }
     for (int i= 24; i<36; i++) {
-        glm::vec4 v = glm::rotate(glm::mat4(1.0f), glm::radians(i*30.0f), glm::vec3(0, 1, 0)) * glm::vec4(0.5f,0,0,1);;
+        glm::vec4 v = glm::rotate(glm::mat4(1.0f), glm::radians(i * 30.0f), glm::vec3(0, 1, 0)) * glm::vec4(0.5f, 0.f, 0.f, 1.f);;
         positions.push_back(v);
         normals.push_back(glm::vec4(0, 0, 0, 1));
-        colors.push_back(glm::vec4(1, 0, 0, 1));
+        if (selected) {
+            colors.push_back(glm::vec4(1, 1, 1, 1));
+        } else {
+            colors.push_back(glm::vec4(1, 0, 0, 1));
+        }
     }
 
     int numPositions = positions.size();

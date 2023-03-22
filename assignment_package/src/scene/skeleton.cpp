@@ -2,7 +2,7 @@
 #include <iostream>
 
 Skeleton::Skeleton(OpenGLContext* context)
-    : Drawable(context)
+    : Drawable(context), mp_selectedJoint(nullptr)
 {
     root = nullptr;
 
@@ -10,10 +10,12 @@ Skeleton::Skeleton(OpenGLContext* context)
     positions = std::vector<glm::vec4>();
     normals = std::vector<glm::vec4>();
     colors = std::vector<glm::vec4>();
+    bindMats = std::vector<glm::mat4>();
+    transformMats = std::vector<glm::mat4>();
 }
 
 Skeleton::Skeleton(OpenGLContext* context, uPtr<Joint> r)
-    : Drawable(context)
+    : Drawable(context), mp_selectedJoint(nullptr)
 {
     root = std::move(r);
 
@@ -21,6 +23,8 @@ Skeleton::Skeleton(OpenGLContext* context, uPtr<Joint> r)
     positions = std::vector<glm::vec4>();
     normals = std::vector<glm::vec4>();
     colors = std::vector<glm::vec4>();
+    bindMats = std::vector<glm::mat4>();
+    transformMats = std::vector<glm::mat4>();
 }
 
 Skeleton::~Skeleton() {
@@ -30,6 +34,8 @@ Skeleton::~Skeleton() {
     positions = std::vector<glm::vec4>();
     normals = std::vector<glm::vec4>();
     colors = std::vector<glm::vec4>();
+    bindMats = std::vector<glm::mat4>();
+    transformMats = std::vector<glm::mat4>();
 }
 
 void Skeleton::computeBindMatrices(Joint* curr) {
@@ -40,21 +46,26 @@ void Skeleton::computeBindMatrices(Joint* curr) {
     }
 }
 
-void Skeleton::drawJoints(ShaderProgram &prog_flat, Joint* curr) {
+void Skeleton::drawJoints(ShaderProgram &shader, Joint* curr) {
     if (root == nullptr) {
         return;
     }
-    curr->draw(prog_flat);
+    curr->draw(shader);
 
     for (const auto& c : curr->children) {
-        drawJoints(prog_flat, c.get());
+        drawJoints(shader, c.get());
     }
 }
 
 void Skeleton::createHelper(Joint* curr) {
-    curr->create();
+    if (curr == mp_selectedJoint) {
+        curr->createJoint(true);
+    } else {
+        curr->createJoint(false);
+    }
 
     glm::vec4 worldPosition = curr->getOverallTransformation() * glm::vec4(0.f, 0.f, 0.f, 1.f);
+
     positions.push_back(worldPosition);
 
     if (curr->parent != nullptr) {
@@ -69,11 +80,16 @@ void Skeleton::createHelper(Joint* curr) {
     }
 }
 
-void Skeleton::create() { 
+void Skeleton::create() {
     if (root == nullptr) {
         this->count = 0;
         return;
     }
+
+    indices = std::vector<GLuint>();
+    positions = std::vector<glm::vec4>();
+    normals = std::vector<glm::vec4>();
+    colors = std::vector<glm::vec4>();
 
     this->createHelper(root.get());
 
@@ -141,11 +157,11 @@ void Skeleton::loadJson(QJsonObject rootJsonObj) {
     this->computeBindMatrices(root.get());
 }
 
-void Skeleton::getBindAndTransformMatrices(Joint* j, std::vector<glm::mat4>& bMats, std::vector<glm::mat4>& tMats) {
-    bMats.push_back(j->bindMatrix);
-    tMats.push_back(j->getOverallTransformation());
+void Skeleton::computeBindAndTransformMatrices(Joint* j) {
+    bindMats.push_back(j->bindMatrix);
+    transformMats.push_back(j->getOverallTransformation());
 
     for (const auto& c : j->children) {
-        getBindAndTransformMatrices(c.get(), bMats, tMats);
+        computeBindAndTransformMatrices(c.get());
     }
 }

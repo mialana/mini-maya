@@ -1,5 +1,4 @@
 #include "mesh.h"
-#include "glm/gtx/string_cast.hpp"
 #include <iostream>
 
 Mesh::Mesh(OpenGLContext* context)
@@ -20,29 +19,6 @@ void Mesh::bindSkeleton(Skeleton& skeleton) {
     }
 
     binded = true;
-
-//    std::vector<glm::vec2> weights = std::vector<glm::vec2>();
-//    std::vector<glm::ivec2> jointIds = std::vector<glm::ivec2>();
-
-//    for (const uPtr<Face> &f : m_faces) {
-//        HalfEdge* start = f->m_hedge;
-//        HalfEdge* curr = f->m_hedge;
-
-//        do {
-//            weights.push_back(curr->m_vert->weights);
-//            jointIds.push_back(glm::vec2(curr->m_vert->influencers.first->id, curr->m_vert->influencers.second->id));
-
-//            curr = curr->next;
-//        } while (curr != start);
-//    }
-
-//    generateWts();
-//    mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufWts);
-//    mp_context->glBufferData(GL_ARRAY_BUFFER, weights.size() * sizeof(glm::vec2), weights.data(), GL_STATIC_DRAW);
-
-//    generateIds();
-//    mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufIds);
-//    mp_context->glBufferData(GL_ARRAY_BUFFER, jointIds.size() * sizeof(glm::ivec2), jointIds.data(), GL_STATIC_DRAW);
 }
 
 void Mesh::create() {
@@ -67,11 +43,21 @@ void Mesh::create() {
             glm::vec3 n = glm::normalize(glm::cross(v1, v2));
             normals.push_back(glm::vec4(n, 0));
 
-            colors.push_back(glm::vec4(curr->m_face->m_color, 1));
+
+
 
             if (binded) {
                 weights.push_back(curr->m_vert->weights);
                 jointIds.push_back(glm::vec2(curr->m_vert->influencers.first->id, curr->m_vert->influencers.second->id));
+
+                if (curr->m_vert->influencers.first->id == 2 || curr->m_vert->influencers.second->id == 2) {
+                    colors.push_back(glm::vec4(0, 0, 0, 1));
+
+                } else {
+                    colors.push_back(glm::vec4(0.98, 0.85, 0.85, 1));
+                }
+            } else {
+                colors.push_back(glm::vec4(curr->m_face->m_color, 1));
             }
 
             fVertNum++;

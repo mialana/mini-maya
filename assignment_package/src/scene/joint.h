@@ -7,15 +7,16 @@
 
 class Joint : public QTreeWidgetItem, public Drawable
 {
-private:
-    glm::vec3 translation;
-    glm::quat rotation;
 public:
     static int population;
     int id;
 
     QString name;
     Joint* parent;
+
+    glm::vec3 translation;
+    glm::quat rotation;
+
     std::vector<uPtr<Joint>> children;
     glm::mat4 bindMatrix;
 
@@ -37,6 +38,8 @@ public:
     }
 
     void create() override;
+
+    void createJoint(bool selected);
 
     void draw(ShaderProgram &prog_flat);
 };

@@ -30,6 +30,7 @@ private:
     Camera m_glCamera;
 
     void updateAll();
+    void bindSkeletonHelper();
 
 public:
     Mesh m_meshCurrent;
@@ -67,7 +68,20 @@ public slots:
     void slot_changeGreen(double);
     void slot_changeBlue(double);
 
+    void slot_jointTranslateX(double);
+    void slot_jointTranslateY(double);
+    void slot_jointTranslateZ(double);
+
+    void slot_jointRotatePlusX();
+    void slot_jointRotatePlusY();
+    void slot_jointRotatePlusZ();
+
+    void slot_jointRotateMinusX();
+    void slot_jointRotateMinusY();
+    void slot_jointRotateMinusZ();
+
 signals:
+    void sig_sendRootNode(QTreeWidgetItem*);
     void sig_sendListItem(QListWidgetItem*);
     void sig_setSelectedVert(QListWidgetItem*);
     void sig_setSelectedFace(QListWidgetItem*);
