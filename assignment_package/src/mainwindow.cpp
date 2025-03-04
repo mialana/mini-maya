@@ -61,7 +61,10 @@ MainWindow::MainWindow(QWidget *parent)
             ui->mygl, SLOT(slot_bindSkeleton()));
 
 
-    connect(ui->vertPosXSpinBox, SIGNAL(valueChanged(double)),
+    connect(ui->pushButton_2, SIGNAL(clicked()), ui->mygl,
+          SLOT(slot_exportToUSD()));
+
+  connect(ui->vertPosXSpinBox, SIGNAL(valueChanged(double)),
             ui->mygl, SLOT(slot_translateX(double)));
 
   connect(ui->vertPosYSpinBox, SIGNAL(valueChanged(double)), ui->mygl,

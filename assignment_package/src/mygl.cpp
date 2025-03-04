@@ -5,7 +5,10 @@
 #include <QDir>
 #include <QFileInfo>
 #include <QKeyEvent>
+#include <iostream>
+
 #include <glm/gtx/string_cast.hpp>
+#include <pxr/usd/usd/stage.h>
 
 MyGL::MyGL(QWidget *parent)
     : OpenGLContext(parent),
@@ -426,3 +429,29 @@ void MyGL::slot_jointRotateMinusZ() {
 }
 
 
+
+void MyGL::slot_exportToUSD() {
+  // const pxr::VtIntArray &faceVertexCounts;
+  //     const pxr::VtIntArray &faceVertexIndices;
+  //     const pxr::VtVec3fArray &points;
+  QString usda_file = QFileDialog::getSaveFileName(
+      this, QString("Select Destination for USD Export"),
+      QDir().cleanPath(QString(QFileInfo(".").absolutePath() +
+                               "../../../usd_outputs/output.usda")),
+      QString("*.usda"));
+
+  pxr::UsdStageRefPtr stage = pxr::UsdStage::CreateNew(usda_file.toStdString());
+  m_usdMesh = pxr::UsdGeomMesh::Define(stage, pxr::SdfPath("/MyRoot/MyMesh"));
+
+  pxr::UsdAttribute face_vertex_counts = m_usdMesh.CreateFaceVertexCountsAttr();
+  pxr::UsdAttribute face_vertex_indices =
+      m_usdMesh.CreateFaceVertexIndicesAttr();
+  pxr::UsdAttribute points = m_usdMesh.CreatePointsAttr();
+
+  stage->Save();
+
+  std::string r;
+  stage->ExportToString(&r);
+
+  std::cout << r << std::endl;
+}

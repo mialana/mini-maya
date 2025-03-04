@@ -13,6 +13,8 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 
+#include <pxr/usd/usdGeom/mesh.h>
+
 class MyGL : public OpenGLContext {
   Q_OBJECT
 private:
@@ -42,6 +44,8 @@ public:
 
   Skeleton m_skeletonCurrent;
 
+  pxr::UsdGeomMesh m_usdMesh;
+
   explicit MyGL(QWidget *parent = nullptr);
   ~MyGL();
 
@@ -66,6 +70,7 @@ public slots:
   void slot_changeGreen(double);
   void slot_changeBlue(double);
 
+  void slot_exportToUSD();
     void slot_jointTranslateX(double);
     void slot_jointTranslateY(double);
     void slot_jointTranslateZ(double);

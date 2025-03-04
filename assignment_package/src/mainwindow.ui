@@ -67,7 +67,7 @@
      <string>Vertices</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
@@ -83,7 +83,7 @@
      <string>Half-Edges</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_3">
@@ -99,7 +99,7 @@
      <string>Faces</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QWidget" name="layoutWidget">
@@ -107,13 +107,30 @@
      <rect>
       <x>380</x>
       <y>470</y>
-      <width>251</width>
-      <height>101</height>
+      <width>272</width>
+      <height>68</height>
      </rect>
     </property>
     <layout class="QFormLayout" name="formLayout">
+     <property name="verticalSpacing">
+      <number>-1</number>
+     </property>
      <item row="0" column="0" colspan="2">
       <layout class="QGridLayout" name="gridLayout_2">
+       <item row="1" column="1">
+        <widget class="QPushButton" name="bindSkeleton">
+         <property name="text">
+          <string>Bind Skeleton</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="0">
+        <widget class="QPushButton" name="subdivideMesh">
+         <property name="text">
+          <string>Subdivide Mesh</string>
+         </property>
+        </widget>
+       </item>
        <item row="0" column="0">
         <widget class="QPushButton" name="splitEdge">
          <property name="text">
@@ -125,20 +142,6 @@
         <widget class="QPushButton" name="triangulateFace">
          <property name="text">
           <string>Triangulate Face</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QPushButton" name="subdivideMesh">
-         <property name="text">
-          <string>Subdivide Mesh</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="1">
-        <widget class="QPushButton" name="bindSkeleton">
-         <property name="text">
-          <string>Bind Skeleton</string>
          </property>
         </widget>
        </item>
@@ -190,7 +193,7 @@
      <string>Green</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_8">
@@ -206,7 +209,7 @@
      <string>Blue</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_9">
@@ -222,7 +225,7 @@
      <string>Red</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QDoubleSpinBox" name="faceBlueSpinBox">
@@ -623,14 +626,27 @@
      <double>-99.989999999999995</double>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>530</y>
+      <width>171</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Export USD</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1061</width>
-     <height>22</height>
+     <width>1057</width>
+     <height>24</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
