@@ -461,12 +461,10 @@ void MyGL::slot_exportToUSD() {
 
     do { // discover how many vertices are in this face
       count += 1;
-      qDebug() << "Idx:" << currHedge->m_vert->id;
       face_vertex_indices_data.push_back(currHedge->m_vert->id);
 
       currHedge = currHedge->next;
     } while (currHedge != firstHedge);
-    qDebug() << count;
     face_vertex_counts_data.push_back(count);
   }
 
@@ -483,9 +481,4 @@ void MyGL::slot_exportToUSD() {
   stage->SetDefaultPrim(m_usdMesh.GetPrim());
 
   stage->Save();
-
-  std::string r;
-  stage->ExportToString(&r);
-
-  std::cout << r << std::endl;
 }
