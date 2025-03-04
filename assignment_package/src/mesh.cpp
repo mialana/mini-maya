@@ -1,5 +1,4 @@
 #include "mesh.h"
-#include <iostream>
 
 Mesh::Mesh(OpenGLContext* context)
     : Drawable(context), initiated(false), binded(false)

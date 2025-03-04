@@ -1,11 +1,11 @@
 #ifndef SHADERPROGRAM_H
 #define SHADERPROGRAM_H
 
-#include <openglcontext.h>
-#include <la.h>
-#include <glm/glm.hpp>
-
+#include "openglcontext.h"
+#include "la.h"
 #include "drawable.h"
+
+#include <glm/glm.hpp>
 
 
 class ShaderProgram

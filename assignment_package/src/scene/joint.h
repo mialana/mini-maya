@@ -1,9 +1,9 @@
 #pragma once
 
-#include <QTreeWidget>
 #include "drawable.h"
 #include "shaderprogram.h"
 #include "smartpointerhelp.h"
+#include <QTreeWidget>
 
 class Joint : public QTreeWidgetItem, public Drawable
 {
@@ -20,26 +20,24 @@ public:
     std::vector<uPtr<Joint>> children;
     glm::mat4 bindMatrix;
 
-    Joint(OpenGLContext*, QString);
-    Joint(OpenGLContext*, QString, Joint*, glm::vec3, glm::quat);
-    Joint(const Joint&);
-    ~Joint();
+  Joint(OpenGLContext *, QString);
+  Joint(OpenGLContext *, QString, Joint *, glm::vec3, glm::quat);
+  Joint(const Joint &);
+  ~Joint();
 
-    void addChild(uPtr<Joint>);
+  void addChild(uPtr<Joint>);
 
-    Joint& operator=(const Joint&);
+  Joint &operator=(const Joint &);
 
-    glm::mat4 getLocalTransformation();
+  glm::mat4 getLocalTransformation();
 
-    glm::mat4 getOverallTransformation();
+  glm::mat4 getOverallTransformation();
 
-    GLenum drawMode() override {
-        return GL_LINES;
-    }
+  GLenum drawMode() override { return GL_LINES; }
 
     void create() override;
 
     void createJoint(bool selected);
 
-    void draw(ShaderProgram &prog_flat);
+  void draw(ShaderProgram &prog_flat);
 };

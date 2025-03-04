@@ -1,5 +1,5 @@
 #include "openglcontext.h"
-#include <utils.h>
+#include "utils.h"
 
 #include <iostream>
 #include <QApplication>

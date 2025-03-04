@@ -1,23 +1,22 @@
 #include "mainwindow.h"
-#include <ui_mainwindow.h>
 #include "cameracontrolshelp.h"
+#include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <iostream>
 
-MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    filename(QDir().cleanPath(QString(QFileInfo(".").absolutePath() + "/../../../../obj_files/cube.obj"))),
-    ui(new Ui::MainWindow)
-{
-    ui->setupUi(this);
-    ui->mygl->setFocus();
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent),
+      filename(QDir().cleanPath(QString(QFileInfo(".").absolutePath() +
+                                        "../../../obj_files/cube.obj"))),
+      ui(new Ui::MainWindow) {
 
-    connect(ui->mygl,
-            SIGNAL(sig_sendListItem(QListWidgetItem*)),
-            this,
-            SLOT(slot_addListItem(QListWidgetItem*)));
+  ui->setupUi(this);
+  ui->mygl->setFocus();
+
+  connect(ui->mygl, SIGNAL(sig_sendListItem(QListWidgetItem *)), this,
+          SLOT(slot_addListItem(QListWidgetItem *)));
 
     connect(ui->mygl,
             SIGNAL(sig_sendRootNode(QTreeWidgetItem*)),
@@ -29,13 +28,11 @@ MainWindow::MainWindow(QWidget *parent) :
             SIGNAL(sig_setSelectedVert(QListWidgetItem*)),
             this, SLOT(slot_setSelectedVert(QListWidgetItem*)));
 
-    connect(ui->mygl,
-            SIGNAL(sig_setSelectedFace(QListWidgetItem*)),
-            this, SLOT(slot_setSelectedFace(QListWidgetItem*)));
+  connect(ui->mygl, SIGNAL(sig_setSelectedFace(QListWidgetItem *)), this,
+          SLOT(slot_setSelectedFace(QListWidgetItem *)));
 
-    connect(ui->mygl,
-            SIGNAL(sig_setSelectedHedge(QListWidgetItem*)),
-            this, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
+  connect(ui->mygl, SIGNAL(sig_setSelectedHedge(QListWidgetItem *)), this,
+          SLOT(slot_setSelectedHedge(QListWidgetItem *)));
 
 
     connect(ui->jointsTreeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
@@ -44,21 +41,21 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->vertsListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
             this, SLOT(slot_setSelectedVert(QListWidgetItem*)));
 
-    connect(ui->facesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT(slot_setSelectedFace(QListWidgetItem*)));
+  connect(ui->facesListWidget,
+          SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
+          this, SLOT(slot_setSelectedFace(QListWidgetItem *)));
 
-    connect(ui->halfEdgesListWidget, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
-            this, SLOT(slot_setSelectedHedge(QListWidgetItem*)));
+  connect(ui->halfEdgesListWidget,
+          SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)),
+          this, SLOT(slot_setSelectedHedge(QListWidgetItem *)));
 
+  connect(ui->splitEdge, SIGNAL(clicked()), ui->mygl, SLOT(slot_splitHedge()));
 
-    connect(ui->splitEdge, SIGNAL(clicked()),
-            ui->mygl, SLOT(slot_splitHedge()));
+  connect(ui->triangulateFace, SIGNAL(clicked()), ui->mygl,
+          SLOT(slot_triangulateFace()));
 
-    connect(ui->triangulateFace, SIGNAL(clicked()),
-            ui->mygl, SLOT(slot_triangulateFace()));
-
-    connect(ui->subdivideMesh, SIGNAL(clicked()),
-            ui->mygl, SLOT(slot_subdivideMesh()));
+  connect(ui->subdivideMesh, SIGNAL(clicked()), ui->mygl,
+          SLOT(slot_subdivideMesh()));
 
     connect(ui->bindSkeleton, SIGNAL(clicked()),
             ui->mygl, SLOT(slot_bindSkeleton()));
@@ -67,17 +64,17 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->vertPosXSpinBox, SIGNAL(valueChanged(double)),
             ui->mygl, SLOT(slot_translateX(double)));
 
-    connect(ui->vertPosYSpinBox, SIGNAL(valueChanged(double)),
-            ui->mygl, SLOT(slot_translateY(double)));
+  connect(ui->vertPosYSpinBox, SIGNAL(valueChanged(double)), ui->mygl,
+          SLOT(slot_translateY(double)));
 
-    connect(ui->vertPosZSpinBox, SIGNAL(valueChanged(double)),
-            ui->mygl, SLOT(slot_translateZ(double)));
+  connect(ui->vertPosZSpinBox, SIGNAL(valueChanged(double)), ui->mygl,
+          SLOT(slot_translateZ(double)));
 
-    connect(ui->faceRedSpinBox, SIGNAL(valueChanged(double)),
-            ui->mygl, SLOT(slot_changeRed(double)));
+  connect(ui->faceRedSpinBox, SIGNAL(valueChanged(double)), ui->mygl,
+          SLOT(slot_changeRed(double)));
 
-    connect(ui->faceGreenSpinBox, SIGNAL(valueChanged(double)),
-            ui->mygl, SLOT(slot_changeGreen(double)));
+  connect(ui->faceGreenSpinBox, SIGNAL(valueChanged(double)), ui->mygl,
+          SLOT(slot_changeGreen(double)));
 
     connect(ui->faceBlueSpinBox, SIGNAL(valueChanged(double)),
             ui->mygl, SLOT(slot_changeBlue(double)));
@@ -129,30 +126,30 @@ void MainWindow::slot_setSelectedJoint(QTreeWidgetItem *i) {
 }
 
 void MainWindow::slot_setSelectedVert(QListWidgetItem *i) {
-    if (Vertex* v = dynamic_cast<Vertex*>(i); v != nullptr) {
-        ui->mygl->mp_selectedVert = v;
-        ui->mygl->m_vertDisplay.updateVert(ui->mygl->mp_selectedVert);
-        ui->mygl->m_vertDisplay.destroy();
-        ui->mygl->m_vertDisplay.create();
+  if (Vertex *v = dynamic_cast<Vertex *>(i); v != nullptr) {
+    ui->mygl->mp_selectedVert = v;
+    ui->mygl->m_vertDisplay.updateVert(ui->mygl->mp_selectedVert);
+    ui->mygl->m_vertDisplay.destroy();
+    ui->mygl->m_vertDisplay.create();
 
-        ui->vertsListWidget->setCurrentItem(i);
+    ui->vertsListWidget->setCurrentItem(i);
 
         ui->vertPosXSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.x);
         ui->vertPosYSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.y);
         ui->vertPosZSpinBox->setValue(ui->mygl->mp_selectedVert->m_pos.z);
 
-        ui->mygl->update();
-    }
+    ui->mygl->update();
+  }
 }
 
 void MainWindow::slot_setSelectedFace(QListWidgetItem *i) {
-    if (Face* f = dynamic_cast<Face*>(i); f != nullptr) {
-        ui->mygl->mp_selectedFace = f;
-        ui->mygl->m_faceDisplay.updateFace(ui->mygl->mp_selectedFace);
-        ui->mygl->m_faceDisplay.destroy();
-        ui->mygl->m_faceDisplay.create();
+  if (Face *f = dynamic_cast<Face *>(i); f != nullptr) {
+    ui->mygl->mp_selectedFace = f;
+    ui->mygl->m_faceDisplay.updateFace(ui->mygl->mp_selectedFace);
+    ui->mygl->m_faceDisplay.destroy();
+    ui->mygl->m_faceDisplay.create();
 
-        ui->facesListWidget->setCurrentItem(i);
+    ui->facesListWidget->setCurrentItem(i);
 
         ui->faceRedSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.r);
         ui->faceGreenSpinBox->setValue(ui->mygl->mp_selectedFace->m_color.g);
@@ -163,54 +160,59 @@ void MainWindow::slot_setSelectedFace(QListWidgetItem *i) {
 }
 
 void MainWindow::slot_setSelectedHedge(QListWidgetItem *i) {
-    if (HalfEdge* he = dynamic_cast<HalfEdge*>(i); he != nullptr) {
-        ui->mygl->mp_selectedHedge = he;
-        ui->mygl->m_hedgeDisplay.updateHedge(ui->mygl->mp_selectedHedge);
-        ui->mygl->m_hedgeDisplay.destroy();
-        ui->mygl->m_hedgeDisplay.create();
+  if (HalfEdge *he = dynamic_cast<HalfEdge *>(i); he != nullptr) {
+    ui->mygl->mp_selectedHedge = he;
+    ui->mygl->m_hedgeDisplay.updateHedge(ui->mygl->mp_selectedHedge);
+    ui->mygl->m_hedgeDisplay.destroy();
+    ui->mygl->m_hedgeDisplay.create();
 
-        ui->halfEdgesListWidget->setCurrentItem(i);
+    ui->halfEdgesListWidget->setCurrentItem(i);
 
-        ui->mygl->update();
-    }
+    ui->mygl->update();
+  }
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
-}
+MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::on_actionImport_Obj_triggered() {
-    QString validate_filename = QFileDialog::getOpenFileName(0, QString("Select OBJ File"), QDir::currentPath().append(QString("../..")), QString("*.obj"));
+  QString validate_filename = QFileDialog::getOpenFileName(
+      0, QString("Select OBJ File"),
+      QDir().cleanPath(
+          QString(QFileInfo(".").absolutePath() + "../../../obj_files")),
+      QString("*.obj"));
 
-    QFile file(validate_filename);
+  QFile file(validate_filename);
 
-    if(!file.open(QIODevice::ReadOnly)){
-        qWarning("Could not open the file.");
-        return;
-    }
+  if (!file.open(QIODevice::ReadOnly)) {
+    qWarning("Could not open the file.");
+    return;
+  }
 
-    ui->mygl->mp_selectedVert = nullptr;
-    ui->mygl->mp_selectedFace = nullptr;
-    ui->mygl->mp_selectedHedge = nullptr;
+  ui->mygl->mp_selectedVert = nullptr;
+  ui->mygl->mp_selectedFace = nullptr;
+  ui->mygl->mp_selectedHedge = nullptr;
 
-    Vertex::population = 0;
-    Face::population = 0;
-    HalfEdge::population = 0;
+  Vertex::population = 0;
+  Face::population = 0;
+  HalfEdge::population = 0;
 
-    filename = validate_filename;
-    ui->mygl->m_meshCurrent.loadObj(file);
+  filename = validate_filename;
+  ui->mygl->m_meshCurrent.loadObj(file);
 }
 
 void MainWindow::on_actionImport_Skeleton_triggered() {
-    QString validate_file = QFileDialog::getOpenFileName(0, QString("Select JSON File"), QDir::currentPath().append(QString("../..")), QString("*.json"));
+  QString validate_file = QFileDialog::getOpenFileName(
+      0, QString("Select JSON File"),
+      QDir().cleanPath(
+          QString(QFileInfo(".").absolutePath() + "../../../jsons")),
+      QString("*.json"));
 
-    QFile file(validate_file);
+  QFile file(validate_file);
 
-    if(!file.open(QIODevice::ReadOnly)){
-        qWarning("Could not open the file.");
-        return;
-    }
+  if (!file.open(QIODevice::ReadOnly)) {
+    qWarning("Could not open the file.");
+    return;
+  }
 
     QString content = file.readAll();
     file.close();
@@ -224,34 +226,30 @@ void MainWindow::on_actionImport_Skeleton_triggered() {
     emit ui->mygl->sig_sendRootNode(ui->mygl->m_skeletonCurrent.root.get());
 }
 
-void MainWindow::on_actionQuit_triggered()
-{
-    QApplication::exit();
-}
+void MainWindow::on_actionQuit_triggered() { QApplication::exit(); }
 
-void MainWindow::on_actionCamera_Controls_triggered()
-{
-    CameraControlsHelp* c = new CameraControlsHelp();
-    c->show();
+void MainWindow::on_actionCamera_Controls_triggered() {
+  CameraControlsHelp *c = new CameraControlsHelp();
+  c->show();
 }
 
 void MainWindow::slot_addListItem(QListWidgetItem *i) {
-    Vertex *v = dynamic_cast<Vertex*>(i);
-    if (v != nullptr) {
-        ui->vertsListWidget->addItem(i);
-        return;
-    }
-    Face *f = dynamic_cast<Face*>(i);
-    if (f != nullptr) {
-        ui->facesListWidget->addItem(i);
-        return;
-    }
+  Vertex *v = dynamic_cast<Vertex *>(i);
+  if (v != nullptr) {
+    ui->vertsListWidget->addItem(i);
+    return;
+  }
+  Face *f = dynamic_cast<Face *>(i);
+  if (f != nullptr) {
+    ui->facesListWidget->addItem(i);
+    return;
+  }
 
-    HalfEdge *he = dynamic_cast<HalfEdge*>(i);
-    if (he != nullptr) {
-        ui->halfEdgesListWidget->addItem(i);
-        return;
-    }
+  HalfEdge *he = dynamic_cast<HalfEdge *>(i);
+  if (he != nullptr) {
+    ui->halfEdgesListWidget->addItem(i);
+    return;
+  }
 }
 
 void MainWindow::slot_addRootToTreeWidget(QTreeWidgetItem *i) {

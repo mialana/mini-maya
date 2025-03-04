@@ -1,5 +1,5 @@
 #include "drawable.h"
-#include <la.h>
+#include "la.h"
 
 Drawable::Drawable(OpenGLContext* context)
     : count(-1), bufIdx(), bufPos(), bufNor(), bufCol(), bufWts(), bufIds(),
@@ -8,10 +8,7 @@ Drawable::Drawable(OpenGLContext* context)
       mp_context(context)
 {}
 
-Drawable::~Drawable() {
-    destroy();
-}
-
+Drawable::~Drawable() { destroy(); }
 
 void Drawable::destroy()
 {
@@ -24,48 +21,40 @@ void Drawable::destroy()
 
 }
 
-GLenum Drawable::drawMode()
-{
-    // Since we want every three indices in bufIdx to be
-    // read to draw our Drawable, we tell that the draw mode
-    // of this Drawable is GL_TRIANGLES
+GLenum Drawable::drawMode() {
+  // Since we want every three indices in bufIdx to be
+  // read to draw our Drawable, we tell that the draw mode
+  // of this Drawable is GL_TRIANGLES
 
-    // If we wanted to draw a wireframe, we would return GL_LINES
+  // If we wanted to draw a wireframe, we would return GL_LINES
 
-    return GL_TRIANGLES;
+  return GL_TRIANGLES;
 }
 
-int Drawable::elemCount()
-{
-    return count;
+int Drawable::elemCount() { return count; }
+
+void Drawable::generateIdx() {
+  idxBound = true;
+  // Create a VBO on our GPU and store its handle in bufIdx
+  mp_context->glGenBuffers(1, &bufIdx);
 }
 
-void Drawable::generateIdx()
-{
-    idxBound = true;
-    // Create a VBO on our GPU and store its handle in bufIdx
-    mp_context->glGenBuffers(1, &bufIdx);
+void Drawable::generatePos() {
+  posBound = true;
+  // Create a VBO on our GPU and store its handle in bufPos
+  mp_context->glGenBuffers(1, &bufPos);
 }
 
-void Drawable::generatePos()
-{
-    posBound = true;
-    // Create a VBO on our GPU and store its handle in bufPos
-    mp_context->glGenBuffers(1, &bufPos);
+void Drawable::generateNor() {
+  norBound = true;
+  // Create a VBO on our GPU and store its handle in bufNor
+  mp_context->glGenBuffers(1, &bufNor);
 }
 
-void Drawable::generateNor()
-{
-    norBound = true;
-    // Create a VBO on our GPU and store its handle in bufNor
-    mp_context->glGenBuffers(1, &bufNor);
-}
-
-void Drawable::generateCol()
-{
-    colBound = true;
-    // Create a VBO on our GPU and store its handle in bufCol
-    mp_context->glGenBuffers(1, &bufCol);
+void Drawable::generateCol() {
+  colBound = true;
+  // Create a VBO on our GPU and store its handle in bufCol
+  mp_context->glGenBuffers(1, &bufCol);
 }
 
 void Drawable::generateWts()
@@ -82,36 +71,47 @@ void Drawable::generateIds()
     mp_context->glGenBuffers(1, &bufIds);
 }
 
-bool Drawable::bindIdx()
+void Drawable::generateWts()
 {
-    if(idxBound) {
-        mp_context->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIdx);
-    }
-    return idxBound;
+    wtsBound = true;
+    // Create a VBO on our GPU and store its handle in bufWt
+    mp_context->glGenBuffers(1, &bufWts);
 }
 
-bool Drawable::bindPos()
+void Drawable::generateIds()
 {
-    if(posBound){
-        mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufPos);
-    }
-    return posBound;
+    idsBound = true;
+    // Create a VBO on our GPU and store its handle in bufWt
+    mp_context->glGenBuffers(1, &bufIds);
 }
 
-bool Drawable::bindNor()
+bool Drawable::bindIdx() 
 {
-    if(norBound){
-        mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufNor);
-    }
-    return norBound;
+  if (idxBound) {
+    mp_context->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIdx);
+  }
+  return idxBound;
 }
 
-bool Drawable::bindCol()
-{
-    if(colBound){
-        mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufCol);
-    }
-    return colBound;
+bool Drawable::bindPos() {
+  if (posBound) {
+    mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufPos);
+  }
+  return posBound;
+}
+
+bool Drawable::bindNor() {
+  if (norBound) {
+    mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufNor);
+  }
+  return norBound;
+}
+
+bool Drawable::bindCol() {
+  if (colBound) {
+    mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufCol);
+  }
+  return colBound;
 }
 
 bool Drawable::bindWts()
