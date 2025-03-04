@@ -49,4 +49,6 @@ usd_executable(my-mini-maya
         usd
         usdGeom
         sdf
+        vt
+        gf
 )

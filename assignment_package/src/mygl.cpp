@@ -8,6 +8,8 @@
 #include <iostream>
 
 #include <glm/gtx/string_cast.hpp>
+#include <pxr/base/gf/vec3f.h>
+#include <pxr/base/vt/array.h>
 #include <pxr/usd/usd/stage.h>
 
 MyGL::MyGL(QWidget *parent)
@@ -447,6 +449,38 @@ void MyGL::slot_exportToUSD() {
   pxr::UsdAttribute face_vertex_indices =
       m_usdMesh.CreateFaceVertexIndicesAttr();
   pxr::UsdAttribute points = m_usdMesh.CreatePointsAttr();
+
+  pxr::VtArray<int> face_vertex_counts_data;
+  pxr::VtArray<int> face_vertex_indices_data;
+  pxr::VtArray<pxr::GfVec3f> points_data;
+
+  for (auto &face : m_meshCurrent.m_faces) {
+    HalfEdge *firstHedge = face->m_hedge;
+    HalfEdge *currHedge = firstHedge;
+    int count = 0;
+
+    do { // discover how many vertices are in this face
+      count += 1;
+      qDebug() << "Idx:" << currHedge->m_vert->id;
+      face_vertex_indices_data.push_back(currHedge->m_vert->id);
+
+      currHedge = currHedge->next;
+    } while (currHedge != firstHedge);
+    qDebug() << count;
+    face_vertex_counts_data.push_back(count);
+  }
+
+  // iterate through mesh verts to read position data
+  for (auto &vert : m_meshCurrent.m_verts) {
+    glm::vec3 pos = vert->m_pos;
+    points_data.push_back(pxr::GfVec3f(pos.x, pos.y, pos.z));
+  }
+
+  face_vertex_counts.Set(face_vertex_counts_data);
+  face_vertex_indices.Set(face_vertex_indices_data);
+  points.Set(points_data);
+
+  stage->SetDefaultPrim(m_usdMesh.GetPrim());
 
   stage->Save();
 
