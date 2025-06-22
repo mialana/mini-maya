@@ -1,10 +1,3 @@
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
-set(CMAKE_INCLUDE_CURRENT_DIR ON)
-
-find_package(Qt6 REQUIRED COMPONENTS Core Widgets OpenGL OpenGLWidgets)
-
 if (USD_ROOT)
 
     if (NOT BOOST_ROOT)
@@ -53,3 +46,6 @@ endif()
 # USD & TBB
 include(${USD_ROOT}/pxrConfig.cmake)
 find_package(TBB REQUIRED)
+
+# QT
+find_package(Qt6 REQUIRED COMPONENTS Core OpenGLWidgets)

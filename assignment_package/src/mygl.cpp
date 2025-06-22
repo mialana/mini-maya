@@ -12,6 +12,9 @@
 #include <pxr/base/vt/array.h>
 #include <pxr/usd/usd/stage.h>
 
+#define VALUE(string) #string
+#define TO_LITERAL(string) VALUE(string)
+
 MyGL::MyGL(QWidget *parent)
     : OpenGLContext(parent),
       m_geomSquare(this),
@@ -132,15 +135,15 @@ void MyGL::paintGL() {
     m_progSkeleton.setModelMatrix(glm::mat4(1.f));
 
   for (auto &v : m_meshCurrent.m_verts) {
-    emit this->sig_sendListItem(v.get());
+    Q_EMIT this->sig_sendListItem(v.get());
   }
 
   for (auto &f : m_meshCurrent.m_faces) {
-    emit this->sig_sendListItem(f.get());
+    Q_EMIT this->sig_sendListItem(f.get());
   }
 
   for (auto &he : m_meshCurrent.m_hedges) {
-    emit this->sig_sendListItem(he.get());
+    Q_EMIT this->sig_sendListItem(he.get());
   }
 
     m_progSkeleton.draw(m_meshCurrent);
@@ -214,16 +217,16 @@ void MyGL::keyPressEvent(QKeyEvent *e) {
   if (mp_selectedHedge != nullptr) {
     switch (e->key()) {
     case Qt::Key_N:
-      emit sig_setSelectedHedge(mp_selectedHedge->next);
+      Q_EMIT sig_setSelectedHedge(mp_selectedHedge->next);
       return;
     case Qt::Key_M:
-      emit sig_setSelectedHedge(mp_selectedHedge->sym);
+      Q_EMIT sig_setSelectedHedge(mp_selectedHedge->sym);
       return;
     case Qt::Key_F:
-      emit sig_setSelectedFace(mp_selectedHedge->m_face);
+      Q_EMIT sig_setSelectedFace(mp_selectedHedge->m_face);
       return;
     case Qt::Key_V:
-      emit sig_setSelectedVert(mp_selectedHedge->m_vert);
+      Q_EMIT sig_setSelectedVert(mp_selectedHedge->m_vert);
       return;
     }
   }
@@ -231,11 +234,11 @@ void MyGL::keyPressEvent(QKeyEvent *e) {
   if (e->key() == Qt::Key_H) {
     if (amount == 10.0f) {
       if (mp_selectedFace != nullptr) {
-        emit sig_setSelectedHedge(mp_selectedFace->m_hedge);
+        Q_EMIT sig_setSelectedHedge(mp_selectedFace->m_hedge);
       }
     } else {
       if (mp_selectedVert != nullptr) {
-        emit sig_setSelectedHedge(mp_selectedVert->m_hedge);
+        Q_EMIT sig_setSelectedHedge(mp_selectedVert->m_hedge);
       }
     }
     return;
@@ -265,9 +268,9 @@ void MyGL::updateAll() {
     m_skeletonCurrent.destroy();
     m_skeletonCurrent.create();
 
-  emit sig_setSelectedVert(mp_selectedVert);
-  emit sig_setSelectedFace(mp_selectedFace);
-  emit sig_setSelectedHedge(mp_selectedHedge);
+  Q_EMIT sig_setSelectedVert(mp_selectedVert);
+  Q_EMIT sig_setSelectedFace(mp_selectedFace);
+  Q_EMIT sig_setSelectedHedge(mp_selectedHedge);
 
   update();
 }

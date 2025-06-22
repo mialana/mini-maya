@@ -56,7 +56,7 @@ public:
 protected:
   void keyPressEvent(QKeyEvent *e);
 
-public slots:
+public Q_SLOTS:
     void slot_splitHedge();
     void slot_triangulateFace();
     void slot_subdivideMesh();
@@ -83,7 +83,7 @@ public slots:
     void slot_jointRotateMinusY();
     void slot_jointRotateMinusZ();
 
-signals:
+Q_SIGNALS:
     void sig_sendRootNode(QTreeWidgetItem*);
     void sig_sendListItem(QListWidgetItem*);
     void sig_setSelectedVert(QListWidgetItem*);

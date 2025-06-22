@@ -25,7 +25,7 @@ include(Defaults)
 include(Packages)
 
 # Include USD plugin building CMake utilities.
-include(USDPluginTools)
+include(Utils)
 
 # Recurse into source tree.
 add_subdirectory(src)

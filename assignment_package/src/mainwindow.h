@@ -20,7 +20,7 @@ public:
 
     QString filename;
 
-private slots:
+private Q_SLOTS:
     void on_actionImport_Skeleton_triggered();
     void on_actionImport_Obj_triggered();
 

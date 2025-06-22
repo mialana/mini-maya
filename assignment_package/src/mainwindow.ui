@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>OpenGLDemo</string>
+   <string>MIni Maya</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="MyGL" name="mygl">
@@ -107,7 +107,7 @@
      <rect>
       <x>380</x>
       <y>470</y>
-      <width>272</width>
+      <width>274</width>
       <height>68</height>
      </rect>
     </property>

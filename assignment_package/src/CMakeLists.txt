@@ -1,54 +1,23 @@
-usd_executable(my-mini-maya
-    CPPFILES
-        main.cpp
-        display.cpp
-        main.cpp
-        mainwindow.cpp
-        mesh.cpp
-        mygl.cpp
-        scene/face.cpp
-        scene/halfedge.cpp
-        scene/joint.cpp
-        scene/skeleton.cpp
-        scene/vertex.cpp
-        shaderprogram.cpp
-        utils.cpp
-        la.cpp
-        drawable.cpp
-        camera.cpp
-        cameracontrolshelp.cpp
-        openglcontext.cpp
-        scene/squareplane.cpp
-        display.h
-        la.h
-        mainwindow.h
-        mesh.h
-        mygl.h
-        scene/face.h
-        scene/halfedge.h
-        scene/joint.h
-        scene/skeleton.h
-        scene/vertex.h
-        shaderprogram.h
-        utils.h
-        drawable.h
-        camera.h
-        cameracontrolshelp.h
-        openglcontext.h
-        scene/squareplane.h
-        smartpointerhelp.h
-        mainwindow.ui
-        cameracontrolshelp.ui
-        mycpp/glmutils.h
-        mycpp/MyCpp_global.h
-        mycpp/mydefines.h
-        mycpp/myutils.cpp
-        mycpp/myutils.h
+file(GLOB_RECURSE SOURCEFILES *.cpp *.h *.ui)
+file(GLOB_RECURSE STATICFILES *.usd *.usd* *.txt, *.qrc)
+list(FILTER STATICFILES EXCLUDE REGEX "CMakeLists.txt")
 
+usd_executable(mini-maya-executable
+
+    CPPFILES
+        ${SOURCEFILES}
+        
     LIBRARIES
         usd
         usdGeom
-        sdf
-        vt
+        usdLux
+        usdImaging
+        usdAppUtils
         gf
+        glf
+        sdf
+        tf
+    
+    STATICFILES
+        ${STATICFILES}
 )

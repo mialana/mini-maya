@@ -21,7 +21,7 @@ public:
   void printLinkInfoLog(int prog);
   void printShaderInfoLog(int shader);
 
-private slots:
+private Q_SLOTS:
   /*** AUTOMATIC TESTING: DO NOT MODIFY ***/
   /***/ void saveImageAndQuit();
 

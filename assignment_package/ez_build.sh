@@ -1,6 +1,14 @@
-cd /Users/liu.amy05/Documents/mini-maya/assignment_package/build
+#!/usr/bin/env bash
 
-cmake -DUSD_ROOT="/Users/liu.amy05/usd" -DCMAKE_INSTALL_PREFIX="/Users/liu.amy05/Documents/mini-maya/assignment_package" ..
+if [ -e build ]; then
+  trash build
+fi
 
-cmake --build  . -j8 -- my-mini-maya
+mkdir build
+cd build
+
+
+cmake -DUSD_ROOT="/opt/usd" -DCMAKE_INSTALL_PREFIX="/Users/Dev/Projects/cache/mini-maya/assignment_package" ..
+
+cmake --build  . -j8 -- mini-maya-executable
 
