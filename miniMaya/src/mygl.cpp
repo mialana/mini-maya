@@ -70,7 +70,7 @@ void MyGL::initializeGL() {
   m_geomSquare.create();
 
   QFile relativeFile = QFile(QDir().cleanPath(
-      QString(QFileInfo(".").absolutePath() + "../../../obj_files/cube.obj")));
+      QString(QFileInfo(".").absolutePath() + "../../../../obj_files/cube.obj")));
 
   if (relativeFile.open(QIODevice::ReadOnly)) {
     m_meshCurrent.loadObj(relativeFile);
