@@ -43,21 +43,11 @@ void Mesh::create() {
             glm::vec3 n = glm::normalize(glm::cross(v1, v2));
             normals.push_back(glm::vec4(n, 0));
 
-
-
+            colors.push_back(glm::vec4(curr->m_face->m_color, 1));
 
             if (binded) {
                 weights.push_back(curr->m_vert->weights);
                 jointIds.push_back(glm::vec2(curr->m_vert->influencers.first->id, curr->m_vert->influencers.second->id));
-
-                if (curr->m_vert->influencers.first->id == 2 || curr->m_vert->influencers.second->id == 2) {
-                    colors.push_back(glm::vec4(0, 0, 0, 1));
-
-                } else {
-                    colors.push_back(glm::vec4(0.98, 0.85, 0.85, 1));
-                }
-            } else {
-                colors.push_back(glm::vec4(curr->m_face->m_color, 1));
             }
 
             fVertNum++;
