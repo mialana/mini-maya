@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MIni Maya</string>
+   <string>Mini Maya</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="MyGL" name="mygl">
@@ -393,10 +393,15 @@
     <property name="geometry">
      <rect>
       <x>890</x>
-      <y>310</y>
+      <y>304</y>
       <width>101</width>
       <height>20</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <bold>true</bold>
+     </font>
     </property>
     <property name="text">
      <string>Transform Joint</string>
@@ -408,8 +413,8 @@
    <widget class="QLabel" name="label_20">
     <property name="geometry">
      <rect>
-      <x>910</x>
-      <y>330</y>
+      <x>911</x>
+      <y>328</y>
       <width>55</width>
       <height>16</height>
      </rect>
@@ -542,8 +547,8 @@
    <widget class="QLabel" name="label_14">
     <property name="geometry">
      <rect>
-      <x>899</x>
-      <y>352</y>
+      <x>900</x>
+      <y>350</y>
       <width>16</width>
       <height>16</height>
      </rect>
@@ -558,8 +563,8 @@
    <widget class="QLabel" name="label_13">
     <property name="geometry">
      <rect>
-      <x>899</x>
-      <y>382</y>
+      <x>900</x>
+      <y>380</y>
       <width>16</width>
       <height>16</height>
      </rect>
@@ -574,8 +579,8 @@
    <widget class="QLabel" name="label_15">
     <property name="geometry">
      <rect>
-      <x>899</x>
-      <y>412</y>
+      <x>900</x>
+      <y>410</y>
       <width>16</width>
       <height>16</height>
      </rect>
@@ -590,8 +595,8 @@
    <widget class="QDoubleSpinBox" name="jointTransXSpinBox">
     <property name="geometry">
      <rect>
-      <x>920</x>
-      <y>349</y>
+      <x>921</x>
+      <y>347</y>
       <width>61</width>
       <height>21</height>
      </rect>
@@ -603,8 +608,8 @@
    <widget class="QDoubleSpinBox" name="jointTransZSpinBox">
     <property name="geometry">
      <rect>
-      <x>920</x>
-      <y>410</y>
+      <x>921</x>
+      <y>408</y>
       <width>61</width>
       <height>21</height>
      </rect>
@@ -616,8 +621,8 @@
    <widget class="QDoubleSpinBox" name="jointTransYSpinBox">
     <property name="geometry">
      <rect>
-      <x>920</x>
-      <y>380</y>
+      <x>921</x>
+      <y>378</y>
       <width>61</width>
       <height>21</height>
      </rect>
