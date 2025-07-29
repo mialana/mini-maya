@@ -442,7 +442,7 @@ void MyGL::slot_exportToUSD() {
   QString usda_file = QFileDialog::getSaveFileName(
       this, QString("Select Destination for USD Export"),
       QDir().cleanPath(QString(QFileInfo(".").absolutePath() +
-                               "../../../usd_outputs/output.usda")),
+                               "../../../../usd_outputs/output.usda")),
       QString("*.usda"));
 
   pxr::UsdStageRefPtr stage = pxr::UsdStage::CreateNew(usda_file.toStdString());

@@ -181,7 +181,7 @@ void MainWindow::on_actionImport_Obj_triggered() {
   QString validate_filename = QFileDialog::getOpenFileName(
       0, QString("Select OBJ File"),
       QDir().cleanPath(
-          QString(QFileInfo(".").absolutePath() + "../../../obj_files")),
+          QString(QFileInfo(".").absolutePath() + "../../../../obj_files")),
       QString("*.obj"));
 
   QFile file(validate_filename);
@@ -207,7 +207,7 @@ void MainWindow::on_actionImport_Skeleton_triggered() {
   QString validate_file = QFileDialog::getOpenFileName(
       0, QString("Select JSON File"),
       QDir().cleanPath(
-          QString(QFileInfo(".").absolutePath() + "../../../jsons")),
+          QString(QFileInfo(".").absolutePath() + "../../../../jsons")),
       QString("*.json"));
 
   QFile file(validate_file);
