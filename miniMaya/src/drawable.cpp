@@ -71,20 +71,6 @@ void Drawable::generateIds()
     mp_context->glGenBuffers(1, &bufIds);
 }
 
-void Drawable::generateWts()
-{
-    wtsBound = true;
-    // Create a VBO on our GPU and store its handle in bufWt
-    mp_context->glGenBuffers(1, &bufWts);
-}
-
-void Drawable::generateIds()
-{
-    idsBound = true;
-    // Create a VBO on our GPU and store its handle in bufWt
-    mp_context->glGenBuffers(1, &bufIds);
-}
-
 bool Drawable::bindIdx() 
 {
   if (idxBound) {

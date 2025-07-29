@@ -19,7 +19,7 @@
      <rect>
       <x>11</x>
       <y>11</y>
-      <width>618</width>
+      <width>621</width>
       <height>432</height>
      </rect>
     </property>
@@ -105,7 +105,7 @@
    <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>380</x>
+      <x>360</x>
       <y>470</y>
       <width>274</width>
       <height>68</height>
@@ -162,7 +162,7 @@
      <string>Joints</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QTreeWidget" name="jointsTreeWidget">
@@ -233,7 +233,7 @@
      <rect>
       <x>287</x>
       <y>528</y>
-      <width>47</width>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -249,7 +249,7 @@
      <rect>
       <x>204</x>
       <y>528</y>
-      <width>47</width>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -265,7 +265,7 @@
      <rect>
       <x>121</x>
       <y>528</y>
-      <width>47</width>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -302,7 +302,7 @@
      <string>Z</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QDoubleSpinBox" name="vertPosZSpinBox">
@@ -331,7 +331,7 @@
      <string>Y</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_5">
@@ -347,7 +347,7 @@
      <string>X</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QDoubleSpinBox" name="vertPosXSpinBox">
@@ -393,7 +393,7 @@
     <property name="geometry">
      <rect>
       <x>890</x>
-      <y>360</y>
+      <y>310</y>
       <width>101</width>
       <height>20</height>
      </rect>
@@ -402,14 +402,14 @@
      <string>Transform Joint</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_20">
     <property name="geometry">
      <rect>
-      <x>863</x>
-      <y>390</y>
+      <x>910</x>
+      <y>330</y>
       <width>55</width>
       <height>16</height>
      </rect>
@@ -418,14 +418,14 @@
      <string>Translate</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_21">
     <property name="geometry">
      <rect>
-      <x>970</x>
-      <y>390</y>
+      <x>920</x>
+      <y>440</y>
       <width>39</width>
       <height>16</height>
      </rect>
@@ -434,16 +434,16 @@
      <string>Rotate</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
-   <widget class="QWidget" name="">
+   <widget class="QWidget" name="layoutWidget">
     <property name="geometry">
      <rect>
-      <x>973</x>
-      <y>410</y>
-      <width>56</width>
-      <height>99</height>
+      <x>900</x>
+      <y>460</y>
+      <width>92</width>
+      <height>100</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout">
@@ -494,8 +494,8 @@
    <widget class="QLabel" name="label_18">
     <property name="geometry">
      <rect>
-      <x>953</x>
-      <y>480</y>
+      <x>880</x>
+      <y>530</y>
       <width>16</width>
       <height>16</height>
      </rect>
@@ -504,14 +504,14 @@
      <string>Z</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_17">
     <property name="geometry">
      <rect>
-      <x>953</x>
-      <y>450</y>
+      <x>880</x>
+      <y>500</y>
       <width>16</width>
       <height>16</height>
      </rect>
@@ -520,14 +520,14 @@
      <string>Y</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_16">
     <property name="geometry">
      <rect>
-      <x>953</x>
-      <y>420</y>
+      <x>880</x>
+      <y>470</y>
       <width>16</width>
       <height>16</height>
      </rect>
@@ -536,14 +536,14 @@
      <string>X</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_14">
     <property name="geometry">
      <rect>
-      <x>855</x>
-      <y>420</y>
+      <x>899</x>
+      <y>352</y>
       <width>16</width>
       <height>16</height>
      </rect>
@@ -552,14 +552,14 @@
      <string>X</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_13">
     <property name="geometry">
      <rect>
-      <x>855</x>
-      <y>450</y>
+      <x>899</x>
+      <y>382</y>
       <width>16</width>
       <height>16</height>
      </rect>
@@ -568,14 +568,14 @@
      <string>Y</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QLabel" name="label_15">
     <property name="geometry">
      <rect>
-      <x>855</x>
-      <y>480</y>
+      <x>899</x>
+      <y>412</y>
       <width>16</width>
       <height>16</height>
      </rect>
@@ -584,15 +584,15 @@
      <string>Z</string>
     </property>
     <property name="alignment">
-     <set>Qt::AlignCenter</set>
+     <set>Qt::AlignmentFlag::AlignCenter</set>
     </property>
    </widget>
    <widget class="QDoubleSpinBox" name="jointTransXSpinBox">
     <property name="geometry">
      <rect>
-      <x>876</x>
-      <y>417</y>
-      <width>54</width>
+      <x>920</x>
+      <y>349</y>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -603,9 +603,9 @@
    <widget class="QDoubleSpinBox" name="jointTransZSpinBox">
     <property name="geometry">
      <rect>
-      <x>876</x>
-      <y>478</y>
-      <width>54</width>
+      <x>920</x>
+      <y>410</y>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -616,9 +616,9 @@
    <widget class="QDoubleSpinBox" name="jointTransYSpinBox">
     <property name="geometry">
      <rect>
-      <x>876</x>
-      <y>448</y>
-      <width>54</width>
+      <x>920</x>
+      <y>380</y>
+      <width>61</width>
       <height>21</height>
      </rect>
     </property>
@@ -629,7 +629,7 @@
    <widget class="QPushButton" name="pushButton_2">
     <property name="geometry">
      <rect>
-      <x>430</x>
+      <x>410</x>
       <y>530</y>
       <width>171</width>
       <height>41</height>
@@ -645,7 +645,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1057</width>
+     <width>1061</width>
      <height>24</height>
     </rect>
    </property>

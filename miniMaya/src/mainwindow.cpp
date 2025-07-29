@@ -226,7 +226,7 @@ void MainWindow::on_actionImport_Skeleton_triggered() {
 
     ui->mygl->m_skeletonCurrent.loadJson(rootJsonObj);
 
-    emit ui->mygl->sig_sendRootNode(ui->mygl->m_skeletonCurrent.root.get());
+    Q_EMIT ui->mygl->sig_sendRootNode(ui->mygl->m_skeletonCurrent.root.get());
 }
 
 void MainWindow::on_actionQuit_triggered() { QApplication::exit(); }

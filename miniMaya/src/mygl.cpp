@@ -87,10 +87,14 @@ void MyGL::initializeGL() {
   m_hedgeDisplay.create();
 
     // Create and set up the diffuse shader
-    m_progLambert.create(":/glsl/lambert.vert.glsl", ":/glsl/lambert.frag.glsl");
+  m_progLambert.create((std::string(PROJECT_SOURCE_DIR) + "/glsl/lambert.vert.glsl").c_str(),
+                       (std::string(PROJECT_SOURCE_DIR) + "/glsl/lambert.frag.glsl").c_str());
     // Create and set up the flat lighting shader
-    m_progFlat.create(":/glsl/flat.vert.glsl", ":/glsl/flat.frag.glsl");
-    m_progSkeleton.create(":/glsl/skeleton.vert.glsl", ":/glsl/skeleton.frag.glsl");
+  m_progFlat.create((std::string(PROJECT_SOURCE_DIR) + "/glsl/flat.vert.glsl").c_str(),
+                    (std::string(PROJECT_SOURCE_DIR) + "/glsl/flat.frag.glsl").c_str());
+
+  m_progSkeleton.create((std::string(PROJECT_SOURCE_DIR) + "/glsl/skeleton.vert.glsl").c_str(),
+                    (std::string(PROJECT_SOURCE_DIR) + "/glsl/skeleton.frag.glsl").c_str());
 
   // We have to have a VAO bound in OpenGL 3.2 Core. But if we're not
   // using multiple VAOs, we can just bind one once.
