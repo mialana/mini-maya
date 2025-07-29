@@ -1,8 +1,0 @@
-(5 pts) What visual errors may occur when using linear blend skinning for a mesh? Why do these errors occur?
-
-Two main errors occur from linear blend skinning. One is that LERPing rotation matrices doesn't work, as vertices that are moving from one position to another will be translated their directly, instead of following a curve like in usual rotation. The second is that it doesn't preserve volume well, such as when twisting is attempted on a limb. This causes vertex endpoints to overlap and create very unrealistic effects.
-
-(5 pts) Since one cannot insert breakpoints into a GLSL shader program, how might one debug a shader? For example, if one were writing a vertex shader that applies a mesh skinning deformation, how might one determine which vertices are influenced by a particular joint? Consider what alterations to your fragment shader might be useful to test this.
-
-A way to determine which vertices are influenced by a particular joint would be to change the color of vertices that are influenced by that joint. Furthermore, you could create a sort of heat map, where the color of certain vertices would depend on the weight that a joint has influence over it.
-Also, to determine if there is a bug at some point in the code, you can have a certain action occur only when a section of code has completed (i.e. all vertices turn red). If there is a certain value that is unclear whether is being set correctly, you can also set vertex colors to that value and visually check to make sure it's correct.

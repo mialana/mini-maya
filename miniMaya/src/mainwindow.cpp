@@ -8,8 +8,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      filename(QDir().cleanPath(QString(QFileInfo(".").absolutePath() +
-                                        "../../../obj_files/cube.obj"))),
+    filename(QDir().cleanPath(
+        QString(PROJECT_SOURCE_DIR) + "/../obj_files/cube.obj")),
       ui(new Ui::MainWindow) {
 
   ui->setupUi(this);
@@ -178,11 +178,12 @@ void MainWindow::slot_setSelectedHedge(QListWidgetItem *i) {
 MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::on_actionImport_Obj_triggered() {
-  QString validate_filename = QFileDialog::getOpenFileName(
-      0, QString("Select OBJ File"),
-      QDir().cleanPath(
-          QString(QFileInfo(".").absolutePath() + "../../../../obj_files")),
-      QString("*.obj"));
+    QString validate_filename = QFileDialog::getOpenFileName(
+        nullptr,
+        QString("Select OBJ File"),
+        QDir().cleanPath(
+            QFileInfo(PROJECT_SOURCE_DIR).absoluteFilePath() + "/../obj_files"),
+        QString("OBJ Files (*.obj)"));    
 
   QFile file(validate_filename);
 
@@ -206,8 +207,7 @@ void MainWindow::on_actionImport_Obj_triggered() {
 void MainWindow::on_actionImport_Skeleton_triggered() {
   QString validate_file = QFileDialog::getOpenFileName(
       0, QString("Select JSON File"),
-      QDir().cleanPath(
-          QString(QFileInfo(".").absolutePath() + "../../../../jsons")),
+      QDir().cleanPath(QString(PROJECT_SOURCE_DIR) + "/../jsons"),
       QString("*.json"));
 
   QFile file(validate_file);

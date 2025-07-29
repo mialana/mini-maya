@@ -69,8 +69,8 @@ void MyGL::initializeGL() {
   // Create the instances of Cylinder and Sphere.
   m_geomSquare.create();
 
-  QFile relativeFile = QFile(QDir().cleanPath(
-      QString(QFileInfo(".").absolutePath() + "../../../../obj_files/cube.obj")));
+  QFile relativeFile(QDir().cleanPath(
+    QString(PROJECT_SOURCE_DIR) + "/../obj_files/cube.obj"));
 
   if (relativeFile.open(QIODevice::ReadOnly)) {
     m_meshCurrent.loadObj(relativeFile);
@@ -445,9 +445,13 @@ void MyGL::slot_exportToUSD() {
   //     const pxr::VtVec3fArray &points;
   QString usda_file = QFileDialog::getSaveFileName(
       this, QString("Select Destination for USD Export"),
-      QDir().cleanPath(QString(QFileInfo(".").absolutePath() +
-                               "../../../../usd_outputs/output.usda")),
+      QDir().cleanPath(QString(PROJECT_SOURCE_DIR) + "/../usd_outputs/output.usda"),
       QString("*.usda"));
+
+  if (usda_file == "") {
+      qDebug() << "No destination selected.";
+      return;
+  }
 
   pxr::UsdStageRefPtr stage = pxr::UsdStage::CreateNew(usda_file.toStdString());
   m_usdMesh = pxr::UsdGeomMesh::Define(stage, pxr::SdfPath("/MyRoot/MyMesh"));
