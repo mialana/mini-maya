@@ -4,9 +4,9 @@ cmake_minimum_required(VERSION 3.13)
 # Define project.
 project(
   miniMaya
-  VERSION 0.0.0
+  VERSION 0.1.0
   DESCRIPTION
-    "A collection of example plugins for Pixar's USD (Universal Scene Description)."
+    ""
   LANGUAGES CXX)
 
 include_directories(./include)
