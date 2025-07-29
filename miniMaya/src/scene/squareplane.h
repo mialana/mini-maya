@@ -7,8 +7,9 @@
 #include <QOpenGLContext>
 #include <QOpenGLShaderProgram>
 
-class SquarePlane : public Drawable {
+class SquarePlane : public Drawable
+{
 public:
-  SquarePlane(OpenGLContext *mp_context);
-  virtual void create();
+    SquarePlane(OpenGLContext* mp_context);
+    virtual void create();
 };

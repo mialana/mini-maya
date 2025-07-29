@@ -1,14 +1,18 @@
 #include "mesh.h"
 
 Mesh::Mesh(OpenGLContext* context)
-    : Drawable(context), initiated(false), binded(false)
+    : Drawable(context)
+    , initiated(false)
+    , binded(false)
 {}
 
-GLenum Mesh::drawMode() {
+GLenum Mesh::drawMode()
+{
     return GL_TRIANGLES;
 }
 
-void Mesh::bindSkeleton(Skeleton& skeleton) {
+void Mesh::bindSkeleton(Skeleton& skeleton)
+{
     for (const auto& v : m_verts) {
         v.get()->computeInfluentialJoints(skeleton.root.get());
 
@@ -20,7 +24,8 @@ void Mesh::bindSkeleton(Skeleton& skeleton) {
     binded = true;
 }
 
-void Mesh::create() {
+void Mesh::create()
+{
     std::vector<GLuint> indices = std::vector<GLuint>();
     std::vector<glm::vec4> positions = std::vector<glm::vec4>();
     std::vector<glm::vec4> normals = std::vector<glm::vec4>();
@@ -29,7 +34,7 @@ void Mesh::create() {
     std::vector<glm::ivec2> jointIds = std::vector<glm::ivec2>();
 
     int currTotal = 0;
-    for (const uPtr<Face> &f : m_faces) {
+    for (const uPtr<Face>& f : m_faces) {
         int fVertNum = 0;
         HalfEdge* start = f->m_hedge;
         HalfEdge* curr = f->m_hedge;
@@ -46,7 +51,8 @@ void Mesh::create() {
 
             if (binded) {
                 weights.push_back(curr->m_vert->weights);
-                jointIds.push_back(glm::vec2(curr->m_vert->influencers.first->id, curr->m_vert->influencers.second->id));
+                jointIds.push_back(glm::vec2(curr->m_vert->influencers.first->id,
+                                             curr->m_vert->influencers.second->id));
             }
 
             fVertNum++;
@@ -65,32 +71,51 @@ void Mesh::create() {
 
     generateIdx();
     mp_context->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIdx);
-    mp_context->glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+    mp_context->glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                             indices.size() * sizeof(GLuint),
+                             indices.data(),
+                             GL_STATIC_DRAW);
 
     generatePos();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufPos);
-    mp_context->glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(glm::vec4), positions.data(), GL_STATIC_DRAW);
+    mp_context->glBufferData(GL_ARRAY_BUFFER,
+                             positions.size() * sizeof(glm::vec4),
+                             positions.data(),
+                             GL_STATIC_DRAW);
 
     generateNor();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufNor);
-    mp_context->glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec4), normals.data(), GL_STATIC_DRAW);
+    mp_context->glBufferData(GL_ARRAY_BUFFER,
+                             normals.size() * sizeof(glm::vec4),
+                             normals.data(),
+                             GL_STATIC_DRAW);
 
     generateCol();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufCol);
-    mp_context->glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec4), colors.data(), GL_STATIC_DRAW);
+    mp_context->glBufferData(GL_ARRAY_BUFFER,
+                             colors.size() * sizeof(glm::vec4),
+                             colors.data(),
+                             GL_STATIC_DRAW);
 
     if (binded) {
         generateWts();
         mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufWts);
-        mp_context->glBufferData(GL_ARRAY_BUFFER, weights.size() * sizeof(glm::vec2), weights.data(), GL_STATIC_DRAW);
+        mp_context->glBufferData(GL_ARRAY_BUFFER,
+                                 weights.size() * sizeof(glm::vec2),
+                                 weights.data(),
+                                 GL_STATIC_DRAW);
 
         generateIds();
         mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufIds);
-        mp_context->glBufferData(GL_ARRAY_BUFFER, jointIds.size() * sizeof(glm::ivec2), jointIds.data(), GL_STATIC_DRAW);
+        mp_context->glBufferData(GL_ARRAY_BUFFER,
+                                 jointIds.size() * sizeof(glm::ivec2),
+                                 jointIds.data(),
+                                 GL_STATIC_DRAW);
     }
 }
 
-void Mesh::createSyms() {
+void Mesh::createSyms()
+{
     std::map<std::pair<Vertex*, Vertex*>, HalfEdge*> hedgesMap;
     for (const auto& f : this->m_faces) {
         HalfEdge* map_val = f->m_hedge;
@@ -112,7 +137,8 @@ void Mesh::createSyms() {
     }
 }
 
-void Mesh::loadObj(QFile& file) {
+void Mesh::loadObj(QFile& file)
+{
     this->m_verts.clear();
     this->m_faces.clear();
     this->m_hedges.clear();
@@ -128,7 +154,9 @@ void Mesh::loadObj(QFile& file) {
 
         if (fileLine.startsWith("v ")) {
             QStringList lineList = fileLine.split(" ");
-            glm::vec3 pos = glm::vec3(lineList[1].toFloat(), lineList[2].toFloat(), lineList[3].toFloat());
+            glm::vec3 pos = glm::vec3(lineList[1].toFloat(),
+                                      lineList[2].toFloat(),
+                                      lineList[3].toFloat());
             uPtr<Vertex> v = mkU<Vertex>(pos);
             this->m_verts.push_back(std::move(v));
         }
@@ -179,7 +207,8 @@ void Mesh::loadObj(QFile& file) {
     this->create();
 }
 
-HalfEdge* Mesh::findHedgeBefore(HalfEdge* he) {
+HalfEdge* Mesh::findHedgeBefore(HalfEdge* he)
+{
     HalfEdge* curr = he;
     do {
         curr = curr->next;
@@ -188,7 +217,8 @@ HalfEdge* Mesh::findHedgeBefore(HalfEdge* he) {
     return curr;
 }
 
-void Mesh::splitHedge(HalfEdge* he1, HalfEdge* he2, Vertex* v1, Vertex* v2, glm::vec3 pos) {
+void Mesh::splitHedge(HalfEdge* he1, HalfEdge* he2, Vertex* v1, Vertex* v2, glm::vec3 pos)
+{
     uPtr<Vertex> v3Uptr = mkU<Vertex>(pos);
     uPtr<HalfEdge> he1bUptr = mkU<HalfEdge>();
     uPtr<HalfEdge> he2bUptr = mkU<HalfEdge>();
@@ -225,7 +255,8 @@ void Mesh::splitHedge(HalfEdge* he1, HalfEdge* he2, Vertex* v1, Vertex* v2, glm:
     he1b->sym = he2;
 }
 
-void Mesh::triangulateFace(Face* f1) {
+void Mesh::triangulateFace(Face* f1)
+{
     HalfEdge* curr = f1->m_hedge;
     HalfEdge* last = Mesh::findHedgeBefore(curr);
 
@@ -270,10 +301,10 @@ void Mesh::triangulateFace(Face* f1) {
         he1 = he2;
         he2 = he2->next;
     }
-
 }
 
-void Mesh::subdivideMesh() {
+void Mesh::subdivideMesh()
+{
     int origVertsNum = this->m_verts.size();
     int origFacesNum = this->m_faces.size();
 
@@ -291,7 +322,8 @@ void Mesh::subdivideMesh() {
     this->quadrangulate(centroidMap, origFacesNum);
 }
 
-void Mesh::findCentroids(std::unordered_map<Face*, Vertex*>& centroidMap) {
+void Mesh::findCentroids(std::unordered_map<Face*, Vertex*>& centroidMap)
+{
     int numFaces = this->m_faces.size();
     for (int i = 0; i < numFaces; i++) {
         Face* f = this->m_faces[i].get();
@@ -318,8 +350,8 @@ void Mesh::findCentroids(std::unordered_map<Face*, Vertex*>& centroidMap) {
 }
 
 void Mesh::findSmoothedMidpoints(std::unordered_map<Face*, Vertex*>& centroidMap,
-                                    std::unordered_map<HalfEdge*, glm::vec3>& midpointMap) {
-
+                                 std::unordered_map<HalfEdge*, glm::vec3>& midpointMap)
+{
     int numHedges = this->m_hedges.size();
     for (int i = 0; i < numHedges; i++) {
         HalfEdge* curr = this->m_hedges[i].get();
@@ -337,23 +369,24 @@ void Mesh::findSmoothedMidpoints(std::unordered_map<Face*, Vertex*>& centroidMap
     }
 }
 
-void Mesh::splitNewHedges(std::unordered_map<HalfEdge*, glm::vec3>& midpointMap) {
-        std::unordered_set<int> hedgesSplit;
+void Mesh::splitNewHedges(std::unordered_map<HalfEdge*, glm::vec3>& midpointMap)
+{
+    std::unordered_set<int> hedgesSplit;
 
-        int numHedges = this->m_hedges.size();
-        for (int i = 0; i < numHedges; i++) {
-            HalfEdge* curr = this->m_hedges[i].get();
-            if (hedgesSplit.count(curr->id) == 0 && hedgesSplit.count(curr->sym->id) == 0) {
-                hedgesSplit.insert(curr->id);
-                hedgesSplit.insert(curr->sym->id);
+    int numHedges = this->m_hedges.size();
+    for (int i = 0; i < numHedges; i++) {
+        HalfEdge* curr = this->m_hedges[i].get();
+        if (hedgesSplit.count(curr->id) == 0 && hedgesSplit.count(curr->sym->id) == 0) {
+            hedgesSplit.insert(curr->id);
+            hedgesSplit.insert(curr->sym->id);
 
-                this->splitHedge(curr, curr->sym, curr->m_vert, curr->sym->m_vert, midpointMap.at(curr));
-            }
+            this->splitHedge(curr, curr->sym, curr->m_vert, curr->sym->m_vert, midpointMap.at(curr));
         }
-
+    }
 }
 
-void Mesh::smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroidMap, int origVertsNum) {
+void Mesh::smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroidMap, int origVertsNum)
+{
     for (int i = 0; i < origVertsNum; i++) {
         Vertex* v = this->m_verts[i].get();
         glm::vec3 sumMid = glm::vec3(0.f);
@@ -364,7 +397,6 @@ void Mesh::smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroidMap, int 
         HalfEdge* curr = start;
         do {
             if (curr != nullptr) {
-
                 midCt++;
                 sumMid += curr->next->m_vert->m_pos;
                 if (curr->m_face != nullptr) {
@@ -375,17 +407,18 @@ void Mesh::smoothOrigVerts(std::unordered_map<Face*, Vertex*>& centroidMap, int 
         } while (curr != start);
 
         glm::vec3 newPos = v->m_pos;
-                newPos *= (midCt - 2);
-                newPos /= midCt;
-                sumMid /= (midCt * midCt);
-                sumCent /= (midCt * midCt);
-                newPos += sumMid + sumCent;
+        newPos *= (midCt - 2);
+        newPos /= midCt;
+        sumMid /= (midCt * midCt);
+        sumCent /= (midCt * midCt);
+        newPos += sumMid + sumCent;
 
-                this->m_verts[i].get()->m_pos = newPos;
+        this->m_verts[i].get()->m_pos = newPos;
     }
 }
 
-void Mesh::quadrangulate(std::unordered_map<Face*, Vertex*>& centroidMap, int origFacesNum) {
+void Mesh::quadrangulate(std::unordered_map<Face*, Vertex*>& centroidMap, int origFacesNum)
+{
     for (int i = 0; i < origFacesNum; i++) {
         Face* f = this->m_faces[i].get();
 
@@ -441,6 +474,5 @@ void Mesh::quadrangulate(std::unordered_map<Face*, Vertex*>& centroidMap, int or
 
         firstFromCentroid->sym = prevToCentroid;
         prevToCentroid->sym = firstFromCentroid;
-
     }
 }

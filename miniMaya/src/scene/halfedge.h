@@ -17,8 +17,8 @@ public:
     HalfEdge();
     HalfEdge(HalfEdge* n, HalfEdge* s, Vertex* v, Face*);
 
-    bool operator==(const HalfEdge &he2) const;
-    bool operator!=(const HalfEdge &he2) const;
+    bool operator==(const HalfEdge& he2) const;
+    bool operator!=(const HalfEdge& he2) const;
 
     void symWith(HalfEdge* he2);
     void setVert(Vertex* v);

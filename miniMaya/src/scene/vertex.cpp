@@ -17,7 +17,8 @@ Vertex::Vertex(glm::vec3 p)
     QListWidgetItem::setText(QString::number(id));
 }
 
-Vertex::Vertex(const Vertex& v2) {
+Vertex::Vertex(const Vertex& v2)
+{
     this->id = v2.id;
     this->m_pos = v2.m_pos;
     this->m_hedge = v2.m_hedge;
@@ -25,8 +26,10 @@ Vertex::Vertex(const Vertex& v2) {
     QListWidgetItem::setText(QString::number(v2.id));
 }
 
-void Vertex::computeInfluentialJoints(Joint* currJoint) {
-    float distance = glm::distance(glm::vec4(m_pos,1), currJoint->getOverallTransformation() * glm::vec4(0,0,0,1));
+void Vertex::computeInfluentialJoints(Joint* currJoint)
+{
+    float distance = glm::distance(glm::vec4(m_pos, 1),
+                                   currJoint->getOverallTransformation() * glm::vec4(0, 0, 0, 1));
 
     if (distance < distances[0]) {
         if (distance < distances[1]) {

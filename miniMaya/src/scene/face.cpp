@@ -2,7 +2,8 @@
 
 int Face::population = 0;
 
-Face::Face(glm::vec3 c) {
+Face::Face(glm::vec3 c)
+{
     this->id = population;
     population++;
 

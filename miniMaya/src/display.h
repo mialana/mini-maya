@@ -6,6 +6,7 @@ class VertexDisplay : public Drawable
 {
 protected:
     Vertex* displayedVert;
+
 public:
     VertexDisplay(OpenGLContext* context);
 
@@ -13,7 +14,8 @@ public:
 
     void updateVert(Vertex* v);
 
-    GLenum drawMode() override {
+    GLenum drawMode() override
+    {
         return GL_POINTS;
     }
 };
@@ -22,6 +24,7 @@ class FaceDisplay : public Drawable
 {
 protected:
     Face* displayedFace;
+
 public:
     FaceDisplay(OpenGLContext* context);
 
@@ -29,7 +32,8 @@ public:
 
     void updateFace(Face* v);
 
-    GLenum drawMode() override {
+    GLenum drawMode() override
+    {
         return GL_LINES;
     }
 };
@@ -38,6 +42,7 @@ class HedgeDisplay : public Drawable
 {
 protected:
     HalfEdge* displayedHedge;
+
 public:
     HedgeDisplay(OpenGLContext* context);
 
@@ -45,7 +50,8 @@ public:
 
     void updateHedge(HalfEdge* v);
 
-    GLenum drawMode() override {
+    GLenum drawMode() override
+    {
         return GL_LINES;
     }
 };

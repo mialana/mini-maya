@@ -2,7 +2,8 @@
 #include <iostream>
 
 Skeleton::Skeleton(OpenGLContext* context)
-    : Drawable(context), mp_selectedJoint(nullptr)
+    : Drawable(context)
+    , mp_selectedJoint(nullptr)
 {
     root = nullptr;
 
@@ -15,7 +16,8 @@ Skeleton::Skeleton(OpenGLContext* context)
 }
 
 Skeleton::Skeleton(OpenGLContext* context, uPtr<Joint> r)
-    : Drawable(context), mp_selectedJoint(nullptr)
+    : Drawable(context)
+    , mp_selectedJoint(nullptr)
 {
     root = std::move(r);
 
@@ -27,7 +29,8 @@ Skeleton::Skeleton(OpenGLContext* context, uPtr<Joint> r)
     transformMats = std::vector<glm::mat4>();
 }
 
-Skeleton::~Skeleton() {
+Skeleton::~Skeleton()
+{
     Drawable::destroy();
 
     indices = std::vector<GLuint>();
@@ -38,7 +41,8 @@ Skeleton::~Skeleton() {
     transformMats = std::vector<glm::mat4>();
 }
 
-void Skeleton::computeBindMatrices(Joint* curr) {
+void Skeleton::computeBindMatrices(Joint* curr)
+{
     curr->bindMatrix = glm::inverse(curr->getOverallTransformation());
 
     for (const auto& c : curr->children) {
@@ -46,7 +50,8 @@ void Skeleton::computeBindMatrices(Joint* curr) {
     }
 }
 
-void Skeleton::drawJoints(ShaderProgram &shader, Joint* curr) {
+void Skeleton::drawJoints(ShaderProgram& shader, Joint* curr)
+{
     if (root == nullptr) {
         return;
     }
@@ -57,7 +62,8 @@ void Skeleton::drawJoints(ShaderProgram &shader, Joint* curr) {
     }
 }
 
-void Skeleton::createHelper(Joint* curr) {
+void Skeleton::createHelper(Joint* curr)
+{
     if (curr == mp_selectedJoint) {
         curr->createJoint(true);
     } else {
@@ -69,7 +75,8 @@ void Skeleton::createHelper(Joint* curr) {
     positions.push_back(worldPosition);
 
     if (curr->parent != nullptr) {
-        glm::vec4 parentWorldPosition = curr->parent->getOverallTransformation() * glm::vec4(0.f, 0.f, 0.f, 1.f);
+        glm::vec4 parentWorldPosition = curr->parent->getOverallTransformation()
+                                        * glm::vec4(0.f, 0.f, 0.f, 1.f);
         positions.push_back(parentWorldPosition);
     } else {
         positions.push_back(worldPosition);
@@ -80,7 +87,8 @@ void Skeleton::createHelper(Joint* curr) {
     }
 }
 
-void Skeleton::create() {
+void Skeleton::create()
+{
     if (root == nullptr) {
         this->count = 0;
         return;
@@ -105,31 +113,48 @@ void Skeleton::create() {
 
     generateIdx();
     mp_context->glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bufIdx);
-    mp_context->glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(GLuint), indices.data(), GL_STATIC_DRAW);
+    mp_context->glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                             indices.size() * sizeof(GLuint),
+                             indices.data(),
+                             GL_STATIC_DRAW);
 
     generatePos();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufPos);
-    mp_context->glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(glm::vec4), positions.data(), GL_STATIC_DRAW);
+    mp_context->glBufferData(GL_ARRAY_BUFFER,
+                             positions.size() * sizeof(glm::vec4),
+                             positions.data(),
+                             GL_STATIC_DRAW);
 
     generateNor();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufNor);
-    mp_context->glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(glm::vec4), normals.data(), GL_STATIC_DRAW);
+    mp_context->glBufferData(GL_ARRAY_BUFFER,
+                             normals.size() * sizeof(glm::vec4),
+                             normals.data(),
+                             GL_STATIC_DRAW);
 
     generateCol();
     mp_context->glBindBuffer(GL_ARRAY_BUFFER, bufCol);
-    mp_context->glBufferData(GL_ARRAY_BUFFER, colors.size() * sizeof(glm::vec4), colors.data(), GL_STATIC_DRAW);
+    mp_context->glBufferData(GL_ARRAY_BUFFER,
+                             colors.size() * sizeof(glm::vec4),
+                             colors.data(),
+                             GL_STATIC_DRAW);
 }
 
-uPtr<Joint> Skeleton::loadJsonHelper(QJsonObject jointJsonObj, Joint* parent) {
+uPtr<Joint> Skeleton::loadJsonHelper(QJsonObject jointJsonObj, Joint* parent)
+{
     QString foundName = jointJsonObj["name"].toString();
     QJsonArray foundTrans = jointJsonObj["pos"].toArray();
     QJsonArray foundRot = jointJsonObj["rot"].toArray();
     QJsonArray foundChildren = jointJsonObj["children"].toArray();
 
-    glm::vec3 finalTrans = glm::vec3(foundTrans[0].toDouble(), foundTrans[1].toDouble(), foundTrans[2].toDouble());
+    glm::vec3 finalTrans = glm::vec3(foundTrans[0].toDouble(),
+                                     foundTrans[1].toDouble(),
+                                     foundTrans[2].toDouble());
     double angle = foundRot[0].toDouble();
-    glm::vec3 axis = glm::vec3(foundRot[1].toDouble(), foundRot[2].toDouble(), foundRot[3].toDouble());
-    glm::quat finalRot = glm::quat(glm::angleAxis(float(angle),axis));
+    glm::vec3 axis = glm::vec3(foundRot[1].toDouble(),
+                               foundRot[2].toDouble(),
+                               foundRot[3].toDouble());
+    glm::quat finalRot = glm::quat(glm::angleAxis(float(angle), axis));
 
     uPtr<Joint> newJtUPtr = mkU<Joint>(mp_context, foundName, parent, finalTrans, finalRot);
 
@@ -143,7 +168,8 @@ uPtr<Joint> Skeleton::loadJsonHelper(QJsonObject jointJsonObj, Joint* parent) {
     return newJtUPtr;
 }
 
-void Skeleton::loadJson(QJsonObject rootJsonObj) {
+void Skeleton::loadJson(QJsonObject rootJsonObj)
+{
     root = loadJsonHelper(rootJsonObj, nullptr);
 
     indices = std::vector<GLuint>();
@@ -157,7 +183,8 @@ void Skeleton::loadJson(QJsonObject rootJsonObj) {
     this->computeBindMatrices(root.get());
 }
 
-void Skeleton::computeBindAndTransformMatrices(Joint* j) {
+void Skeleton::computeBindAndTransformMatrices(Joint* j)
+{
     bindMats.push_back(j->bindMatrix);
     transformMats.push_back(j->getOverallTransformation());
 
