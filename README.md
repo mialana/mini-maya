@@ -2,6 +2,8 @@
 
 ![img](.thumbs/thumbnail.png)
 
+**[Demo Video](https://youtu.be/xrlr0QXQ3Ts)**
+
 A mesh editor GUI that performs Catmull-Clark subdivision on input OBJ files, binds model skeletons for transformation, and exports out to USD.
 
 ### Requirements
